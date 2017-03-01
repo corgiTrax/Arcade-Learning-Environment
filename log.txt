@@ -1,0 +1,308 @@
+=========== [ MAKEFILE BUILD TESTS ] ===========
+USE_SDL = 1; USE_RLGLUE = 1;
+==> TEST: "make -f makefile.tmp clean"
+rm -f   
+rm -f src/emucore/AtariVox.o src/emucore/Booster.o src/emucore/Cart2K.o src/emucore/Cart3F.o src/emucore/Cart3E.o src/emucore/Cart4A50.o src/emucore/Cart4K.o src/emucore/CartAR.o src/emucore/CartCV.o src/emucore/Cart.o src/emucore/CartDPC.o src/emucore/CartE0.o src/emucore/CartE7.o src/emucore/CartF4.o src/emucore/CartF4SC.o src/emucore/CartF6.o src/emucore/CartF6SC.o src/emucore/CartF8.o src/emucore/CartF8SC.o src/emucore/CartFASC.o src/emucore/CartFE.o src/emucore/CartMB.o src/emucore/CartMC.o src/emucore/CartUA.o src/emucore/Cart0840.o src/emucore/Console.o src/emucore/Control.o src/emucore/Deserializer.o src/emucore/Driving.o src/emucore/Event.o src/emucore/FSNode.o src/emucore/Joystick.o src/emucore/Keyboard.o src/emucore/M6532.o src/emucore/MD5.o src/emucore/MediaSrc.o src/emucore/OSystem.o src/emucore/Paddles.o src/emucore/Props.o src/emucore/PropsSet.o src/emucore/Random.o src/emucore/Serializer.o src/emucore/Settings.o src/emucore/SpeakJet.o src/emucore/Switches.o src/emucore/TIA.o src/emucore/TIASnd.o src/emucore/unzip.o  src/emucore/libemucore.a 
+rm -f src/emucore/m6502/src/Device.o src/emucore/m6502/src/M6502.o src/emucore/m6502/src/M6502Low.o src/emucore/m6502/src/M6502Hi.o src/emucore/m6502/src/NullDev.o src/emucore/m6502/src/System.o src/emucore/m6502/libm6502.a 
+rm -f src/common/SoundNull.o src/common/SoundSDL.o src/common/SoundExporter.o src/common/display_screen.o src/common/ColourPalette.o src/common/ScreenExporter.o src/common/Constants.o src/common/Log.o src/common/libcommon.a 
+rm -f   
+rm -f src/os_dependent/FSNodePOSIX.o src/os_dependent/OSystemUNIX.o src/os_dependent/SettingsUNIX.o  src/os_dependent/libos_dependent.a 
+rm -f src/games/Roms.o src/games/RomSettings.o src/games/RomUtils.o src/games/supported/AirRaid.o src/games/supported/Alien.o src/games/supported/Amidar.o src/games/supported/Assault.o src/games/supported/Asterix.o src/games/supported/Asteroids.o src/games/supported/Atlantis.o src/games/supported/BankHeist.o src/games/supported/BattleZone.o src/games/supported/BeamRider.o src/games/supported/Berzerk.o src/games/supported/Bowling.o src/games/supported/Boxing.o src/games/supported/Breakout.o src/games/supported/Carnival.o src/games/supported/Centipede.o src/games/supported/ChopperCommand.o src/games/supported/CrazyClimber.o src/games/supported/Defender.o src/games/supported/DemonAttack.o src/games/supported/DonkeyKong.o src/games/supported/DoubleDunk.o src/games/supported/ElevatorAction.o src/games/supported/Enduro.o src/games/supported/FishingDerby.o src/games/supported/Freeway.o src/games/supported/Frogger.o src/games/supported/Frostbite.o src/games/supported/Galaxian.o src/games/supported/Gopher.o src/games/supported/Gravitar.o src/games/supported/Hero.o src/games/supported/IceHockey.o src/games/supported/JamesBond.o src/games/supported/JourneyEscape.o src/games/supported/Kangaroo.o src/games/supported/Koolaid.o src/games/supported/KeystoneKapers.o src/games/supported/Kingkong.o src/games/supported/Krull.o src/games/supported/KungFuMaster.o src/games/supported/LaserGates.o src/games/supported/LostLuggage.o src/games/supported/MontezumaRevenge.o src/games/supported/MrDo.o src/games/supported/MsPacman.o src/games/supported/NameThisGame.o src/games/supported/Phoenix.o src/games/supported/Pitfall.o src/games/supported/Pong.o src/games/supported/Pooyan.o src/games/supported/PrivateEye.o src/games/supported/QBert.o src/games/supported/RiverRaid.o src/games/supported/RoadRunner.o src/games/supported/RoboTank.o src/games/supported/Seaquest.o src/games/supported/SirLancelot.o src/games/supported/Skiing.o src/games/supported/Solaris.o src/games/supported/SpaceInvaders.o src/games/supported/StarGunner.o src/games/supported/Tennis.o src/games/supported/Tetris.o src/games/supported/TimePilot.o src/games/supported/Turmoil.o src/games/supported/Tutankham.o src/games/supported/Trondead.o src/games/supported/UpNDown.o src/games/supported/Venture.o src/games/supported/VideoPinball.o src/games/supported/WizardOfWor.o src/games/supported/YarsRevenge.o src/games/supported/Zaxxon.o  src/games/libgames.a 
+rm -f   
+rm -f src/external/TinyMT/tinymt32.o  src/external/libexternal.a 
+rm -f   src/main.o src/ale_interface.o src/emucore/AtariVox.o src/emucore/Booster.o src/emucore/Cart2K.o src/emucore/Cart3F.o src/emucore/Cart3E.o src/emucore/Cart4A50.o src/emucore/Cart4K.o src/emucore/CartAR.o src/emucore/CartCV.o src/emucore/Cart.o src/emucore/CartDPC.o src/emucore/CartE0.o src/emucore/CartE7.o src/emucore/CartF4.o src/emucore/CartF4SC.o src/emucore/CartF6.o src/emucore/CartF6SC.o src/emucore/CartF8.o src/emucore/CartF8SC.o src/emucore/CartFASC.o src/emucore/CartFE.o src/emucore/CartMB.o src/emucore/CartMC.o src/emucore/CartUA.o src/emucore/Cart0840.o src/emucore/Console.o src/emucore/Control.o src/emucore/Deserializer.o src/emucore/Driving.o src/emucore/Event.o src/emucore/FSNode.o src/emucore/Joystick.o src/emucore/Keyboard.o src/emucore/M6532.o src/emucore/MD5.o src/emucore/MediaSrc.o src/emucore/OSystem.o src/emucore/Paddles.o src/emucore/Props.o src/emucore/PropsSet.o src/emucore/Random.o src/emucore/Serializer.o src/emucore/Settings.o src/emucore/SpeakJet.o src/emucore/Switches.o src/emucore/TIA.o src/emucore/TIASnd.o src/emucore/unzip.o  src/emucore/m6502/src/Device.o src/emucore/m6502/src/M6502.o src/emucore/m6502/src/M6502Low.o src/emucore/m6502/src/M6502Hi.o src/emucore/m6502/src/NullDev.o src/emucore/m6502/src/System.o src/common/SoundNull.o src/common/SoundSDL.o src/common/SoundExporter.o src/common/display_screen.o src/common/ColourPalette.o src/common/ScreenExporter.o src/common/Constants.o src/common/Log.o src/controllers/ale_controller.o src/controllers/fifo_controller.o src/controllers/rlglue_controller.o  src/os_dependent/FSNodePOSIX.o src/os_dependent/OSystemUNIX.o src/os_dependent/SettingsUNIX.o  src/games/Roms.o src/games/RomSettings.o src/games/RomUtils.o src/games/supported/AirRaid.o src/games/supported/Alien.o src/games/supported/Amidar.o src/games/supported/Assault.o src/games/supported/Asterix.o src/games/supported/Asteroids.o src/games/supported/Atlantis.o src/games/supported/BankHeist.o src/games/supported/BattleZone.o src/games/supported/BeamRider.o src/games/supported/Berzerk.o src/games/supported/Bowling.o src/games/supported/Boxing.o src/games/supported/Breakout.o src/games/supported/Carnival.o src/games/supported/Centipede.o src/games/supported/ChopperCommand.o src/games/supported/CrazyClimber.o src/games/supported/Defender.o src/games/supported/DemonAttack.o src/games/supported/DonkeyKong.o src/games/supported/DoubleDunk.o src/games/supported/ElevatorAction.o src/games/supported/Enduro.o src/games/supported/FishingDerby.o src/games/supported/Freeway.o src/games/supported/Frogger.o src/games/supported/Frostbite.o src/games/supported/Galaxian.o src/games/supported/Gopher.o src/games/supported/Gravitar.o src/games/supported/Hero.o src/games/supported/IceHockey.o src/games/supported/JamesBond.o src/games/supported/JourneyEscape.o src/games/supported/Kangaroo.o src/games/supported/Koolaid.o src/games/supported/KeystoneKapers.o src/games/supported/Kingkong.o src/games/supported/Krull.o src/games/supported/KungFuMaster.o src/games/supported/LaserGates.o src/games/supported/LostLuggage.o src/games/supported/MontezumaRevenge.o src/games/supported/MrDo.o src/games/supported/MsPacman.o src/games/supported/NameThisGame.o src/games/supported/Phoenix.o src/games/supported/Pitfall.o src/games/supported/Pong.o src/games/supported/Pooyan.o src/games/supported/PrivateEye.o src/games/supported/QBert.o src/games/supported/RiverRaid.o src/games/supported/RoadRunner.o src/games/supported/RoboTank.o src/games/supported/Seaquest.o src/games/supported/SirLancelot.o src/games/supported/Skiing.o src/games/supported/Solaris.o src/games/supported/SpaceInvaders.o src/games/supported/StarGunner.o src/games/supported/Tennis.o src/games/supported/Tetris.o src/games/supported/TimePilot.o src/games/supported/Turmoil.o src/games/supported/Tutankham.o src/games/supported/Trondead.o src/games/supported/UpNDown.o src/games/supported/Venture.o src/games/supported/VideoPinball.o src/games/supported/WizardOfWor.o src/games/supported/YarsRevenge.o src/games/supported/Zaxxon.o  src/environment/ale_state.o src/environment/stella_environment.o src/environment/phosphor_blend.o  src/external/TinyMT/tinymt32.o  ale libale.so
+==> TEST: "make -f makefile.tmp -j16"
+ctags `find . -name '*.[ch]xx' -o -name '*.c' -o -name '*.y'` || true
+g++  -I/usr/include/SDL -D_GNU_SOURCE=1 -D_REENTRANT -Wall -Wunused -fPIC -O3 -fomit-frame-pointer -DRLGENV_NOMAINLOOP -DUNIX -DHAS_ALTIVEC -DUSE_NASM -DBSPF_UNIX -DHAVE_INTTYPES -DWINDOWED_SUPPORT  -DHAVE_GETTIMEOFDAY -DSNAPSHOT_SUPPORT  -D__USE_SDL -DSOUND_SUPPORT -D__USE_RLGLUE -Isrc -Isrc/controllers -Isrc/os_dependent -I/usr/include -I/usr/local/include -Isrc/environment -Isrc/external  -Isrc/games -Isrc/emucore -Isrc/emucore/m6502/src -Isrc/emucore/m6502/src/bspf/src -Isrc/common -Isrc/controllers -Isrc/environment    -c -o src/main.o src/main.cpp
+g++  -I/usr/include/SDL -D_GNU_SOURCE=1 -D_REENTRANT -Wall -Wunused -fPIC -O3 -fomit-frame-pointer -DRLGENV_NOMAINLOOP -DUNIX -DHAS_ALTIVEC -DUSE_NASM -DBSPF_UNIX -DHAVE_INTTYPES -DWINDOWED_SUPPORT  -DHAVE_GETTIMEOFDAY -DSNAPSHOT_SUPPORT  -D__USE_SDL -DSOUND_SUPPORT -D__USE_RLGLUE -Isrc -Isrc/controllers -Isrc/os_dependent -I/usr/include -I/usr/local/include -Isrc/environment -Isrc/external  -Isrc/games -Isrc/emucore -Isrc/emucore/m6502/src -Isrc/emucore/m6502/src/bspf/src -Isrc/common -Isrc/controllers -Isrc/environment    -c -o src/ale_interface.o src/ale_interface.cpp
+mkdir -p src/emucore/.deps
+mkdir -p src/emucore/.deps
+mkdir -p src/emucore/.deps
+g++ -Wp,-MMD,"src/emucore/.deps/AtariVox.d",-MQ,"src/emucore/AtariVox.o",-MP  -I/usr/include/SDL -D_GNU_SOURCE=1 -D_REENTRANT -Wall -Wunused -fPIC -O3 -fomit-frame-pointer -DRLGENV_NOMAINLOOP -DUNIX -DHAS_ALTIVEC -DUSE_NASM -DBSPF_UNIX -DHAVE_INTTYPES -DWINDOWED_SUPPORT  -DHAVE_GETTIMEOFDAY -DSNAPSHOT_SUPPORT  -D__USE_SDL -DSOUND_SUPPORT -D__USE_RLGLUE -Isrc -Isrc/controllers -Isrc/os_dependent -I/usr/include -I/usr/local/include -Isrc/environment -Isrc/external  -Isrc/games -Isrc/emucore -Isrc/emucore/m6502/src -Isrc/emucore/m6502/src/bspf/src -Isrc/common -Isrc/controllers -Isrc/environment   -c src/emucore/AtariVox.cxx -o src/emucore/AtariVox.o
+g++ -Wp,-MMD,"src/emucore/.deps/Booster.d",-MQ,"src/emucore/Booster.o",-MP  -I/usr/include/SDL -D_GNU_SOURCE=1 -D_REENTRANT -Wall -Wunused -fPIC -O3 -fomit-frame-pointer -DRLGENV_NOMAINLOOP -DUNIX -DHAS_ALTIVEC -DUSE_NASM -DBSPF_UNIX -DHAVE_INTTYPES -DWINDOWED_SUPPORT  -DHAVE_GETTIMEOFDAY -DSNAPSHOT_SUPPORT  -D__USE_SDL -DSOUND_SUPPORT -D__USE_RLGLUE -Isrc -Isrc/controllers -Isrc/os_dependent -I/usr/include -I/usr/local/include -Isrc/environment -Isrc/external  -Isrc/games -Isrc/emucore -Isrc/emucore/m6502/src -Isrc/emucore/m6502/src/bspf/src -Isrc/common -Isrc/controllers -Isrc/environment   -c src/emucore/Booster.cxx -o src/emucore/Booster.o
+g++ -Wp,-MMD,"src/emucore/.deps/Cart2K.d",-MQ,"src/emucore/Cart2K.o",-MP  -I/usr/include/SDL -D_GNU_SOURCE=1 -D_REENTRANT -Wall -Wunused -fPIC -O3 -fomit-frame-pointer -DRLGENV_NOMAINLOOP -DUNIX -DHAS_ALTIVEC -DUSE_NASM -DBSPF_UNIX -DHAVE_INTTYPES -DWINDOWED_SUPPORT  -DHAVE_GETTIMEOFDAY -DSNAPSHOT_SUPPORT  -D__USE_SDL -DSOUND_SUPPORT -D__USE_RLGLUE -Isrc -Isrc/controllers -Isrc/os_dependent -I/usr/include -I/usr/local/include -Isrc/environment -Isrc/external  -Isrc/games -Isrc/emucore -Isrc/emucore/m6502/src -Isrc/emucore/m6502/src/bspf/src -Isrc/common -Isrc/controllers -Isrc/environment   -c src/emucore/Cart2K.cxx -o src/emucore/Cart2K.o
+mkdir -p src/emucore/.deps
+mkdir -p src/emucore/.deps
+mkdir -p src/emucore/.deps
+g++ -Wp,-MMD,"src/emucore/.deps/Cart3F.d",-MQ,"src/emucore/Cart3F.o",-MP  -I/usr/include/SDL -D_GNU_SOURCE=1 -D_REENTRANT -Wall -Wunused -fPIC -O3 -fomit-frame-pointer -DRLGENV_NOMAINLOOP -DUNIX -DHAS_ALTIVEC -DUSE_NASM -DBSPF_UNIX -DHAVE_INTTYPES -DWINDOWED_SUPPORT  -DHAVE_GETTIMEOFDAY -DSNAPSHOT_SUPPORT  -D__USE_SDL -DSOUND_SUPPORT -D__USE_RLGLUE -Isrc -Isrc/controllers -Isrc/os_dependent -I/usr/include -I/usr/local/include -Isrc/environment -Isrc/external  -Isrc/games -Isrc/emucore -Isrc/emucore/m6502/src -Isrc/emucore/m6502/src/bspf/src -Isrc/common -Isrc/controllers -Isrc/environment   -c src/emucore/Cart3F.cxx -o src/emucore/Cart3F.o
+g++ -Wp,-MMD,"src/emucore/.deps/Cart3E.d",-MQ,"src/emucore/Cart3E.o",-MP  -I/usr/include/SDL -D_GNU_SOURCE=1 -D_REENTRANT -Wall -Wunused -fPIC -O3 -fomit-frame-pointer -DRLGENV_NOMAINLOOP -DUNIX -DHAS_ALTIVEC -DUSE_NASM -DBSPF_UNIX -DHAVE_INTTYPES -DWINDOWED_SUPPORT  -DHAVE_GETTIMEOFDAY -DSNAPSHOT_SUPPORT  -D__USE_SDL -DSOUND_SUPPORT -D__USE_RLGLUE -Isrc -Isrc/controllers -Isrc/os_dependent -I/usr/include -I/usr/local/include -Isrc/environment -Isrc/external  -Isrc/games -Isrc/emucore -Isrc/emucore/m6502/src -Isrc/emucore/m6502/src/bspf/src -Isrc/common -Isrc/controllers -Isrc/environment   -c src/emucore/Cart3E.cxx -o src/emucore/Cart3E.o
+g++ -Wp,-MMD,"src/emucore/.deps/Cart4A50.d",-MQ,"src/emucore/Cart4A50.o",-MP  -I/usr/include/SDL -D_GNU_SOURCE=1 -D_REENTRANT -Wall -Wunused -fPIC -O3 -fomit-frame-pointer -DRLGENV_NOMAINLOOP -DUNIX -DHAS_ALTIVEC -DUSE_NASM -DBSPF_UNIX -DHAVE_INTTYPES -DWINDOWED_SUPPORT  -DHAVE_GETTIMEOFDAY -DSNAPSHOT_SUPPORT  -D__USE_SDL -DSOUND_SUPPORT -D__USE_RLGLUE -Isrc -Isrc/controllers -Isrc/os_dependent -I/usr/include -I/usr/local/include -Isrc/environment -Isrc/external  -Isrc/games -Isrc/emucore -Isrc/emucore/m6502/src -Isrc/emucore/m6502/src/bspf/src -Isrc/common -Isrc/controllers -Isrc/environment   -c src/emucore/Cart4A50.cxx -o src/emucore/Cart4A50.o
+mkdir -p src/emucore/.deps
+mkdir -p src/emucore/.deps
+g++ -Wp,-MMD,"src/emucore/.deps/Cart4K.d",-MQ,"src/emucore/Cart4K.o",-MP  -I/usr/include/SDL -D_GNU_SOURCE=1 -D_REENTRANT -Wall -Wunused -fPIC -O3 -fomit-frame-pointer -DRLGENV_NOMAINLOOP -DUNIX -DHAS_ALTIVEC -DUSE_NASM -DBSPF_UNIX -DHAVE_INTTYPES -DWINDOWED_SUPPORT  -DHAVE_GETTIMEOFDAY -DSNAPSHOT_SUPPORT  -D__USE_SDL -DSOUND_SUPPORT -D__USE_RLGLUE -Isrc -Isrc/controllers -Isrc/os_dependent -I/usr/include -I/usr/local/include -Isrc/environment -Isrc/external  -Isrc/games -Isrc/emucore -Isrc/emucore/m6502/src -Isrc/emucore/m6502/src/bspf/src -Isrc/common -Isrc/controllers -Isrc/environment   -c src/emucore/Cart4K.cxx -o src/emucore/Cart4K.o
+g++ -Wp,-MMD,"src/emucore/.deps/CartAR.d",-MQ,"src/emucore/CartAR.o",-MP  -I/usr/include/SDL -D_GNU_SOURCE=1 -D_REENTRANT -Wall -Wunused -fPIC -O3 -fomit-frame-pointer -DRLGENV_NOMAINLOOP -DUNIX -DHAS_ALTIVEC -DUSE_NASM -DBSPF_UNIX -DHAVE_INTTYPES -DWINDOWED_SUPPORT  -DHAVE_GETTIMEOFDAY -DSNAPSHOT_SUPPORT  -D__USE_SDL -DSOUND_SUPPORT -D__USE_RLGLUE -Isrc -Isrc/controllers -Isrc/os_dependent -I/usr/include -I/usr/local/include -Isrc/environment -Isrc/external  -Isrc/games -Isrc/emucore -Isrc/emucore/m6502/src -Isrc/emucore/m6502/src/bspf/src -Isrc/common -Isrc/controllers -Isrc/environment   -c src/emucore/CartAR.cxx -o src/emucore/CartAR.o
+mkdir -p src/emucore/.deps
+mkdir -p src/emucore/.deps
+mkdir -p src/emucore/.deps
+g++ -Wp,-MMD,"src/emucore/.deps/CartCV.d",-MQ,"src/emucore/CartCV.o",-MP  -I/usr/include/SDL -D_GNU_SOURCE=1 -D_REENTRANT -Wall -Wunused -fPIC -O3 -fomit-frame-pointer -DRLGENV_NOMAINLOOP -DUNIX -DHAS_ALTIVEC -DUSE_NASM -DBSPF_UNIX -DHAVE_INTTYPES -DWINDOWED_SUPPORT  -DHAVE_GETTIMEOFDAY -DSNAPSHOT_SUPPORT  -D__USE_SDL -DSOUND_SUPPORT -D__USE_RLGLUE -Isrc -Isrc/controllers -Isrc/os_dependent -I/usr/include -I/usr/local/include -Isrc/environment -Isrc/external  -Isrc/games -Isrc/emucore -Isrc/emucore/m6502/src -Isrc/emucore/m6502/src/bspf/src -Isrc/common -Isrc/controllers -Isrc/environment   -c src/emucore/CartCV.cxx -o src/emucore/CartCV.o
+g++ -Wp,-MMD,"src/emucore/.deps/Cart.d",-MQ,"src/emucore/Cart.o",-MP  -I/usr/include/SDL -D_GNU_SOURCE=1 -D_REENTRANT -Wall -Wunused -fPIC -O3 -fomit-frame-pointer -DRLGENV_NOMAINLOOP -DUNIX -DHAS_ALTIVEC -DUSE_NASM -DBSPF_UNIX -DHAVE_INTTYPES -DWINDOWED_SUPPORT  -DHAVE_GETTIMEOFDAY -DSNAPSHOT_SUPPORT  -D__USE_SDL -DSOUND_SUPPORT -D__USE_RLGLUE -Isrc -Isrc/controllers -Isrc/os_dependent -I/usr/include -I/usr/local/include -Isrc/environment -Isrc/external  -Isrc/games -Isrc/emucore -Isrc/emucore/m6502/src -Isrc/emucore/m6502/src/bspf/src -Isrc/common -Isrc/controllers -Isrc/environment   -c src/emucore/Cart.cxx -o src/emucore/Cart.o
+g++ -Wp,-MMD,"src/emucore/.deps/CartDPC.d",-MQ,"src/emucore/CartDPC.o",-MP  -I/usr/include/SDL -D_GNU_SOURCE=1 -D_REENTRANT -Wall -Wunused -fPIC -O3 -fomit-frame-pointer -DRLGENV_NOMAINLOOP -DUNIX -DHAS_ALTIVEC -DUSE_NASM -DBSPF_UNIX -DHAVE_INTTYPES -DWINDOWED_SUPPORT  -DHAVE_GETTIMEOFDAY -DSNAPSHOT_SUPPORT  -D__USE_SDL -DSOUND_SUPPORT -D__USE_RLGLUE -Isrc -Isrc/controllers -Isrc/os_dependent -I/usr/include -I/usr/local/include -Isrc/environment -Isrc/external  -Isrc/games -Isrc/emucore -Isrc/emucore/m6502/src -Isrc/emucore/m6502/src/bspf/src -Isrc/common -Isrc/controllers -Isrc/environment   -c src/emucore/CartDPC.cxx -o src/emucore/CartDPC.o
+mkdir -p src/emucore/.deps
+mkdir -p src/emucore/.deps
+g++ -Wp,-MMD,"src/emucore/.deps/CartE0.d",-MQ,"src/emucore/CartE0.o",-MP  -I/usr/include/SDL -D_GNU_SOURCE=1 -D_REENTRANT -Wall -Wunused -fPIC -O3 -fomit-frame-pointer -DRLGENV_NOMAINLOOP -DUNIX -DHAS_ALTIVEC -DUSE_NASM -DBSPF_UNIX -DHAVE_INTTYPES -DWINDOWED_SUPPORT  -DHAVE_GETTIMEOFDAY -DSNAPSHOT_SUPPORT  -D__USE_SDL -DSOUND_SUPPORT -D__USE_RLGLUE -Isrc -Isrc/controllers -Isrc/os_dependent -I/usr/include -I/usr/local/include -Isrc/environment -Isrc/external  -Isrc/games -Isrc/emucore -Isrc/emucore/m6502/src -Isrc/emucore/m6502/src/bspf/src -Isrc/common -Isrc/controllers -Isrc/environment   -c src/emucore/CartE0.cxx -o src/emucore/CartE0.o
+g++ -Wp,-MMD,"src/emucore/.deps/CartE7.d",-MQ,"src/emucore/CartE7.o",-MP  -I/usr/include/SDL -D_GNU_SOURCE=1 -D_REENTRANT -Wall -Wunused -fPIC -O3 -fomit-frame-pointer -DRLGENV_NOMAINLOOP -DUNIX -DHAS_ALTIVEC -DUSE_NASM -DBSPF_UNIX -DHAVE_INTTYPES -DWINDOWED_SUPPORT  -DHAVE_GETTIMEOFDAY -DSNAPSHOT_SUPPORT  -D__USE_SDL -DSOUND_SUPPORT -D__USE_RLGLUE -Isrc -Isrc/controllers -Isrc/os_dependent -I/usr/include -I/usr/local/include -Isrc/environment -Isrc/external  -Isrc/games -Isrc/emucore -Isrc/emucore/m6502/src -Isrc/emucore/m6502/src/bspf/src -Isrc/common -Isrc/controllers -Isrc/environment   -c src/emucore/CartE7.cxx -o src/emucore/CartE7.o
+/bin/sh: 1: ctags: not found
+mkdir -p src/emucore/.deps
+g++ -Wp,-MMD,"src/emucore/.deps/CartF4.d",-MQ,"src/emucore/CartF4.o",-MP  -I/usr/include/SDL -D_GNU_SOURCE=1 -D_REENTRANT -Wall -Wunused -fPIC -O3 -fomit-frame-pointer -DRLGENV_NOMAINLOOP -DUNIX -DHAS_ALTIVEC -DUSE_NASM -DBSPF_UNIX -DHAVE_INTTYPES -DWINDOWED_SUPPORT  -DHAVE_GETTIMEOFDAY -DSNAPSHOT_SUPPORT  -D__USE_SDL -DSOUND_SUPPORT -D__USE_RLGLUE -Isrc -Isrc/controllers -Isrc/os_dependent -I/usr/include -I/usr/local/include -Isrc/environment -Isrc/external  -Isrc/games -Isrc/emucore -Isrc/emucore/m6502/src -Isrc/emucore/m6502/src/bspf/src -Isrc/common -Isrc/controllers -Isrc/environment   -c src/emucore/CartF4.cxx -o src/emucore/CartF4.o
+mkdir -p src/emucore/.deps
+g++ -Wp,-MMD,"src/emucore/.deps/CartF4SC.d",-MQ,"src/emucore/CartF4SC.o",-MP  -I/usr/include/SDL -D_GNU_SOURCE=1 -D_REENTRANT -Wall -Wunused -fPIC -O3 -fomit-frame-pointer -DRLGENV_NOMAINLOOP -DUNIX -DHAS_ALTIVEC -DUSE_NASM -DBSPF_UNIX -DHAVE_INTTYPES -DWINDOWED_SUPPORT  -DHAVE_GETTIMEOFDAY -DSNAPSHOT_SUPPORT  -D__USE_SDL -DSOUND_SUPPORT -D__USE_RLGLUE -Isrc -Isrc/controllers -Isrc/os_dependent -I/usr/include -I/usr/local/include -Isrc/environment -Isrc/external  -Isrc/games -Isrc/emucore -Isrc/emucore/m6502/src -Isrc/emucore/m6502/src/bspf/src -Isrc/common -Isrc/controllers -Isrc/environment   -c src/emucore/CartF4SC.cxx -o src/emucore/CartF4SC.o
+In file included from src/main.cpp:35:0:
+src/controllers/rlglue_controller.hpp:25:39: fatal error: rlglue/Environment_common.h: No such file or directory
+ #include <rlglue/Environment_common.h>
+                                       ^
+compilation terminated.
+mkdir -p src/emucore/.deps
+g++ -Wp,-MMD,"src/emucore/.deps/CartF6.d",-MQ,"src/emucore/CartF6.o",-MP  -I/usr/include/SDL -D_GNU_SOURCE=1 -D_REENTRANT -Wall -Wunused -fPIC -O3 -fomit-frame-pointer -DRLGENV_NOMAINLOOP -DUNIX -DHAS_ALTIVEC -DUSE_NASM -DBSPF_UNIX -DHAVE_INTTYPES -DWINDOWED_SUPPORT  -DHAVE_GETTIMEOFDAY -DSNAPSHOT_SUPPORT  -D__USE_SDL -DSOUND_SUPPORT -D__USE_RLGLUE -Isrc -Isrc/controllers -Isrc/os_dependent -I/usr/include -I/usr/local/include -Isrc/environment -Isrc/external  -Isrc/games -Isrc/emucore -Isrc/emucore/m6502/src -Isrc/emucore/m6502/src/bspf/src -Isrc/common -Isrc/controllers -Isrc/environment   -c src/emucore/CartF6.cxx -o src/emucore/CartF6.o
+mkdir -p src/emucore/.deps
+mkdir -p src/emucore/.deps
+g++ -Wp,-MMD,"src/emucore/.deps/CartF6SC.d",-MQ,"src/emucore/CartF6SC.o",-MP  -I/usr/include/SDL -D_GNU_SOURCE=1 -D_REENTRANT -Wall -Wunused -fPIC -O3 -fomit-frame-pointer -DRLGENV_NOMAINLOOP -DUNIX -DHAS_ALTIVEC -DUSE_NASM -DBSPF_UNIX -DHAVE_INTTYPES -DWINDOWED_SUPPORT  -DHAVE_GETTIMEOFDAY -DSNAPSHOT_SUPPORT  -D__USE_SDL -DSOUND_SUPPORT -D__USE_RLGLUE -Isrc -Isrc/controllers -Isrc/os_dependent -I/usr/include -I/usr/local/include -Isrc/environment -Isrc/external  -Isrc/games -Isrc/emucore -Isrc/emucore/m6502/src -Isrc/emucore/m6502/src/bspf/src -Isrc/common -Isrc/controllers -Isrc/environment   -c src/emucore/CartF6SC.cxx -o src/emucore/CartF6SC.o
+g++ -Wp,-MMD,"src/emucore/.deps/CartF8.d",-MQ,"src/emucore/CartF8.o",-MP  -I/usr/include/SDL -D_GNU_SOURCE=1 -D_REENTRANT -Wall -Wunused -fPIC -O3 -fomit-frame-pointer -DRLGENV_NOMAINLOOP -DUNIX -DHAS_ALTIVEC -DUSE_NASM -DBSPF_UNIX -DHAVE_INTTYPES -DWINDOWED_SUPPORT  -DHAVE_GETTIMEOFDAY -DSNAPSHOT_SUPPORT  -D__USE_SDL -DSOUND_SUPPORT -D__USE_RLGLUE -Isrc -Isrc/controllers -Isrc/os_dependent -I/usr/include -I/usr/local/include -Isrc/environment -Isrc/external  -Isrc/games -Isrc/emucore -Isrc/emucore/m6502/src -Isrc/emucore/m6502/src/bspf/src -Isrc/common -Isrc/controllers -Isrc/environment   -c src/emucore/CartF8.cxx -o src/emucore/CartF8.o
+mkdir -p src/emucore/.deps
+g++ -Wp,-MMD,"src/emucore/.deps/CartF8SC.d",-MQ,"src/emucore/CartF8SC.o",-MP  -I/usr/include/SDL -D_GNU_SOURCE=1 -D_REENTRANT -Wall -Wunused -fPIC -O3 -fomit-frame-pointer -DRLGENV_NOMAINLOOP -DUNIX -DHAS_ALTIVEC -DUSE_NASM -DBSPF_UNIX -DHAVE_INTTYPES -DWINDOWED_SUPPORT  -DHAVE_GETTIMEOFDAY -DSNAPSHOT_SUPPORT  -D__USE_SDL -DSOUND_SUPPORT -D__USE_RLGLUE -Isrc -Isrc/controllers -Isrc/os_dependent -I/usr/include -I/usr/local/include -Isrc/environment -Isrc/external  -Isrc/games -Isrc/emucore -Isrc/emucore/m6502/src -Isrc/emucore/m6502/src/bspf/src -Isrc/common -Isrc/controllers -Isrc/environment   -c src/emucore/CartF8SC.cxx -o src/emucore/CartF8SC.o
+mkdir -p src/emucore/.deps
+mkdir -p src/emucore/.deps
+g++ -Wp,-MMD,"src/emucore/.deps/CartFASC.d",-MQ,"src/emucore/CartFASC.o",-MP  -I/usr/include/SDL -D_GNU_SOURCE=1 -D_REENTRANT -Wall -Wunused -fPIC -O3 -fomit-frame-pointer -DRLGENV_NOMAINLOOP -DUNIX -DHAS_ALTIVEC -DUSE_NASM -DBSPF_UNIX -DHAVE_INTTYPES -DWINDOWED_SUPPORT  -DHAVE_GETTIMEOFDAY -DSNAPSHOT_SUPPORT  -D__USE_SDL -DSOUND_SUPPORT -D__USE_RLGLUE -Isrc -Isrc/controllers -Isrc/os_dependent -I/usr/include -I/usr/local/include -Isrc/environment -Isrc/external  -Isrc/games -Isrc/emucore -Isrc/emucore/m6502/src -Isrc/emucore/m6502/src/bspf/src -Isrc/common -Isrc/controllers -Isrc/environment   -c src/emucore/CartFASC.cxx -o src/emucore/CartFASC.o
+g++ -Wp,-MMD,"src/emucore/.deps/CartFE.d",-MQ,"src/emucore/CartFE.o",-MP  -I/usr/include/SDL -D_GNU_SOURCE=1 -D_REENTRANT -Wall -Wunused -fPIC -O3 -fomit-frame-pointer -DRLGENV_NOMAINLOOP -DUNIX -DHAS_ALTIVEC -DUSE_NASM -DBSPF_UNIX -DHAVE_INTTYPES -DWINDOWED_SUPPORT  -DHAVE_GETTIMEOFDAY -DSNAPSHOT_SUPPORT  -D__USE_SDL -DSOUND_SUPPORT -D__USE_RLGLUE -Isrc -Isrc/controllers -Isrc/os_dependent -I/usr/include -I/usr/local/include -Isrc/environment -Isrc/external  -Isrc/games -Isrc/emucore -Isrc/emucore/m6502/src -Isrc/emucore/m6502/src/bspf/src -Isrc/common -Isrc/controllers -Isrc/environment   -c src/emucore/CartFE.cxx -o src/emucore/CartFE.o
+mkdir -p src/emucore/.deps
+mkdir -p src/emucore/.deps
+g++ -Wp,-MMD,"src/emucore/.deps/CartMB.d",-MQ,"src/emucore/CartMB.o",-MP  -I/usr/include/SDL -D_GNU_SOURCE=1 -D_REENTRANT -Wall -Wunused -fPIC -O3 -fomit-frame-pointer -DRLGENV_NOMAINLOOP -DUNIX -DHAS_ALTIVEC -DUSE_NASM -DBSPF_UNIX -DHAVE_INTTYPES -DWINDOWED_SUPPORT  -DHAVE_GETTIMEOFDAY -DSNAPSHOT_SUPPORT  -D__USE_SDL -DSOUND_SUPPORT -D__USE_RLGLUE -Isrc -Isrc/controllers -Isrc/os_dependent -I/usr/include -I/usr/local/include -Isrc/environment -Isrc/external  -Isrc/games -Isrc/emucore -Isrc/emucore/m6502/src -Isrc/emucore/m6502/src/bspf/src -Isrc/common -Isrc/controllers -Isrc/environment   -c src/emucore/CartMB.cxx -o src/emucore/CartMB.o
+g++ -Wp,-MMD,"src/emucore/.deps/CartMC.d",-MQ,"src/emucore/CartMC.o",-MP  -I/usr/include/SDL -D_GNU_SOURCE=1 -D_REENTRANT -Wall -Wunused -fPIC -O3 -fomit-frame-pointer -DRLGENV_NOMAINLOOP -DUNIX -DHAS_ALTIVEC -DUSE_NASM -DBSPF_UNIX -DHAVE_INTTYPES -DWINDOWED_SUPPORT  -DHAVE_GETTIMEOFDAY -DSNAPSHOT_SUPPORT  -D__USE_SDL -DSOUND_SUPPORT -D__USE_RLGLUE -Isrc -Isrc/controllers -Isrc/os_dependent -I/usr/include -I/usr/local/include -Isrc/environment -Isrc/external  -Isrc/games -Isrc/emucore -Isrc/emucore/m6502/src -Isrc/emucore/m6502/src/bspf/src -Isrc/common -Isrc/controllers -Isrc/environment   -c src/emucore/CartMC.cxx -o src/emucore/CartMC.o
+mkdir -p src/emucore/.deps
+mkdir -p src/emucore/.deps
+g++ -Wp,-MMD,"src/emucore/.deps/CartUA.d",-MQ,"src/emucore/CartUA.o",-MP  -I/usr/include/SDL -D_GNU_SOURCE=1 -D_REENTRANT -Wall -Wunused -fPIC -O3 -fomit-frame-pointer -DRLGENV_NOMAINLOOP -DUNIX -DHAS_ALTIVEC -DUSE_NASM -DBSPF_UNIX -DHAVE_INTTYPES -DWINDOWED_SUPPORT  -DHAVE_GETTIMEOFDAY -DSNAPSHOT_SUPPORT  -D__USE_SDL -DSOUND_SUPPORT -D__USE_RLGLUE -Isrc -Isrc/controllers -Isrc/os_dependent -I/usr/include -I/usr/local/include -Isrc/environment -Isrc/external  -Isrc/games -Isrc/emucore -Isrc/emucore/m6502/src -Isrc/emucore/m6502/src/bspf/src -Isrc/common -Isrc/controllers -Isrc/environment   -c src/emucore/CartUA.cxx -o src/emucore/CartUA.o
+g++ -Wp,-MMD,"src/emucore/.deps/Cart0840.d",-MQ,"src/emucore/Cart0840.o",-MP  -I/usr/include/SDL -D_GNU_SOURCE=1 -D_REENTRANT -Wall -Wunused -fPIC -O3 -fomit-frame-pointer -DRLGENV_NOMAINLOOP -DUNIX -DHAS_ALTIVEC -DUSE_NASM -DBSPF_UNIX -DHAVE_INTTYPES -DWINDOWED_SUPPORT  -DHAVE_GETTIMEOFDAY -DSNAPSHOT_SUPPORT  -D__USE_SDL -DSOUND_SUPPORT -D__USE_RLGLUE -Isrc -Isrc/controllers -Isrc/os_dependent -I/usr/include -I/usr/local/include -Isrc/environment -Isrc/external  -Isrc/games -Isrc/emucore -Isrc/emucore/m6502/src -Isrc/emucore/m6502/src/bspf/src -Isrc/common -Isrc/controllers -Isrc/environment   -c src/emucore/Cart0840.cxx -o src/emucore/Cart0840.o
+make: *** [src/main.o] Error 1
+make: *** Waiting for unfinished jobs....
+==> FAILURE!!!
+=========== [ SHARED LIBRARY TESTS ] ===========
+==> TEST: "make -f makefile.tmp clean"
+rm -rf sharedLibraryInterfaceExample *.o
+==> TEST: "make -f makefile.tmp"
+g++ -D__USE_SDL -DSOUND_SUPPORT -I../../src -I../../src/controllers -I../../src/os_dependent -I../../src/environment -I../../src/external -L../.. -Wl,-rpath=../.. -I/usr/include/SDL -D_GNU_SOURCE=1 -D_REENTRANT sharedLibraryInterfaceExample.cpp -lale -lz -L/usr/lib/x86_64-linux-gnu -lSDL -o sharedLibraryInterfaceExample
+/usr/bin/ld: cannot find -lale
+collect2: error: ld returned 1 exit status
+make: *** [sharedLibraryInterfaceExample] Error 1
+==> FAILURE!!!
+Skipping TEST: ./sharedLibraryInterfaceExample
+=========== [ RL-GLUE TESTS ] ===========
+==> TEST: "make -f Makefile.rlglue clean"
+rm -rf RLGlueAgent RLGlueExperiment *.o
+==> TEST: "make -f Makefile.rlglue"
+cc  -Wall -pedantic  -c RLGlueAgent.c 
+RLGlueAgent.c:28:84: fatal error: rlglue/Agent_common.h: No such file or directory
+ #include <rlglue/Agent_common.h> /* agent_ function prototypes and RL-Glue types */
+                                                                                    ^
+compilation terminated.
+make: *** [RLGlueAgent.o] Error 1
+==> FAILURE!!!
+Skipping TEST: ./RLGlueExperiment
+USE_SDL = 0; USE_RLGLUE = 0;
+==> TEST: "cmake -DUSE_SDL=0 -DUSE_RLGLUE=0"
+-- Configuring done
+-- Generating done
+-- Build files have been written to: /home/ruohan/ale
+==> TEST: "make clean"
+==> TEST: "make -j16"
+Scanning dependencies of target ale-lib
+Scanning dependencies of target ale-c-lib
+Scanning dependencies of target ale-bin
+[  0%] [  0%] [  1%] [  1%] [  1%] [  1%] [  1%] [  1%] [  1%] [  1%] [  1%] Building CXX object CMakeFiles/ale-lib.dir/src/ale_interface.cpp.o
+[  2%] [  2%] Building CXX object CMakeFiles/ale-lib.dir/src/common/display_screen.cpp.o
+Building CXX object CMakeFiles/ale-lib.dir/src/common/ColourPalette.cpp.o
+Building CXX object CMakeFiles/ale-lib.dir/src/common/Constants.cpp.o
+Building CXX object CMakeFiles/ale-lib.dir/src/common/SoundSDL.cxx.o
+Building CXX object CMakeFiles/ale-c-lib.dir/src/ale_interface.cpp.o
+Building CXX object CMakeFiles/ale-bin.dir/src/main.cpp.o
+Building CXX object CMakeFiles/ale-c-lib.dir/ale_python_interface/ale_c_wrapper.cpp.o
+Building CXX object CMakeFiles/ale-bin.dir/src/common/display_screen.cpp.o
+Building CXX object CMakeFiles/ale-bin.dir/src/ale_interface.cpp.o
+Building CXX object CMakeFiles/ale-c-lib.dir/src/common/display_screen.cpp.o
+[  2%] Building CXX object CMakeFiles/ale-c-lib.dir/src/common/ColourPalette.cpp.o
+Building CXX object CMakeFiles/ale-bin.dir/src/common/ColourPalette.cpp.o
+[  3%] [  3%] Building CXX object CMakeFiles/ale-lib.dir/src/common/SoundNull.cxx.o
+Building CXX object CMakeFiles/ale-lib.dir/src/common/Log.cpp.o
+Building CXX object CMakeFiles/ale-lib.dir/src/common/ScreenExporter.cpp.o
+[  3%] Building CXX object CMakeFiles/ale-c-lib.dir/src/common/Constants.cpp.o
+[  3%] Building CXX object CMakeFiles/ale-lib.dir/src/common/SoundExporter.cpp.o
+[  4%] Building CXX object CMakeFiles/ale-bin.dir/src/common/Constants.cpp.o
+[  4%] Building CXX object CMakeFiles/ale-lib.dir/src/controllers/rlglue_controller.cpp.o
+[  4%] [  4%] /home/ruohan/ale/src/common/SoundNull.cxx: In member function ‘virtual bool SoundNull::load(Deserializer&)’:
+/home/ruohan/ale/src/common/SoundNull.cxx:49:9: warning: variable ‘reg’ set but not used [-Wunused-but-set-variable]
+   uInt8 reg;
+         ^
+Building CXX object CMakeFiles/ale-lib.dir/src/controllers/fifo_controller.cpp.o
+Building CXX object CMakeFiles/ale-bin.dir/src/common/SoundSDL.cxx.o
+[  4%] [  4%] Building CXX object CMakeFiles/ale-c-lib.dir/src/common/SoundSDL.cxx.o
+Building CXX object CMakeFiles/ale-c-lib.dir/src/common/SoundNull.cxx.o
+[  4%] [  5%] [  6%] Building CXX object CMakeFiles/ale-lib.dir/src/controllers/ale_controller.cpp.o
+Building CXX object CMakeFiles/ale-bin.dir/src/common/SoundNull.cxx.o
+Building CXX object CMakeFiles/ale-c-lib.dir/src/common/Log.cpp.o
+[  6%] Building C object CMakeFiles/ale-lib.dir/src/emucore/unzip.c.o
+[  6%] Building CXX object CMakeFiles/ale-bin.dir/src/common/Log.cpp.o
+[  6%] Building CXX object CMakeFiles/ale-lib.dir/src/emucore/CartF6.cxx.o
+[  6%] Building CXX object CMakeFiles/ale-lib.dir/src/emucore/Joystick.cxx.o
+[  6%] Building CXX object CMakeFiles/ale-bin.dir/src/common/ScreenExporter.cpp.o
+[  6%] [  7%] Building CXX object CMakeFiles/ale-c-lib.dir/src/common/ScreenExporter.cpp.o
+Building CXX object CMakeFiles/ale-lib.dir/src/emucore/CartF8SC.cxx.o
+[  8%] [  8%] [  8%] Building CXX object CMakeFiles/ale-bin.dir/src/common/SoundExporter.cpp.o
+Building CXX object CMakeFiles/ale-bin.dir/src/controllers/rlglue_controller.cpp.o
+Building CXX object CMakeFiles/ale-bin.dir/src/controllers/fifo_controller.cpp.o
+[  8%] Building CXX object CMakeFiles/ale-c-lib.dir/src/common/SoundExporter.cpp.o
+[  8%] [  8%] Building CXX object CMakeFiles/ale-lib.dir/src/emucore/Random.cxx.o
+/home/ruohan/ale/src/common/SoundNull.cxx: In member function ‘virtual bool SoundNull::load(Deserializer&)’:
+/home/ruohan/ale/src/common/SoundNull.cxx:49:9: warning: variable ‘reg’ set but not used [-Wunused-but-set-variable]
+   uInt8 reg;
+         ^
+/home/ruohan/ale/src/common/SoundNull.cxx: In member function ‘virtual bool SoundNull::load(Deserializer&)’:
+/home/ruohan/ale/src/common/SoundNull.cxx:49:9: warning: variable ‘reg’ set but not used [-Wunused-but-set-variable]
+   uInt8 reg;
+         ^
+Building CXX object CMakeFiles/ale-lib.dir/src/emucore/Booster.cxx.o
+[  8%] [  8%] Building CXX object CMakeFiles/ale-lib.dir/src/emucore/CartMB.cxx.o
+[  8%] Building CXX object CMakeFiles/ale-lib.dir/src/emucore/Event.cxx.o
+Building CXX object CMakeFiles/ale-bin.dir/src/controllers/ale_controller.cpp.o
+[  9%] [  9%] Building CXX object CMakeFiles/ale-c-lib.dir/src/controllers/rlglue_controller.cpp.o
+Building CXX object CMakeFiles/ale-lib.dir/src/emucore/Paddles.cxx.o
+[ 10%] [ 10%] Building C object CMakeFiles/ale-bin.dir/src/emucore/unzip.c.o
+Building CXX object CMakeFiles/ale-lib.dir/src/emucore/Props.cxx.o
+[ 10%] Building CXX object CMakeFiles/ale-bin.dir/src/emucore/CartF6.cxx.o
+[ 10%] [ 10%] Building CXX object CMakeFiles/ale-lib.dir/src/emucore/CartFASC.cxx.o
+Building CXX object CMakeFiles/ale-bin.dir/src/emucore/Joystick.cxx.o
+[ 10%] Building CXX object CMakeFiles/ale-c-lib.dir/src/controllers/fifo_controller.cpp.o
+[ 10%] Building CXX object CMakeFiles/ale-lib.dir/src/emucore/Settings.cxx.o
+[ 11%] Building CXX object CMakeFiles/ale-c-lib.dir/src/controllers/ale_controller.cpp.o
+[ 12%] [ 12%] Building CXX object CMakeFiles/ale-lib.dir/src/emucore/CartF4SC.cxx.o
+[ 12%] Building CXX object CMakeFiles/ale-lib.dir/src/emucore/Cart2K.cxx.o
+Building C object CMakeFiles/ale-c-lib.dir/src/emucore/unzip.c.o
+[ 12%] Building CXX object CMakeFiles/ale-c-lib.dir/src/emucore/CartF6.cxx.o
+[ 12%] [ 12%] Building CXX object CMakeFiles/ale-bin.dir/src/emucore/CartF8SC.cxx.o
+Building CXX object CMakeFiles/ale-c-lib.dir/src/emucore/Joystick.cxx.o
+[ 12%] Building CXX object CMakeFiles/ale-bin.dir/src/emucore/Random.cxx.o
+[ 13%] Building CXX object CMakeFiles/ale-bin.dir/src/emucore/Booster.cxx.o
+[ 13%] Building CXX object CMakeFiles/ale-bin.dir/src/emucore/CartMB.cxx.o
+[ 13%] Building CXX object CMakeFiles/ale-bin.dir/src/emucore/Event.cxx.o
+[ 13%] Building CXX object CMakeFiles/ale-lib.dir/src/emucore/Cart4A50.cxx.o
+[ 13%] [ 14%] Building CXX object CMakeFiles/ale-lib.dir/src/emucore/CartE0.cxx.o
+[ 14%] Building CXX object CMakeFiles/ale-c-lib.dir/src/emucore/CartF8SC.cxx.o
+[ 14%] [ 14%] Building CXX object CMakeFiles/ale-c-lib.dir/src/emucore/Random.cxx.o
+Building CXX object CMakeFiles/ale-lib.dir/src/emucore/CartDPC.cxx.o
+Building CXX object CMakeFiles/ale-bin.dir/src/emucore/Paddles.cxx.o
+[ 15%] Building CXX object CMakeFiles/ale-lib.dir/src/emucore/FSNode.cxx.o
+[ 16%] [ 16%] Building CXX object CMakeFiles/ale-bin.dir/src/emucore/Props.cxx.o
+[ 16%] Building CXX object CMakeFiles/ale-lib.dir/src/emucore/M6532.cxx.o
+[ 16%] Building CXX object CMakeFiles/ale-c-lib.dir/src/emucore/Booster.cxx.o
+[ 16%] Building CXX object CMakeFiles/ale-bin.dir/src/emucore/CartFASC.cxx.o
+Building CXX object CMakeFiles/ale-bin.dir/src/emucore/Settings.cxx.o
+[ 16%] [ 16%] Building CXX object CMakeFiles/ale-bin.dir/src/emucore/CartF4SC.cxx.o
+Building CXX object CMakeFiles/ale-c-lib.dir/src/emucore/CartMB.cxx.o
+[ 16%] [ 16%] Building CXX object CMakeFiles/ale-c-lib.dir/src/emucore/Event.cxx.o
+Building CXX object CMakeFiles/ale-bin.dir/src/emucore/Cart2K.cxx.o
+[ 17%] [ 18%] [ 18%] Building CXX object CMakeFiles/ale-bin.dir/src/emucore/Cart4A50.cxx.o
+Building CXX object CMakeFiles/ale-c-lib.dir/src/emucore/Props.cxx.o
+Building CXX object CMakeFiles/ale-c-lib.dir/src/emucore/Paddles.cxx.o
+[ 18%] Building CXX object CMakeFiles/ale-c-lib.dir/src/emucore/CartFASC.cxx.o
+[ 18%] [ 18%] Building CXX object CMakeFiles/ale-lib.dir/src/emucore/TIASnd.cxx.o
+[ 18%] Building CXX object CMakeFiles/ale-lib.dir/src/emucore/CartAR.cxx.o
+Building CXX object CMakeFiles/ale-bin.dir/src/emucore/CartE0.cxx.o
+[ 18%] Building CXX object CMakeFiles/ale-bin.dir/src/emucore/CartDPC.cxx.o
+[ 18%] [ 19%] [ 19%] Building CXX object CMakeFiles/ale-c-lib.dir/src/emucore/Settings.cxx.o
+[ 20%] Building CXX object CMakeFiles/ale-lib.dir/src/emucore/MD5.cxx.o
+[ 20%] Building CXX object CMakeFiles/ale-c-lib.dir/src/emucore/CartF4SC.cxx.o
+Building CXX object CMakeFiles/ale-c-lib.dir/src/emucore/Cart2K.cxx.o
+Building CXX object CMakeFiles/ale-lib.dir/src/emucore/Control.cxx.o
+[ 20%] [ 21%] Building CXX object CMakeFiles/ale-bin.dir/src/emucore/FSNode.cxx.o
+Building CXX object CMakeFiles/ale-bin.dir/src/emucore/M6532.cxx.o
+[ 21%] Building CXX object CMakeFiles/ale-bin.dir/src/emucore/TIASnd.cxx.o
+[ 21%] Building CXX object CMakeFiles/ale-lib.dir/src/emucore/CartMC.cxx.o
+[ 21%] Building CXX object CMakeFiles/ale-lib.dir/src/emucore/CartF6SC.cxx.o
+[ 21%] Building CXX object CMakeFiles/ale-c-lib.dir/src/emucore/Cart4A50.cxx.o
+[ 21%] [ 21%] Building CXX object CMakeFiles/ale-bin.dir/src/emucore/CartAR.cxx.o
+Building CXX object CMakeFiles/ale-lib.dir/src/emucore/Deserializer.cxx.o
+[ 22%] [ 22%] Building CXX object CMakeFiles/ale-lib.dir/src/emucore/CartFE.cxx.o
+Building CXX object CMakeFiles/ale-c-lib.dir/src/emucore/CartE0.cxx.o
+[ 22%] Building CXX object CMakeFiles/ale-c-lib.dir/src/emucore/CartDPC.cxx.o
+[ 22%] [ 22%] [ 22%] [ 23%] Building CXX object CMakeFiles/ale-bin.dir/src/emucore/Control.cxx.o
+Building CXX object CMakeFiles/ale-bin.dir/src/emucore/MD5.cxx.o
+Building CXX object CMakeFiles/ale-lib.dir/src/emucore/AtariVox.cxx.o
+Building CXX object CMakeFiles/ale-c-lib.dir/src/emucore/FSNode.cxx.o
+[ 23%] Building CXX object CMakeFiles/ale-lib.dir/src/emucore/Cart3F.cxx.o
+[ 23%] Building CXX object CMakeFiles/ale-c-lib.dir/src/emucore/M6532.cxx.o
+[ 23%] Building CXX object CMakeFiles/ale-lib.dir/src/emucore/CartCV.cxx.o
+[ 23%] Building CXX object CMakeFiles/ale-lib.dir/src/emucore/Keyboard.cxx.o
+[ 24%] [ 25%] Building CXX object CMakeFiles/ale-bin.dir/src/emucore/CartMC.cxx.o
+Building CXX object CMakeFiles/ale-lib.dir/src/emucore/CartF4.cxx.o
+[ 25%] [ 25%] Building CXX object CMakeFiles/ale-bin.dir/src/emucore/CartF6SC.cxx.o
+Building CXX object CMakeFiles/ale-lib.dir/src/emucore/CartE7.cxx.o
+[ 25%] [ 25%] [ 25%] Building CXX object CMakeFiles/ale-c-lib.dir/src/emucore/TIASnd.cxx.o
+Building CXX object CMakeFiles/ale-bin.dir/src/emucore/Deserializer.cxx.o
+Building CXX object CMakeFiles/ale-c-lib.dir/src/emucore/CartAR.cxx.o
+[ 25%] [ 25%] Building CXX object CMakeFiles/ale-c-lib.dir/src/emucore/MD5.cxx.o
+[ 25%] Building CXX object CMakeFiles/ale-bin.dir/src/emucore/CartFE.cxx.o
+[ 25%] Building CXX object CMakeFiles/ale-lib.dir/src/emucore/TIA.cxx.o
+Building CXX object CMakeFiles/ale-lib.dir/src/emucore/CartF8.cxx.o
+[ 26%] Building CXX object CMakeFiles/ale-lib.dir/src/emucore/Switches.cxx.o
+[ 27%] Building CXX object CMakeFiles/ale-bin.dir/src/emucore/AtariVox.cxx.o
+[ 27%] [ 27%] Building CXX object CMakeFiles/ale-bin.dir/src/emucore/Cart3F.cxx.o
+Building CXX object CMakeFiles/ale-lib.dir/src/emucore/MediaSrc.cxx.o
+[ 27%] [ 27%] [ 27%] Building CXX object CMakeFiles/ale-bin.dir/src/emucore/CartCV.cxx.o
+Building CXX object CMakeFiles/ale-bin.dir/src/emucore/Keyboard.cxx.o
+Building CXX object CMakeFiles/ale-lib.dir/src/emucore/Console.cxx.o
+[ 27%] Building CXX object CMakeFiles/ale-lib.dir/src/emucore/CartUA.cxx.o
+[ 27%] [ 28%] Building CXX object CMakeFiles/ale-c-lib.dir/src/emucore/Control.cxx.o
+Building CXX object CMakeFiles/ale-lib.dir/src/emucore/Driving.cxx.o
+[ 28%] [ 29%] Building CXX object CMakeFiles/ale-c-lib.dir/src/emucore/CartMC.cxx.o
+Building CXX object CMakeFiles/ale-lib.dir/src/emucore/SpeakJet.cxx.o
+[ 29%] [ 29%] Building CXX object CMakeFiles/ale-lib.dir/src/emucore/PropsSet.cxx.o
+[ 29%] Building CXX object CMakeFiles/ale-c-lib.dir/src/emucore/CartF6SC.cxx.o
+[ 29%] Building CXX object CMakeFiles/ale-bin.dir/src/emucore/CartF4.cxx.o
+Building CXX object CMakeFiles/ale-c-lib.dir/src/emucore/Deserializer.cxx.o
+[ 30%] Building CXX object CMakeFiles/ale-bin.dir/src/emucore/CartE7.cxx.o
+[ 31%] [ 31%] Building CXX object CMakeFiles/ale-bin.dir/src/emucore/TIA.cxx.o
+Building CXX object CMakeFiles/ale-c-lib.dir/src/emucore/CartFE.cxx.o
+[ 31%] [ 31%] Building CXX object CMakeFiles/ale-bin.dir/src/emucore/CartF8.cxx.o
+Building CXX object CMakeFiles/ale-c-lib.dir/src/emucore/AtariVox.cxx.o
+[ 31%] [ 31%] Building CXX object CMakeFiles/ale-lib.dir/src/emucore/Cart4K.cxx.o
+[ 31%] Building CXX object CMakeFiles/ale-lib.dir/src/emucore/Cart.cxx.o
+[ 31%] Building CXX object CMakeFiles/ale-c-lib.dir/src/emucore/Cart3F.cxx.o
+Building CXX object CMakeFiles/ale-c-lib.dir/src/emucore/CartCV.cxx.o
+[ 31%] [ 31%] Building CXX object CMakeFiles/ale-c-lib.dir/src/emucore/Keyboard.cxx.o
+Building CXX object CMakeFiles/ale-bin.dir/src/emucore/Switches.cxx.o
+[ 32%] Building CXX object CMakeFiles/ale-c-lib.dir/src/emucore/CartF4.cxx.o
+[ 32%] Building CXX object CMakeFiles/ale-c-lib.dir/src/emucore/CartE7.cxx.o
+[ 32%] Building CXX object CMakeFiles/ale-c-lib.dir/src/emucore/TIA.cxx.o
+[ 32%] Building CXX object CMakeFiles/ale-c-lib.dir/src/emucore/CartF8.cxx.o
+[ 33%] [ 34%] [ 34%] Building CXX object CMakeFiles/ale-lib.dir/src/emucore/Serializer.cxx.o
+[ 35%] Building CXX object CMakeFiles/ale-c-lib.dir/src/emucore/Switches.cxx.o
+Building CXX object CMakeFiles/ale-c-lib.dir/src/emucore/MediaSrc.cxx.o
+Building CXX object CMakeFiles/ale-bin.dir/src/emucore/MediaSrc.cxx.o
+[ 35%] Building CXX object CMakeFiles/ale-c-lib.dir/src/emucore/Console.cxx.o
+[ 35%] Building CXX object CMakeFiles/ale-lib.dir/src/emucore/Cart3E.cxx.o
+[ 35%] [ 35%] Building CXX object CMakeFiles/ale-bin.dir/src/emucore/Console.cxx.o
+Building CXX object CMakeFiles/ale-lib.dir/src/emucore/Cart0840.cxx.o
+[ 35%] [ 35%] [ 35%] [ 35%] Building CXX object CMakeFiles/ale-c-lib.dir/src/emucore/CartUA.cxx.o
+Building CXX object CMakeFiles/ale-lib.dir/src/emucore/OSystem.cxx.o
+Building CXX object CMakeFiles/ale-lib.dir/src/emucore/m6502/src/NullDev.cxx.o
+Building CXX object CMakeFiles/ale-c-lib.dir/src/emucore/Driving.cxx.o
+[ 36%] [ 36%] Building CXX object CMakeFiles/ale-lib.dir/src/emucore/m6502/src/M6502Low.cxx.o
+[ 36%] Building CXX object CMakeFiles/ale-bin.dir/src/emucore/CartUA.cxx.o
+Building CXX object CMakeFiles/ale-lib.dir/src/emucore/m6502/src/M6502Hi.cxx.o
+make[2]: *** [CMakeFiles/ale-c-lib.dir/src/emucore/Driving.cxx.o] Interrupt
+make[2]: *** [CMakeFiles/ale-c-lib.dir/src/emucore/TIA.cxx.o] Interrupt
+make[2]: *** [CMakeFiles/ale-c-lib.dir/src/emucore/Settings.cxx.o] Interrupt
+make[2]: *** [CMakeFiles/ale-bin.dir/src/emucore/Console.cxx.o] Interrupt
+make[2]: make[2]: *** [CMakeFiles/ale-lib.dir/src/emucore/TIA.cxx.o] Interrupt*** [CMakeFiles/ale-bin.dir/src/emucore/TIA.cxx.o] Interrupt
+
+make[2]: *** [CMakeFiles/ale-bin.dir/src/emucore/CartUA.cxx.o] Interruptmake[2]: 
+*** [CMakeFiles/ale-lib.dir/src/emucore/Cart3E.cxx.o] Interrupt
+make[2]: *** [CMakeFiles/ale-lib.dir/src/emucore/m6502/src/NullDev.cxx.o] Interrupt
+make[2]: *** [CMakeFiles/ale-lib.dir/src/emucore/m6502/src/M6502Low.cxx.o] Interrupt
+make[2]: *** [CMakeFiles/ale-lib.dir/src/emucore/m6502/src/M6502Hi.cxx.o] Interrupt
+make[2]: *** [CMakeFiles/ale-c-lib.dir/src/emucore/CartUA.cxx.o] Interrupt
+make[2]: *** [CMakeFiles/ale-bin.dir/src/emucore/Driving.cxx.o] Interrupt
+make[2]: *** [CMakeFiles/ale-lib.dir/src/emucore/OSystem.cxx.o] Interrupt
+make[2]: *** [CMakeFiles/ale-lib.dir/src/emucore/Cart0840.cxx.o] Interrupt
+make[1]: *** [CMakeFiles/ale-bin.dir/all] Interrupt
+make[2]: make[1]: *** [CMakeFiles/ale-c-lib.dir/src/emucore/Console.cxx.o] Interrupt*** [CMakeFiles/ale-lib.dir/all] Interrupt
+
+make[1]: *** [CMakeFiles/ale-c-lib.dir/all] Interrupt
+make: *** [all] Interrupt

@@ -1,0 +1,7 @@
+/home/ruohan/ale/CMakeFiles/ale-bin.dir
+/home/ruohan/ale/CMakeFiles/ale-c-lib.dir
+/home/ruohan/ale/CMakeFiles/ale-lib.dir
+/home/ruohan/ale/CMakeFiles/fifoInterfaceExample.dir
+/home/ruohan/ale/CMakeFiles/sharedLibraryInterfaceExample.dir
+/home/ruohan/ale/CMakeFiles/uninstall.dir
+/home/ruohan/ale/CMakeFiles/videoRecordingExample.dir

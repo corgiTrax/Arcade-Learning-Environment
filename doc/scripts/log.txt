@@ -1,0 +1,17 @@
+Linux stimulus-presentation 3.19.0-56-generic #62~14.04.1-Ubuntu SMP Fri Mar 11 11:03:15 UTC 2016 x86_64 x86_64 x86_64 GNU/Linux
+=========== [ MAKEFILE BUILD TESTS ] ===========
+USE_SDL = 0; USE_RLGLUE = 0;
+==> TEST: "make -f makefile.tmp clean"
+make: *** No rule to make target `clean'.  Stop.
+==> FAILURE!!!
+==> TEST: "make -f makefile.tmp -j16"
+make: *** No targets.  Stop.
+==> FAILURE!!!
+=========== [ SHARED LIBRARY TESTS ] ===========
+==> TEST: "make -f makefile.tmp clean"
+make: *** No rule to make target `clean'.  Stop.
+==> FAILURE!!!
+==> TEST: "make -f makefile.tmp"
+make: *** No targets.  Stop.
+==> FAILURE!!!
+Skipping TEST: ./sharedLibraryInterfaceExample

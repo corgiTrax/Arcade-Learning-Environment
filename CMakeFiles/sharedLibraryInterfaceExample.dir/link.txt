@@ -1,0 +1,1 @@
+/usr/bin/c++    -Wall -Wunused -fPIC -O3 -fomit-frame-pointer -D__STDC_CONSTANT_MACROS    CMakeFiles/sharedLibraryInterfaceExample.dir/doc/examples/sharedLibraryInterfaceExample.cpp.o  -o doc/examples/ale-sharedLibraryInterfaceExample  -L/home/ruohan/ale -rdynamic -lale -lz -Wl,-Bstatic -lSDLmain -Wl,-Bdynamic -lSDL -lpthread -Wl,-rpath,/home/ruohan/ale 
