@@ -1,4 +1,5 @@
 #!/usr/bin/perl
+
 use IPC::Open2;
 
 # -----------------------------------
@@ -26,7 +27,7 @@ if ($numArgs > 1) {
 }
 $num_episodes = 1;
 
-$env_cmd = "./ale -game_controller fifo roms/$rom.bin";
+$env_cmd = "./ale -game_controller fifo -repeat_action_probability 0.0 roms/$rom.bin";
 $agent_cmd = "java -Xmx1024M -jar $agentJarFile " . $arg; 
 
 if ($OS eq "linux" or $OS eq "darwin") {
