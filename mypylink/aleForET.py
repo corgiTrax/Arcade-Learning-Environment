@@ -9,6 +9,7 @@ from random import randrange
 from ale_python_interface import ALEInterface
 import pygame, numpy as np
 from IPython import embed
+
 class aleForET:
     def __init__(self,rom_file, screen):
         self.screen = screen

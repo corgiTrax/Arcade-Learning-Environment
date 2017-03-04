@@ -19,6 +19,7 @@ doc/examples/*Example
 *.lo
 *.o
 *.d
+*.pyc
 
 # Compiled Dynamic libraries
 *.so

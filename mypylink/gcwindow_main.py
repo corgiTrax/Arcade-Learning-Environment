@@ -52,7 +52,7 @@ if len(sys.argv) < 2:
 	sys.exit()
 rom_file = sys.argv[1]
 
-genv = EyeLinkCoreGraphicsPyGame(800,600,eyelinktracker)
+genv = EyeLinkCoreGraphicsPyGame(960,630,eyelinktracker)
 openGraphicsEx(genv)
 
 #Opens the EDF file.
