@@ -35,7 +35,7 @@ class aleForET:
         # Get the list of legal actions
         self.legal_actions = self.ale.getLegalActionSet()
 
-    def run(self, gc_window_drawer_func):
+    def run(self, gc_window_drawer_func = None):
         black = 0, 0, 0
         last_time=time.time()
         frame_cnt=0
