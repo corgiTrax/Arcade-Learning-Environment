@@ -35,7 +35,7 @@ class aleForET:
         # Get the list of legal actions
         self.legal_actions = self.ale.getLegalActionSet()
 
-    def run(self, gc_window_drawer_func = None):
+    def run(self, gc_window_drawer_func = None, save_np_to_bmp_func = None):
         black = 0, 0, 0
         last_time=time.time()
         frame_cnt=0
@@ -65,6 +65,10 @@ class aleForET:
             if gc_window_drawer_func != None:
                 gc_window_drawer_func(self.screen)
             pygame.display.flip()
+
+            # Save bmp image
+            if save_np_to_bmp_func != None:
+                save_np_to_bmp_func(cur_frame_np)
 
             a = self.legal_actions[randrange(len(self.legal_actions))]
             # Apply an action and get the resulting reward
