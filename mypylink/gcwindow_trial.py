@@ -314,7 +314,7 @@ def do_trial(surf, ale):
 	# 	getEYELINK().bitmapSaveAndBackdrop(bgbm.get_width(), bgbm.get_height(), agc, 0, 0, bgbm.get_width(), bgbm.get_height(), "trial" + str(trial) + ".png", "trialimages", SV_NOREPLACE, 0, 0, BX_MAXCONTRAST)
 	
 	
-	
+	# TODO: ??? WHEN DOES A DRIFT CORRECTION RETURNS 0 ? BY PRESSING ENTER KEY OR SAPCE KEY ???
 	#The following does drift correction at the begin of each trial
 	while True: 
 		# Checks whether we are still connected to the tracker
