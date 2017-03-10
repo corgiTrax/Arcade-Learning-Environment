@@ -1,9 +1,5 @@
 #!/usr/bin/env python
-# python_example.py
-# Author: Ben Goodrich
-#
-# This is a direct port to python of the shared library example from
-# ALE provided in doc/examples/sharedLibraryInterfaceExample.cpp
+# Author: Zhuode Liu
 import time, sys, os
 from random import randrange
 from ale_python_interface import ALEInterface
@@ -35,7 +31,7 @@ class aleForET:
         # Get the list of legal actions
         self.legal_actions = self.ale.getLegalActionSet()
 
-    def run(self, gc_window_drawer_func = None, save_np_to_bmp_func = None):
+    def run(self, gc_window_drawer_func = None, save_screen_func = None):
         black = 0, 0, 0
         last_time=time.time()
         frame_cnt=0
@@ -57,18 +53,17 @@ class aleForET:
             cur_frame_Surface = pygame.surfarray.make_surface(cur_frame_np)
             cur_frame_Surface = pygame.transform.flip(cur_frame_Surface, True, False)
             cur_frame_Surface = pygame.transform.rotate(cur_frame_Surface, 90)
-            cur_frame_Surface = pygame.transform.scale(cur_frame_Surface, self.size)
-            cur_frame_rect = cur_frame_Surface.get_rect()
+            # Perform scaling directly on screen, leaving cur_frame_Surface unscaled.
+            # Slightly faster than scaling cur_frame_Surface and then transfer to screen.
+            pygame.transform.scale(cur_frame_Surface, self.size, self.screen)
 
-            self.screen.fill(black)
-            self.screen.blit(cur_frame_Surface, cur_frame_rect)
             if gc_window_drawer_func != None:
                 gc_window_drawer_func(self.screen)
             pygame.display.flip()
 
-            # Save bmp image
-            if save_np_to_bmp_func != None:
-                save_np_to_bmp_func(cur_frame_np)
+            # Save frame to disk (160*210, i.e. not scaled; because this is faster)
+            if save_screen_func != None:
+                save_screen_func(cur_frame_Surface)
 
             a = self.legal_actions[randrange(len(self.legal_actions))]
             # Apply an action and get the resulting reward
