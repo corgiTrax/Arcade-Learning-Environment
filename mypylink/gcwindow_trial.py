@@ -102,9 +102,8 @@ class drawgc_wrapper:
 	def drawgc(self, surf):
 		'''Does gaze-contingent drawing; uses the getNewestSample() to get latest update '''
 		# TODO return statement are all not drawgc()'s responsibility. move to somewhere else.
-
 		
-		error = getEYELINK().isRecording()# First check if recording is aborted 
+		error = getEYELINK().isRecording() # First check if recording is aborted 
 		if error != 0:
 			# TODO if the we terminate recording at the Host machine, code execution 
 			# will always fall into here.
@@ -190,7 +189,6 @@ class drawgc_wrapper:
 
 
 def do_trial(surf, ale):
-	'''Does the simple trial'''
 
 	#This supplies the title at the bottom of the eyetracker display
 	message = "record_status_message 'Trial %s'" % (ale.gamename)
@@ -203,28 +201,9 @@ def do_trial(surf, ale):
 	msg = "TRIALID %s" % ale.gamename
 	getEYELINK().sendMessage(msg)
 	
-		
-	# Now we don't have such image. Just skip these code
-	# The following code is for the EyeLink Data Viewer integration purpose. 
-	# See section "Protocol for EyeLink Data to Viewer Integration" of the EyeLink Data Viewer User Manual
-	# The IMGLOAD command is used to show an overlay image in Data Viewer 
-	## getEYELINK().sendMessage("!V IMGLOAD FILL  sacrmeto.jpg") 
-	
-	# This TRIAL_VAR command specifies a trial variable and value for the given trial. 
-	# Send one message for each pair of trial condition variable and its corresponding value.
-	## getEYELINK().sendMessage("!V TRIAL_VAR image  sacrmeto.jpg")
-	## getEYELINK().sendMessage("!V TRIAL_VAR type  gaze_contingent")
-	 
-	
-	# if BITMAP_SAVE_BACK_DROP:
-	# 	#array3d(bgbm) crashes on some configurations. 
-	# 	agc = arrayToList(bgbm.get_width(), bgbm.get_height(), array3d(bgbm))
-	# 	bitmapSave(bgbm.get_width(), bgbm.get_height(), agc, 0, 0, bgbm.get_width(), bgbm.get_height(), "trial" + str(trial) + ".bmp", "trialimages", SV_NOREPLACE,)
-	# 	getEYELINK().bitmapSaveAndBackdrop(bgbm.get_width(), bgbm.get_height(), agc, 0, 0, bgbm.get_width(), bgbm.get_height(), "trial" + str(trial) + ".png", "trialimages", SV_NOREPLACE, 0, 0, BX_MAXCONTRAST)
-	
 	
 	# TODO: ??? WHEN DOES A DRIFT CORRECTION RETURNS 0 ? BY PRESSING ENTER KEY OR SAPCE KEY ???
-	#The following does drift correction at the begin of each trial
+	# The following does drift correction at the begin of each trial
 	while True: 
 		# Checks whether we are still connected to the tracker
 		if not getEYELINK().isConnected():
@@ -240,17 +219,13 @@ def do_trial(surf, ale):
 		except:
 			getEYELINK().doTrackerSetup()		
 	
-	#switch tracker to ide and give it time to complete mode switch
+	# switch tracker to ide and give it time to complete mode switch
 	getEYELINK().setOfflineMode()
-	msecDelay(50) 
-
+	msecDelay(50)
 
 	error = getEYELINK().startRecording(1, 1, 1, 1)
 	if error:	return error
-	gc.disable()
-	#begin the realtime mode
-	#TODO: check beginRealTimeMode, the doc says it's relevant to realtime running mode in windows?
-	#pylink.beginRealTimeMode(100)
+	gc.disable() # disable python garbage collection for the entire experiment
 	try: 
 		getEYELINK().waitForBlockStart(100,1,0) 
 	except RuntimeError: 
@@ -261,9 +236,13 @@ def do_trial(surf, ale):
 		else: # for any other status simply re-raise the exception 
 			raise
 	surf.fill((255, 255, 255, 255))
-	startTime = currentTime()
 	
-	getEYELINK().sendMessage("SYNCTIME %d" % (currentTime() - startTime))
+	# according to pylink.chm:
+	# "SYNCTIME" marks the zero-time in a trial. A number may follow, which 
+	# is interpreted as the delay of the message from the actual stimulus onset. 
+	# It is suggested that recording start 100 milliseconds before the display is
+	# drawn or unblanked at zero-time, so that no data at the trial start is lost.
+	getEYELINK().sendMessage("SYNCTIME %d" % 0) # From above doc it seems we can just send 0 because we haven't drawn anything yet
 	dw = drawgc_wrapper()
 	ale.run(dw.drawgc)
 	ret_value = drawgc_wrapper.post_experiment()
@@ -285,6 +264,10 @@ def run_trials(rom_file, screen):
 	# Press ESC to skip eye tracker setup
 	getEYELINK().doTrackerSetup() 
 
+	# Determine whether to redo the trail , finish the trial, or quit, depending on the return value
+	# These return values are predefined in PyLink, so they might also be read by Data Viewer (I'm not sure).
+	# Some return values checked below are never returned by do_trail(). 
+	# But in the future do_trail() could return them when we need.
 	while 1:
 		ret_value = do_trial(screen, ale)
 		endRealTimeMode()
