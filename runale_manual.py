@@ -7,7 +7,9 @@
 import time, sys
 from random import randrange
 from ale_python_interface import ALEInterface
-import pygame, numpy as np
+import pygame 
+import numpy as np
+import action_enums as aenum
 pygame.init()
 
 if len(sys.argv) < 2:
@@ -63,7 +65,7 @@ for episode in xrange(10):
         last_time=time.time()
         frame_cnt=0
     
-    time.sleep(0.01)
+    time.sleep(0.02)
     
     # Show game image
     cur_frame_np = ale.getScreenRGB()
@@ -76,26 +78,20 @@ for episode in xrange(10):
     screen.blit(cur_frame_Surface, cur_frame_rect)
     pygame.display.flip()
 
+# random actions
 #    a = legal_actions[randrange(len(legal_actions))]
     es = pygame.event.get()
-    a = legal_actions[0]
+    if frame_cnt == 1: 
+        a_index = aenum.PLAYER_A_NOOP
+    print(es)
     for e in es:
         if (e.type==pygame.KEYDOWN):
-            # print(e.key)
-            if e.key == ord('0'):
-                a = legal_actions[0]
-            if e.key == ord('1'):
-                a = legal_actions[1]
-            if e.key == ord('2'):
-                a = legal_actions[2]
-            if e.key == ord('3'):
-                a = legal_actions[3]
-            if e.key == ord('4'):
-                a = legal_actions[4]
-
-            print(a)
+            a_index = aenum.action_map(e.key)
+        elif (e.type == pygame.KEYUP):
+            a_index = aenum.PLAYER_A_NOOP
+            
+    a = legal_actions[a_index]
     # Apply an action and get the resulting reward
-        
     reward = ale.act(a);
 
     total_reward += reward
