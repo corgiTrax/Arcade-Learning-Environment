@@ -33,9 +33,9 @@ public class ScreenDisplay extends JPanel {
     /** The image to be displayed */
     BufferedImage image;
     /** The scale at which we want to display (3x normal height) */
-    int yScaleFactor = 3 * 1.5;
+    int yScaleFactor = 3;
     /** The x-axis scale at which we want to display (6x normal width) */
-    int xScaleFactor = 6 * 1.5;
+    int xScaleFactor = 6;
     /** The default screen width */
     int defaultWidth = 160;
     /** The default screen height */

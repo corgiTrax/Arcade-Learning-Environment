@@ -102,9 +102,8 @@ class drawgc_wrapper:
 	def drawgc(self, surf):
 		'''Does gaze-contingent drawing; uses the getNewestSample() to get latest update '''
 		# TODO return statement are all not drawgc()'s responsibility. move to somewhere else.
-
 		
-		error = getEYELINK().isRecording()# First check if recording is aborted 
+		error = getEYELINK().isRecording() # First check if recording is aborted 
 		if error != 0:
 			# TODO if the we terminate recording at the Host machine, code execution 
 			# will always fall into here.
@@ -189,99 +188,7 @@ class drawgc_wrapper:
 		return getEYELINK().getRecordingStatus()
 
 
-
-
-fgtext = [
-"Buck did not read the newspapers, or he would have known that",
-"trouble was brewing, not alone for himself, but for every ",
-"tide-water dog, strong of muscle and with warm, long hair, from",
-"Puget Sound to San Diego. Because men, groping in the Arctic ",
-"darkness, had found a yellow metal and because steamship and ",
-"transportation companies were booming the find, thousands of ",
-"men were rushing into the Northland. These men wanted dogs, ",
-"and the dogs they wanted were heavy dogs, with strong muscles ",
-"by which to toil, and furry coats to protect them from the frost.",
-"																 ",
-"Buck lived at a big house in the sun-kissed Santa Clara ",
-"Valley. Judge Miller's place, it was called. It stood back ",
-"from the road, half hidden among the trees, through which ",
-"glimpses could be caught of the wide cool veranda that ran ",
-"around its four sides."
-]
-
-bgtext = [
-"Xxxx xxx xxx xxxx xxx xxxxxxxxxxx xx xx xxxxx xxxx xxxxx xxxx",
-"xxxxxxx xxx xxxxxxxx xxx xxxxx xxx xxxxxxxx xxx xxx xxxxx ",
-"xxxxxxxxxx xxxx xxxxxx xx xxxxxx xxx xxxx xxxxx xxxx xxxxx xxxx",
-"Xxxxx Xxxxx xx Xxx Xxxxxx Xxxxxxx xxxx xxxxxxx xx xxx Xxxxxx ",
-"xxxxxxxxx xxx xxxxx x xxxxxx xxxxx xxx xxxxxxx xxxxxxxxx xxx ",
-"xxxxxxxxxxxxxx xxxxxxxxx xxxx xxxxxxx xxx xxxxx xxxxxxxxx xx ",
-"xxx xxxx xxxxxxx xxxx xxx Xxxxxxxxxx Xxxxx xxx xxxxxx xxxxx ",
-"xxx xxx xxxx xxxx xxxxxx xxxx xxxxx xxxxx xxxx xxxxxx xxxxxxx ",
-"xx xxxxx xx xxxx, xxx xxxxx xxxxx xx xxxxxxx xxxx xxxx xxx xxxxxx",
-"																 ",
-"Xxxx xxxxx xx x xxx xxxxx xx xxx xxxxxxxxxx Xxxxx Xxxxx ",
-"Xxxxxxx Xxxxx Xxxxxxxx xxxxxx xx xxx xxxxxxx Xx xxxxx xxxx ",
-"xxxx xxx xxxxx xxxx xxxxxx xxxxx xxx xxxxxx xxxxxxx xxxxx ",
-"xxxxxxxx xxxxx xx xxxxxx xx xxx xxxx xxxx xxxxxxx xxxx xxx ",
-"xxxxxx xxx xxxx xxxxxx"
-]
-
-
-
-def getTxtBitmap(text, dim):
-	''' This function is used to create a page of text. '''
-
-	''' return image object if successful; otherwise None '''
-
-	if(not font.get_init()):
-		font.init()
-	fnt = font.Font("cour.ttf", 15)
-	fnt.set_bold(1)
-	sz = fnt.size(text[0])
-	bmp = Surface(dim)
-	
-	bmp.fill((255, 255, 255, 255))
-	for i in range(len(text)):
-		txt = fnt.render(text[i], 1, (0, 0, 0, 255), (255, 255, 255, 255))
-		bmp.blit(txt, (0, sz[1] * i))
-	
-	return bmp
-	
-	
-def getImageBitmap(pic):
-	''' This function is used to load an image into a new surface. '''
-
-	''' return image object if successful; otherwise None '''
-
-	if(pic == 1):
-		try:
-			bmp = image.load("sacrmeto.jpg", "jpg")
-			return bmp
-		except:
-			print("Cannot load image sacrmeto.jpg")
-			return None
-	else:
-		try:
-			bmp = image.load("sac_blur.jpg", "jpg")
-			return bmp
-		except:
-			print("Cannot load image sac_blur.jpg")
-			return None
-	
-	
-	
-def arrayToList(w, h, dt):
-	rv = []
-	for y in range(h):
-		line = []
-		for x in range(w):
-			v = dt[x, y]
-			line.append((v[0], v[1], v[2]))
-		rv.append(line)
-	return rv
 def do_trial(surf, ale):
-	'''Does the simple trial'''
 
 	#This supplies the title at the bottom of the eyetracker display
 	message = "record_status_message 'Trial %s'" % (ale.gamename)
@@ -294,28 +201,9 @@ def do_trial(surf, ale):
 	msg = "TRIALID %s" % ale.gamename
 	getEYELINK().sendMessage(msg)
 	
-		
-	# Now we don't have such image. Just skip these code
-	# The following code is for the EyeLink Data Viewer integration purpose. 
-	# See section "Protocol for EyeLink Data to Viewer Integration" of the EyeLink Data Viewer User Manual
-	# The IMGLOAD command is used to show an overlay image in Data Viewer 
-	## getEYELINK().sendMessage("!V IMGLOAD FILL  sacrmeto.jpg") 
-	
-	# This TRIAL_VAR command specifies a trial variable and value for the given trial. 
-	# Send one message for each pair of trial condition variable and its corresponding value.
-	## getEYELINK().sendMessage("!V TRIAL_VAR image  sacrmeto.jpg")
-	## getEYELINK().sendMessage("!V TRIAL_VAR type  gaze_contingent")
-	 
-	
-	# if BITMAP_SAVE_BACK_DROP:
-	# 	#array3d(bgbm) crashes on some configurations. 
-	# 	agc = arrayToList(bgbm.get_width(), bgbm.get_height(), array3d(bgbm))
-	# 	bitmapSave(bgbm.get_width(), bgbm.get_height(), agc, 0, 0, bgbm.get_width(), bgbm.get_height(), "trial" + str(trial) + ".bmp", "trialimages", SV_NOREPLACE,)
-	# 	getEYELINK().bitmapSaveAndBackdrop(bgbm.get_width(), bgbm.get_height(), agc, 0, 0, bgbm.get_width(), bgbm.get_height(), "trial" + str(trial) + ".png", "trialimages", SV_NOREPLACE, 0, 0, BX_MAXCONTRAST)
-	
 	
 	# TODO: ??? WHEN DOES A DRIFT CORRECTION RETURNS 0 ? BY PRESSING ENTER KEY OR SAPCE KEY ???
-	#The following does drift correction at the begin of each trial
+	# The following does drift correction at the begin of each trial
 	while True: 
 		# Checks whether we are still connected to the tracker
 		if not getEYELINK().isConnected():
@@ -331,17 +219,13 @@ def do_trial(surf, ale):
 		except:
 			getEYELINK().doTrackerSetup()		
 	
-	#switch tracker to ide and give it time to complete mode switch
+	# switch tracker to ide and give it time to complete mode switch
 	getEYELINK().setOfflineMode()
-	msecDelay(50) 
-
+	msecDelay(50)
 
 	error = getEYELINK().startRecording(1, 1, 1, 1)
 	if error:	return error
-	gc.disable()
-	#begin the realtime mode
-	#TODO: check beginRealTimeMode, the doc says it's relevant to realtime running mode in windows?
-	#pylink.beginRealTimeMode(100)
+	gc.disable() # disable python garbage collection for the entire experiment
 	try: 
 		getEYELINK().waitForBlockStart(100,1,0) 
 	except RuntimeError: 
@@ -352,9 +236,13 @@ def do_trial(surf, ale):
 		else: # for any other status simply re-raise the exception 
 			raise
 	surf.fill((255, 255, 255, 255))
-	startTime = currentTime()
 	
-	getEYELINK().sendMessage("SYNCTIME %d" % (currentTime() - startTime))
+	# according to pylink.chm:
+	# "SYNCTIME" marks the zero-time in a trial. A number may follow, which 
+	# is interpreted as the delay of the message from the actual stimulus onset. 
+	# It is suggested that recording start 100 milliseconds before the display is
+	# drawn or unblanked at zero-time, so that no data at the trial start is lost.
+	getEYELINK().sendMessage("SYNCTIME %d" % 0) # From above doc it seems we can just send 0 because we haven't drawn anything yet
 	dw = drawgc_wrapper()
 	ale.run(dw.drawgc)
 	ret_value = drawgc_wrapper.post_experiment()
@@ -376,6 +264,10 @@ def run_trials(rom_file, screen):
 	# Press ESC to skip eye tracker setup
 	getEYELINK().doTrackerSetup() 
 
+	# Determine whether to redo the trail , finish the trial, or quit, depending on the return value
+	# These return values are predefined in PyLink, so they might also be read by Data Viewer (I'm not sure).
+	# Some return values checked below are never returned by do_trail(). 
+	# But in the future do_trail() could return them when we need.
 	while 1:
 		ret_value = do_trial(screen, ale)
 		endRealTimeMode()

@@ -98,9 +98,13 @@ else:
 	getEYELINK().sendCommand("link_sample_data  = LEFT,RIGHT,GAZE,GAZERES,AREA,STATUS,INPUT")
 	
 	
+# Start the experiment!
 
 if(getEYELINK().isConnected() and not getEYELINK().breakPressed()):
 	gcwindow_trial.run_trials(rom_file, surf)
+
+
+# Experiment ended
 
 if getEYELINK() != None:
 	# File transfer and cleanup!
