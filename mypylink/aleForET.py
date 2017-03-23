@@ -40,8 +40,10 @@ class aleForET:
           total_reward = 0
           while not self.ale.game_over():
 
+            key = pygame.key.get_pressed()
+
             if event_handler_func != None:
-                stop_signal, eyelink_err_code = event_handler_func()
+                stop_signal, eyelink_err_code = event_handler_func(key)
                 if stop_signal:
                     return eyelink_err_code
 
@@ -70,15 +72,6 @@ class aleForET:
             if save_screen_func != None:
                 save_screen_func(cur_frame_Surface)
 
-            # random action
-            #a = self.legal_actions[randrange(len(self.legal_actions))]
-            key = pygame.key.get_pressed()
-            if key[pygame.K_ESCAPE]:
-                print("Exitting the game...")
-            elif key[pygame.K_F1]:
-                print("Pause the game...")
-            elif key[pygame.K_F5]:
-                print("Calibrate....")
             a_index = aenum.action_map(key, self.gamename)
             a = self.legal_actions[a_index]
 

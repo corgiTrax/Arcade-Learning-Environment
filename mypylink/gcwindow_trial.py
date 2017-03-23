@@ -197,10 +197,17 @@ def do_trial(surf, ale, play_beep_func):
 	gc.enable()
 	return eyelink_err_code
 
-def event_handler_callback_func():
+def event_handler_callback_func(key_pressed):
 	error = getEYELINK().isRecording() # First check if recording is aborted 
 	if error != 0: # this will happen if the we click "abort trial" at host machine
 		return True, error
+
+	if key_pressed[K_ESCAPE]:
+		print("Exitting the game...")
+	elif key_pressed[K_F1]:
+		print("Pause the game...")
+	elif key_pressed[K_F5]:
+		print("Calibrate....")
 
 	return False, None
 
