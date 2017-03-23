@@ -58,13 +58,6 @@ def updateCursor(cursor, loc, fgbm):
 		srcrct = cursor.get_rect().move(loc[0], loc[1])
 		cursor.blit(fgbm, (0, 0), srcrct)
 	
-	
-def end_trial():
-	'''Ends recording: adds 100 msec of data to catch final events'''
-	pumpDelay(100)
-	getEYELINK().stopRecording()
-	while getEYELINK().getkey():
-		pass
 
 # TODO: ad-hoc class, to store the states required by drawgc()
 class drawgc_wrapper:
@@ -100,39 +93,7 @@ class drawgc_wrapper:
 
 	def drawgc(self, surf):
 		'''Does gaze-contingent drawing; uses the getNewestSample() to get latest update '''
-		# TODO return statement are all not drawgc()'s responsibility. move to somewhere else.
-		
-		error = getEYELINK().isRecording() # First check if recording is aborted 
-		if error != 0:
-			# TODO if the we terminate recording at the Host machine, code execution 
-			# will always fall into here.
-			end_trial()
-			print "1", error
-			return error
 
-		# TODO maybe add back "duration" feature later
-		# if (currentTime() - startTime) > DURATION:#Writres out a time out message if no response is made
-		# 	getEYELINK().sendMessage("TIMEOUT")
-		# 	end_trial()
-		# 	buttons = (0, 0)
-		# 	break
-		
-		if(getEYELINK().breakPressed()):	# Checks for program termination or ALT-F4 or CTRL-C keys
-			end_trial()
-			print "2"
-			return ABORT_EXPT
-		#elif(getEYELINK().escapePressed()): # Checks for local ESC key to abort trial (useful in debugging)
-		#	end_trial()
-		#	print "3"
-		#	return SKIP_TRIAL
-			
-		buttons = getEYELINK().getLastButtonPress() # Checks for eye-tracker buttons pressed
-		if(buttons[0] != 0):
-			getEYELINK().sendMessage("ENDBUTTON %d" % (buttons[0]))
-			end_trial()
-			print "4"
-			return ABORT_EXPT		
-			
 		dt = getEYELINK().getNewestSample() # check for new sample update
 		if(dt != None):
 			# Gets the gaze position of the latest sample,
@@ -173,19 +134,6 @@ class drawgc_wrapper:
 			surf.blit(self.cursor, region_topleft)#Draws and shows the cursor content;
 			display.flip()
 
-		# (code execution falls into here extremely often)
-		return getEYELINK().getRecordingStatus()
-
-
-	# TODO move to somewhere else. Not a responsibility of drawgc()
-	def post_experiment(self):
-		end_trial()	
-		#The TRIAL_RESULT message defines the end of a trial for the EyeLink Data Viewer. 
-		#This is different than the end of recording message END that is logged when the trial recording ends. 
-		#Data viewer will not parse any messages, events, or samples that exist in the data file after this message. 
-		getEYELINK().sendMessage("TRIAL_RESULT %d" % 0)
-		return getEYELINK().getRecordingStatus()
-
 
 def do_trial(surf, ale, play_beep_func):
 
@@ -206,8 +154,7 @@ def do_trial(surf, ale, play_beep_func):
 	while True: 
 		# Checks whether we are still connected to the tracker
 		if not getEYELINK().isConnected():
-			return ABORT_EXPT			
-		
+			return ABORT_EXPT
 		# Does drift correction and handles the re-do camera setup situations
 		try:
 			play_beep_func(0, repeat=5)
@@ -221,9 +168,6 @@ def do_trial(surf, ale, play_beep_func):
 			play_beep_func(1, repeat=2)
 			getEYELINK().doTrackerSetup()		
 	
-	# switch tracker to ide and give it time to complete mode switch
-	getEYELINK().setOfflineMode()
-	msecDelay(50)
 
 	error = getEYELINK().startRecording(1, 1, 1, 1)
 	if error:	return error
@@ -246,14 +190,35 @@ def do_trial(surf, ale, play_beep_func):
 	# drawn or unblanked at zero-time, so that no data at the trial start is lost.
 	getEYELINK().sendMessage("SYNCTIME %d" % 0) # From above doc it seems we can just send 0 because we haven't drawn anything yet
 	dw = drawgc_wrapper()
-	ale.run(dw.drawgc)
-	ret_value = dw.post_experiment()
+	ret_value = ale.run(dw.drawgc, None, event_handler_callback_func) # experiment starts
+	eyelink_err_code = post_experiment() # experiment ends
+	if ret_value != 0: 
+		eyelink_err_code = ret_value # ale.run()'s return value has higher priority than post_experiment()'s
 	gc.enable()
-	return ret_value
+	return eyelink_err_code
 
-def drawgc_dummy(surf):
-	pass
+def event_handler_callback_func():
+	error = getEYELINK().isRecording() # First check if recording is aborted 
+	if error != 0: # this will happen if the we click "abort trial" at host machine
+		return True, error
+
+	return False, None
+
+def post_experiment(self):
+		end_trial()	
+		#The TRIAL_RESULT message defines the end of a trial for the EyeLink Data Viewer. 
+		#This is different than the end of recording message END that is logged when the trial recording ends. 
+		#Data viewer will not parse any messages, events, or samples that exist in the data file after this message. 
+		getEYELINK().sendMessage("TRIAL_RESULT %d" % 0)
+		return getEYELINK().getRecordingStatus()
 	
+def end_trial():
+	'''Ends recording: adds 100 msec of data to catch final events'''
+	pumpDelay(100)
+	getEYELINK().stopRecording()
+	while getEYELINK().getkey():
+		pass
+
 def run_trials(rom_file, screen, play_beep_func):
 	''' This function is used to run individual trials and handles the trial return values. '''
 

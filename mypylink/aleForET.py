@@ -31,14 +31,18 @@ class aleForET:
         # Get the list of legal actions
         self.legal_actions = self.ale.getLegalActionSet()
 
-    def run(self, gc_window_drawer_func = None, save_screen_func = None):
-        black = 0, 0, 0
+    def run(self, gc_window_drawer_func = None, save_screen_func = None, event_handler_func = None):
         last_time=time.time()
         frame_cnt=0
         # Play 10 episodes
         for episode in xrange(10):
           total_reward = 0
           while not self.ale.game_over():
+
+            if event_handler_func != None:
+                stop_signal, eyelink_err_code = event_handler_func()
+                if stop_signal:
+                    return eyelink_err_code
 
             # Display FPS
             frame_cnt+=1
@@ -71,3 +75,4 @@ class aleForET:
             total_reward += reward
           print 'Episode', episode, 'ended with score:', total_reward
           self.ale.reset_game()
+        return 0
