@@ -8,7 +8,7 @@ import pygame
 from IPython import embed
 
 class ScreenRecorder:
-    def __init__(self):
+    def __init__(self, get_time_func):
         rootdir = 'screen_record'
         if not os.path.exists(rootdir):
             os.mkdir(rootdir)
@@ -19,9 +19,11 @@ class ScreenRecorder:
         self.dir = rootdir + '/' +  str(highest_indices+1) + \
             '_' + time.strftime("%b-%d-%H-%M-%S")
         os.mkdir(self.dir)
+        
+        self.get_time_func = get_time_func
             
     def save(self, screen):
-        time_val = '%.3f' % time.time()
+        time_val = self.get_time_func()
         fname = "%s/%s.bmp" % (self.dir, str(time_val))
         pygame.image.save(screen, fname)
 
@@ -60,5 +62,5 @@ if __name__ == "__main__":
     screen = pygame.display.set_mode(size, pygame.RESIZABLE | pygame.DOUBLEBUF)
 
     ale = aleForET(rom_file, screen)
-    scr_recorder = ScreenRecorder()
+    scr_recorder = ScreenRecorder(time.time)
     ale.run(None, scr_recorder.save)

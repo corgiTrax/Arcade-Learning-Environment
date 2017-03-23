@@ -106,7 +106,7 @@ class drawgc_wrapper:
 			region_topleft = (gaze_position[0] - self.cursorsize[0] // 2, gaze_position[1] - self.cursorsize[1] // 2)
 			if(self.oldv != None and self.oldv == region_topleft):
 				# (code execution falls into here extremely often) gaze pos no change
-				return  # I DON'T know what to return here. there is no error here.
+				return
 			self.oldv = region_topleft
 			
 			if(self.backcursor != None): #copy the current self.backcursor to the surface and get a new backup
@@ -130,41 +130,46 @@ class drawgc_wrapper:
 				self.backcursor.blit(surf, (0, 0), self.srcrct)
 				self.backcursor.blit(surf, (0, 0), self.srcrct)
 
-			updateCursor(self.cursor, region_topleft, self.fgbm)#Updates the content of the cursor
-			surf.blit(self.cursor, region_topleft)#Draws and shows the cursor content;
+			updateCursor(self.cursor, region_topleft, self.fgbm) # Updates the content of the cursor
+			surf.blit(self.cursor, region_topleft) # Draws and shows the cursor content;
 			display.flip()
 
 
 def do_trial(surf, ale, play_beep_func):
 
-	#This supplies the title at the bottom of the eyetracker display
+	# This supplies the title at the bottom of the eyetracker display
 	message = "record_status_message 'Trial %s'" % (ale.gamename)
 	getEYELINK().sendCommand(message)	
 	
-	#Always send a TRIALID message before starting to record.
-	#EyeLink Data Viewer defines the start of a trial by the TRIALID message.
-	#This message is different than the start of recording message START that is logged when the trial recording begins. 
-	#The Data viewer will not parse any messages, events, or samples, that exist in the data file prior to this message.
+	# Always send a TRIALID message before starting to record.
+	# EyeLink Data Viewer defines the start of a trial by the TRIALID message.
+	# This message is different than the start of recording message START that is logged when the trial recording begins. 
+	# The Data viewer will not parse any messages, events, or samples, that exist in the data file prior to this message.
 	msg = "TRIALID %s" % ale.gamename
 	getEYELINK().sendMessage(msg)
 	
 	
 	# TODO: ??? WHEN DOES A DRIFT CORRECTION RETURNS 0 ? BY PRESSING ENTER KEY OR SAPCE KEY ???
+	# TODO: test the control flow of this code.
 	# The following does drift correction at the begin of each trial
 	while True: 
 		# Checks whether we are still connected to the tracker
 		if not getEYELINK().isConnected():
-			return ABORT_EXPT
+			raise Exception("EyeLink disconnected.") 
 		# Does drift correction and handles the re-do camera setup situations
 		try:
 			play_beep_func(0, repeat=5)
 			error = getEYELINK().doDriftCorrect(surf.get_rect().w // 2, surf.get_rect().h // 2, 1, 1)
+			print("Error code returned:" error)
 			if error != 27: 
+				print("error != 27")
 				break
 			else:
+				print("Else")
 				play_beep_func(1)
 				getEYELINK().doTrackerSetup()
 		except:
+			print ("Exception")
 			play_beep_func(1, repeat=2)
 			getEYELINK().doTrackerSetup()		
 	
@@ -190,7 +195,8 @@ def do_trial(surf, ale, play_beep_func):
 	# drawn or unblanked at zero-time, so that no data at the trial start is lost.
 	getEYELINK().sendMessage("SYNCTIME %d" % 0) # From above doc it seems we can just send 0 because we haven't drawn anything yet
 	dw = drawgc_wrapper()
-	ret_value = ale.run(dw.drawgc, None, event_handler_callback_func) # experiment starts
+	scr_recorder = ScreenRecorder(lambda:getEYELINK().trackerTime())
+	ret_value = ale.run(dw.drawgc, scr_recorder.save, event_handler_callback_func) # experiment starts
 	eyelink_err_code = post_experiment() # experiment ends
 	if ret_value != 0: 
 		eyelink_err_code = ret_value # ale.run()'s return value has higher priority than post_experiment()'s
@@ -208,14 +214,16 @@ def event_handler_callback_func(key_pressed):
 		print("Pause the game...")
 	elif key_pressed[K_F5]:
 		print("Calibrate....")
+	elif key_pressed[K_F7]:
+		print("Showing gaze-contigent window....")
 
 	return False, None
 
 def post_experiment(self):
 		end_trial()	
-		#The TRIAL_RESULT message defines the end of a trial for the EyeLink Data Viewer. 
-		#This is different than the end of recording message END that is logged when the trial recording ends. 
-		#Data viewer will not parse any messages, events, or samples that exist in the data file after this message. 
+		# The TRIAL_RESULT message defines the end of a trial for the EyeLink Data Viewer. 
+		# This is different than the end of recording message END that is logged when the trial recording ends. 
+		# Data viewer will not parse any messages, events, or samples that exist in the data file after this message. 
 		getEYELINK().sendMessage("TRIAL_RESULT %d" % 0)
 		return getEYELINK().getRecordingStatus()
 	
