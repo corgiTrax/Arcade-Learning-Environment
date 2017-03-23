@@ -47,6 +47,7 @@ if USE_SDL:
 
 # Load the ROM file
 ale.loadROM(sys.argv[1])
+game_name = sys.argv[1].split("/")[-1].split(".")[0]
 
 # Get the list of legal actions
 legal_actions = ale.getLegalActionSet()
@@ -65,7 +66,7 @@ for episode in xrange(10):
         last_time=time.time()
         frame_cnt=0
     
-    time.sleep(0.02)
+    time.sleep(0.01)
     
     # Show game image
     cur_frame_np = ale.getScreenRGB()
@@ -80,20 +81,13 @@ for episode in xrange(10):
 
 # random actions
 #    a = legal_actions[randrange(len(legal_actions))]
-    es = pygame.event.get()
-    if frame_cnt == 1: 
-        a_index = aenum.PLAYER_A_NOOP
-    print(es)
-    for e in es:
-        if (e.type==pygame.KEYDOWN):
-            a_index = aenum.action_map(e.key)
-        elif (e.type == pygame.KEYUP):
-            a_index = aenum.PLAYER_A_NOOP
-            
+    key_pressed = pygame.key.get_pressed()
+    a_index = aenum.action_map(key_pressed, game_name)
     a = legal_actions[a_index]
     # Apply an action and get the resulting reward
     reward = ale.act(a);
-
+    pygame.event.pump()
+    
     total_reward += reward
   print 'Episode', episode, 'ended with score:', total_reward
   ale.reset_game()
