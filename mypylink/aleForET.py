@@ -5,6 +5,7 @@ from random import randrange
 from ale_python_interface import ALEInterface
 import pygame, numpy as np
 from IPython import embed
+import action_enums as aenum
 
 class aleForET:
     def __init__(self,rom_file, screen):
@@ -69,10 +70,26 @@ class aleForET:
             if save_screen_func != None:
                 save_screen_func(cur_frame_Surface)
 
-            a = self.legal_actions[randrange(len(self.legal_actions))]
+            # random action
+            #a = self.legal_actions[randrange(len(self.legal_actions))]
+            key = pygame.key.get_pressed()
+            if key[pygame.K_ESCAPE]:
+                print("Exitting the game...")
+            elif key[pygame.K_F1]:
+                print("Pause the game...")
+            elif key[pygame.K_F5]:
+                print("Calibrate....")
+            a_index = aenum.action_map(key, self.gamename)
+            a = self.legal_actions[a_index]
+
             # Apply an action and get the resulting reward
             reward = self.ale.act(a);
             total_reward += reward
+            # need this line to get new key pressed
+            pygame.event.pump()
+            # TODO: slow down game
+            time.sleep(0.025)
+
           print 'Episode', episode, 'ended with score:', total_reward
           self.ale.reset_game()
         return 0

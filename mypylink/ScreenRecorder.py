@@ -2,7 +2,6 @@
 # Author: Zhuode Liu
 # I wrote a main function for this script, so it can be run to for testing/debuging purposes
 
-import skimage.io
 import re,sys,os,time
 from aleForET import aleForET
 import pygame
