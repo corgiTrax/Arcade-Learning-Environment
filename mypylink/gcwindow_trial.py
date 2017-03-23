@@ -61,7 +61,6 @@ def updateCursor(cursor, loc, fgbm):
 	
 def end_trial():
 	'''Ends recording: adds 100 msec of data to catch final events'''
-	pylink.endRealTimeMode()
 	pumpDelay(100)
 	getEYELINK().stopRecording()
 	while getEYELINK().getkey():
@@ -184,11 +183,11 @@ class drawgc_wrapper:
 		#The TRIAL_RESULT message defines the end of a trial for the EyeLink Data Viewer. 
 		#This is different than the end of recording message END that is logged when the trial recording ends. 
 		#Data viewer will not parse any messages, events, or samples that exist in the data file after this message. 
-		getEYELINK().sendMessage("TRIAL_RESULT %d" % (buttons[0]))
+		getEYELINK().sendMessage("TRIAL_RESULT %d" % 0)
 		return getEYELINK().getRecordingStatus()
 
 
-def do_trial(surf, ale):
+def do_trial(surf, ale, play_beep_func):
 
 	#This supplies the title at the bottom of the eyetracker display
 	message = "record_status_message 'Trial %s'" % (ale.gamename)
@@ -211,12 +210,15 @@ def do_trial(surf, ale):
 		
 		# Does drift correction and handles the re-do camera setup situations
 		try:
+			play_beep_func(0, repeat=5)
 			error = getEYELINK().doDriftCorrect(surf.get_rect().w // 2, surf.get_rect().h // 2, 1, 1)
 			if error != 27: 
 				break
 			else:
+				play_beep_func(1)
 				getEYELINK().doTrackerSetup()
 		except:
+			play_beep_func(1, repeat=2)
 			getEYELINK().doTrackerSetup()		
 	
 	# switch tracker to ide and give it time to complete mode switch
@@ -245,23 +247,24 @@ def do_trial(surf, ale):
 	getEYELINK().sendMessage("SYNCTIME %d" % 0) # From above doc it seems we can just send 0 because we haven't drawn anything yet
 	dw = drawgc_wrapper()
 	ale.run(dw.drawgc)
-	ret_value = drawgc_wrapper.post_experiment()
-	# pylink.endRealTimeMode()
+	ret_value = dw.post_experiment()
 	gc.enable()
 	return ret_value
 
 def drawgc_dummy(surf):
 	pass
 	
-def run_trials(rom_file, screen):
+def run_trials(rom_file, screen, play_beep_func):
 	''' This function is used to run individual trials and handles the trial return values. '''
 
 	''' Returns a successful trial with 0, aborting experiment with ABORT_EXPT (3); It also handles
 	the case of re-running a trial. '''
 
 	ale = aleForET(rom_file, screen)
-	#Do the tracker setup at the beginning of the experiment.
+
+	# Do the tracker setup at the beginning of the experiment.
 	# Press ESC to skip eye tracker setup
+	play_beep_func(2, repeat=2)
 	getEYELINK().doTrackerSetup() 
 
 	# Determine whether to redo the trail , finish the trial, or quit, depending on the return value
@@ -269,7 +272,7 @@ def run_trials(rom_file, screen):
 	# Some return values checked below are never returned by do_trail(). 
 	# But in the future do_trail() could return them when we need.
 	while 1:
-		ret_value = do_trial(screen, ale)
+		ret_value = do_trial(screen, ale, play_beep_func)
 		endRealTimeMode()
 	
 		if (ret_value == TRIAL_OK):

@@ -66,7 +66,6 @@ class EyeLinkCoreGraphicsPyGame(pylink.EyeLinkCustomDisplay):
 		self.fnt.set_bold(1)
 		self.setTracker(tracker)
 		self.last_mouse_state = -1
-		
 	
 	
 	
@@ -124,8 +123,21 @@ class EyeLinkCoreGraphicsPyGame(pylink.EyeLinkCustomDisplay):
 			self.__target_beep__error__.play()
 		else:#	CAL_GOOD_BEEP or DC_GOOD_BEEP
 			self.__target_beep__done__.play()
-		
-	
+
+	def play_beep2(self, beepid, repeat=1):
+		import time
+		for i in range(repeat):
+			if beepid == 0:
+				self.__target_beep__.play()
+				time.sleep(self.__target_beep__.get_length())
+			elif beepid == 1:
+				self.__target_beep__error__.play()
+				time.sleep(self.__target_beep__error__.get_length())
+			else:
+				self.__target_beep__done__.play()
+				time.sleep(self.__target_beep__done__.get_length())
+			time.sleep(0.2)
+
 	def getColorFromIndex(self, colorindex):
 		if colorindex == pylink.CR_HAIR_COLOR:		  return (255, 255, 255, 255)
 		elif colorindex == pylink.PUPIL_HAIR_COLOR:	   return (255, 255, 255, 255)
@@ -134,7 +146,6 @@ class EyeLinkCoreGraphicsPyGame(pylink.EyeLinkCustomDisplay):
 		elif colorindex == pylink.MOUSE_CURSOR_COLOR:	 return (255, 0, 0, 255)
 		else: return (0, 0, 0, 0)
 		
-	
 		
 		
 	def draw_line(self, x1, y1, x2, y2, colorindex):
