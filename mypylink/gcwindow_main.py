@@ -59,7 +59,7 @@ openGraphicsEx(genv)
 edfFileName = "TEST.EDF";
 getEYELINK().openDataFile(edfFileName)		
 	
-pylink.flushGetkeyQueue(); 
+flushGetkeyQueue(); 
 getEYELINK().setOfflineMode();                          
 
 #Gets the display surface and sends a mesage to EDF file;

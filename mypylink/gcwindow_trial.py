@@ -37,6 +37,7 @@ import gc
 import sys
 from aleForET import aleForET
 from IPython import embed
+from ScreenRecorder import ScreenRecorder
 
 #if you need to save bitmap features and/or backdrop features set
 #BITMAP_SAVE_BACK_DROP to  true. This will require numpy or Numeric modules. Also
@@ -160,7 +161,7 @@ def do_trial(surf, ale, play_beep_func):
 		try:
 			play_beep_func(0, repeat=5)
 			error = getEYELINK().doDriftCorrect(surf.get_rect().w // 2, surf.get_rect().h // 2, 1, 1)
-			print("Error code returned:" error)
+			print("Error code returned:", error)
 			if error != 27: 
 				print("error != 27")
 				break
@@ -201,6 +202,7 @@ def do_trial(surf, ale, play_beep_func):
 	if ret_value != 0: 
 		eyelink_err_code = ret_value # ale.run()'s return value has higher priority than post_experiment()'s
 	gc.enable()
+	print "eyelink_err_code = %d" % eyelink_err_code
 	return eyelink_err_code
 
 def event_handler_callback_func(key_pressed):
@@ -219,7 +221,7 @@ def event_handler_callback_func(key_pressed):
 
 	return False, None
 
-def post_experiment(self):
+def post_experiment():
 		end_trial()	
 		# The TRIAL_RESULT message defines the end of a trial for the EyeLink Data Viewer. 
 		# This is different than the end of recording message END that is logged when the trial recording ends. 
