@@ -149,31 +149,8 @@ def do_trial(surf, ale, play_beep_func):
 	msg = "TRIALID %s" % ale.gamename
 	getEYELINK().sendMessage(msg)
 	
-	
-	# TODO: ??? WHEN DOES A DRIFT CORRECTION RETURNS 0 ? BY PRESSING ENTER KEY OR SAPCE KEY ???
-	# TODO: test the control flow of this code.
-	# The following does drift correction at the begin of each trial
-	while True: 
-		# Checks whether we are still connected to the tracker
-		if not getEYELINK().isConnected():
-			raise Exception("EyeLink disconnected.") 
-		# Does drift correction and handles the re-do camera setup situations
-		try:
-			play_beep_func(0, repeat=5)
-			error = getEYELINK().doDriftCorrect(surf.get_rect().w // 2, surf.get_rect().h // 2, 1, 1)
-			print("Error code returned:", error)
-			if error != 27: 
-				print("error != 27")
-				break
-			else:
-				print("Else")
-				play_beep_func(1)
-				getEYELINK().doTrackerSetup()
-		except:
-			print ("Exception")
-			play_beep_func(1, repeat=2)
-			getEYELINK().doTrackerSetup()		
-	
+	play_beep_func(0, repeat=5)
+	getEYELINK().doDriftCorrect(surf.get_rect().w // 2, surf.get_rect().h // 2, 1, 1) 
 
 	error = getEYELINK().startRecording(1, 1, 1, 1)
 	if error:	return error
@@ -212,12 +189,16 @@ def event_handler_callback_func(key_pressed):
 
 	if key_pressed[K_ESCAPE]:
 		print("Exitting the game...")
+		getEYELINK().sendMessage("key_pressed non-atari esc")
 	elif key_pressed[K_F1]:
 		print("Pause the game...")
+		getEYELINK().sendMessage("key_pressed non-atari pause")
 	elif key_pressed[K_F5]:
 		print("Calibrate....")
+		getEYELINK().sendMessage("key_pressed non-atari calibrate")
 	elif key_pressed[K_F7]:
 		print("Showing gaze-contigent window....")
+		getEYELINK().sendMessage("key_pressed non-atari gcwindow")
 
 	return False, None
 
