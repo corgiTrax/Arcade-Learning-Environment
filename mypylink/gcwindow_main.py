@@ -101,7 +101,8 @@ else:
 # Start the experiment!
 
 if(getEYELINK().isConnected() and not getEYELINK().breakPressed()):
-	gcwindow_trial.run_trials(rom_file, surf, genv.play_beep2)
+	gcwindow_trial.set_play_beep_func(genv.play_beep2)
+	gcwindow_trial.run_trials(rom_file, surf)
 
 
 # Experiment ended

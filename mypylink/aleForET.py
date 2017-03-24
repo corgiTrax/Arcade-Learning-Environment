@@ -39,12 +39,11 @@ class aleForET:
         for episode in xrange(10):
           total_reward = 0
           while not self.ale.game_over():
-
             key = pygame.key.get_pressed()
 
             if event_handler_func != None:
-                stop_signal, eyelink_err_code = event_handler_func(key)
-                if stop_signal:
+                stop, eyelink_err_code, bool_drawgc = event_handler_func(key)
+                if stop:
                     return eyelink_err_code
 
             # Display FPS
@@ -64,7 +63,7 @@ class aleForET:
             # Slightly faster than scaling cur_frame_Surface and then transfer to screen.
             pygame.transform.scale(cur_frame_Surface, self.size, self.screen)
 
-            if gc_window_drawer_func != None:
+            if gc_window_drawer_func != None and bool_drawgc:
                 gc_window_drawer_func(self.screen)
             pygame.display.flip()
 
@@ -78,11 +77,13 @@ class aleForET:
             # Apply an action and get the resulting reward
             reward = self.ale.act(a);
             total_reward += reward
-            # need this line to get new key pressed
-            pygame.event.pump()
+            
+            pygame.event.pump() # need this line to get new key pressed
             # TODO: slow down game
             time.sleep(0.025)
 
           print 'Episode', episode, 'ended with score:', total_reward
           self.ale.reset_game()
-        return 0
+
+        TRIAL_OK = 0 # copied from EyeLink's constant
+        return TRIAL_OK
