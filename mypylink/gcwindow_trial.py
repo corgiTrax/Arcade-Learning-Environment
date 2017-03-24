@@ -105,35 +105,8 @@ class drawgc_wrapper:
 
 			# Determines the top-left corner of the update region and determines whether an update is necessarily or not
 			region_topleft = (gaze_position[0] - self.cursorsize[0] // 2, gaze_position[1] - self.cursorsize[1] // 2)
-			if(self.oldv != None and self.oldv == region_topleft):
-				# (code execution falls into here extremely often) gaze pos no change
-				return
-			self.oldv = region_topleft
-			
-			if(self.backcursor != None): #copy the current self.backcursor to the surface and get a new backup
-				if(self.prevrct != None):	
-					surf.blit(self.pbackcursor, (self.prevrct.x, self.prevrct.y))
-					
-				self.pbackcursor.blit(self.backcursor, (0, 0))
-				self.pbackcursor.blit(self.backcursor, (0, 0))
-				self.prevrct = self.srcrct.move(0, 0) #make a copy	
-				self.srcrct.x = region_topleft[0]
-				self.srcrct.y = region_topleft[1]
-				self.backcursor.blit(surf, (0, 0), self.srcrct)
-			
-			else: # create a new self.backcursor and copy the new back cursor
-				self.backcursor = Surface(self.cursorsize)
-				self.pbackcursor = Surface(self.cursorsize)
-				self.backcursor.fill((0, 255, 0, 255))
-				self.srcrct = self.cursor.get_rect().move(0, 0)
-				self.srcrct.x = region_topleft[0]
-				self.srcrct.y = region_topleft[1]
-				self.backcursor.blit(surf, (0, 0), self.srcrct)
-				self.backcursor.blit(surf, (0, 0), self.srcrct)
 
-			updateCursor(self.cursor, region_topleft, self.fgbm) # Updates the content of the cursor
 			surf.blit(self.cursor, region_topleft) # Draws and shows the cursor content;
-			display.flip()
 
 
 def do_trial(surf, ale, play_beep_func):
@@ -150,7 +123,11 @@ def do_trial(surf, ale, play_beep_func):
 	getEYELINK().sendMessage(msg)
 	
 	play_beep_func(0, repeat=5)
-	getEYELINK().doDriftCorrect(surf.get_rect().w // 2, surf.get_rect().h // 2, 1, 1) 
+	try:
+		getEYELINK().doDriftCorrect(surf.get_rect().w // 2, surf.get_rect().h // 2, 1, 1)
+	except: # When ESC is pressed or "Abort" buttun clicked, an exception will be thrown
+		pass
+
 
 	error = getEYELINK().startRecording(1, 1, 1, 1)
 	if error:	return error
@@ -179,12 +156,12 @@ def do_trial(surf, ale, play_beep_func):
 	if ret_value != 0: 
 		eyelink_err_code = ret_value # ale.run()'s return value has higher priority than post_experiment()'s
 	gc.enable()
-	print "eyelink_err_code = %d" % eyelink_err_code
+	print "Trial Ended. eyelink_err_code = %d (%s)" % (eyelink_err_code, eyelink_err_code_to_str(eyelink_err_code))
 	return eyelink_err_code
 
 def event_handler_callback_func(key_pressed):
 	error = getEYELINK().isRecording() # First check if recording is aborted 
-	if error != 0: # this will happen if the we click "abort trial" at host machine
+	if error != 0: # This will happen if the we click "abort trial" at host machine
 		return True, error
 
 	if key_pressed[K_ESCAPE]:
@@ -255,3 +232,14 @@ def run_trials(rom_file, screen, play_beep_func):
 
 	return 0
 		
+def eyelink_err_code_to_str(code):
+	if (code == TRIAL_OK):
+		return "TRIAL OK"
+	elif (code == SKIP_TRIAL):
+		return "TRIAL ABORTED"
+	elif (code == ABORT_EXPT):
+		return "EXPERIMENT ABORTED"
+	elif (code == REPEAT_TRIAL):
+		return "TRIAL REPEATED"
+	else:
+		return "TRIAL ERROR"
