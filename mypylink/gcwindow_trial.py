@@ -90,14 +90,14 @@ class drawgc_wrapper:
 
 			surf.blit(self.cursor, region_topleft) # Draws and shows the cursor content;
 
-def do_trail_subfunc_starting_msg():
+def do_trail_subfunc_starting_msg(gamename):
 	# This controls the title at the bottom of the eyetracker display
-	getEYELINK().sendCommand("record_status_message 'Trial %s'" % (ale.gamename))	
+	getEYELINK().sendCommand("record_status_message 'Trial %s'" % (gamename))	
 	# Always send a TRIALID message before starting to record.
 	# EyeLink Data Viewer defines the start of a trial by the TRIALID message.
 	# This message is different than the start of recording message START that is logged when the trial recording begins. 
 	# The Data viewer will not parse any messages, events, or samples, that exist in the data file prior to this message.
-	getEYELINK().sendMessage("TRIALID %s" % ale.gamename)
+	getEYELINK().sendMessage("TRIALID %s" % gamename)
 
 def do_trail_subfunc_start_recording():
 	error = getEYELINK().startRecording(1, 1, 1, 1)
@@ -129,7 +129,7 @@ def do_trial(surf, ale):
 	except: # When ESC is pressed or "Abort" buttun clicked, an exception will be thrown
 		pass
 
-	do_trail_subfunc_starting_msg()
+	do_trail_subfunc_starting_msg(ale.gamename)
 	err = do_trail_subfunc_start_recording()
 	if err != 0: return err
 	do_trail_subfunc_starting_msg2()
@@ -161,16 +161,17 @@ def do_trial(surf, ale):
 
 bool_drawgc = True
 def event_handler_callback_func(key_pressed):
+	global bool_drawgc
 	# First check if host PC is still recording
 	# This will block the thread when "abort trial" is clicked at host PC and the "abort trail" menu is shown 
 	error = getEYELINK().isRecording() 
 	if error != 0: # happens when "abort trial" is clicked at host PC
-		return True, error
+		return True, error, bool_drawgc
 
 	if key_pressed[K_ESCAPE]:
 		print("Exiting the game...")
 		getEYELINK().sendMessage("key_pressed non-atari esc")
-		return True, SKIP_TRIAL
+		return True, SKIP_TRIAL, bool_drawgc
 	elif key_pressed[K_F1]:
 		print("Pause the game...")
 		getEYELINK().sendMessage("key_pressed non-atari pause")
@@ -235,3 +236,4 @@ def eyelink_err_code_to_str(code):
 		return "TRIAL REPEATED"
 	else:
 		return "TRIAL ERROR"
+

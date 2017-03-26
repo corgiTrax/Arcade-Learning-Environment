@@ -40,12 +40,11 @@ from pygame import display
 from EyeLinkCoreGraphicsPyGame import EyeLinkCoreGraphicsPyGame
 from IPython import embed
 
-
-eyelinktracker = EyeLink("100.1.1.1")
-
-if not eyelinktracker:
-	print("EL is None")
-	sys.exit()
+try:
+  eyelinktracker = EyeLink("100.1.1.1")
+except Exception as ex:
+	print(str(ex) + "\nEL is None, using dummy EyeLink interface")
+        eyelinktracker = EyeLink(None)
 
 if len(sys.argv) < 2:
 	print 'Usage:', sys.argv[0], 'rom_file'

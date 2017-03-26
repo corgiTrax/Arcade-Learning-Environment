@@ -24,6 +24,8 @@ class aleForET:
         self.ale.setInt('random_seed', 123)
         self.ale.setBool('sound', False) 
         self.ale.setBool('display_screen', False)
+        self.ale.setBool('color_averaging', False)
+        self.ale.setFloat('repeat_action_probability', 0.0)
 
         # Load the ROM file
         self.ale.loadROM(rom_file)
@@ -35,11 +37,13 @@ class aleForET:
     def run(self, gc_window_drawer_func = None, save_screen_func = None, event_handler_func = None):
         last_time=time.time()
         frame_cnt=0
+        clock = pygame.time.Clock()
         # Play 10 episodes
         for episode in xrange(10):
           total_reward = 0
           while not self.ale.game_over():
             key = pygame.key.get_pressed()
+            clock.tick(framerate=30)
 
             if event_handler_func != None:
                 stop, eyelink_err_code, bool_drawgc = event_handler_func(key)
@@ -79,8 +83,6 @@ class aleForET:
             total_reward += reward
             
             pygame.event.pump() # need this line to get new key pressed
-            # TODO: slow down game
-            time.sleep(0.025)
 
           print 'Episode', episode, 'ended with score:', total_reward
           self.ale.reset_game()
