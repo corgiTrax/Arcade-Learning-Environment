@@ -159,7 +159,7 @@ def do_trial(surf, ale):
 	print "Trial Ended. eyelink_err_code = %d (%s)" % (eyelink_err_code, eyelink_err_code_to_str(eyelink_err_code))
 	return eyelink_err_code
 
-bool_drawgc = True
+bool_drawgc = False
 def event_handler_callback_func(key_pressed):
 	global bool_drawgc
 	# First check if host PC is still recording
@@ -173,7 +173,7 @@ def event_handler_callback_func(key_pressed):
 		getEYELINK().sendMessage("key_pressed non-atari esc")
 		return True, SKIP_TRIAL, bool_drawgc
 	elif key_pressed[K_F1]:
-		print("Pause the game...")
+		print("Pause the game...") # TODO how to pause the game? cannot run doTrackerSetup(), it will stop recording
 		getEYELINK().sendMessage("key_pressed non-atari pause")
 		getEYELINK().doTrackerSetup()
 	elif key_pressed[K_F5]:
@@ -229,11 +229,11 @@ def eyelink_err_code_to_str(code):
 	if (code == TRIAL_OK):
 		return "TRIAL OK"
 	elif (code == SKIP_TRIAL):
-		return "TRIAL ABORTED"
+		return "TRIAL ABORTED (SKIP_TRIAL)"
 	elif (code == ABORT_EXPT):
-		return "EXPERIMENT ABORTED"
+		return "EXPERIMENT ABORTED (ABORT_EXPT)"
 	elif (code == REPEAT_TRIAL):
-		return "TRIAL REPEATED"
+		return "TRIAL REPEATED (REPEAT_TRIAL)"
 	else:
 		return "TRIAL ERROR"
 

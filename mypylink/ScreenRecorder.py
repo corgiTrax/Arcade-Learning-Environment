@@ -15,13 +15,13 @@ class ScreenRecorder:
         indices = [int(re.match("(\d+)_", x).group(1)) for x in os.listdir(rootdir)]
         highest_indices = max(indices) if len(indices)>0 else -1
         
+        # dir name is like "5_Mar-09-12-27-59"
+        self.dir = rootdir + '/' +  str(highest_indices+1) + \
+            '_' + time.strftime("%b-%d-%H-%M-%S")
         self.dir_created = False
             
     def save(self, screen, frameid):
         if self.dir_created == False: # create an dir when save() is called for the first time
-            # creates a dir like "5_Mar-09-12-27-59"
-            self.dir = rootdir + '/' +  str(highest_indices+1) + \
-                '_' + time.strftime("%b-%d-%H-%M-%S")
             os.mkdir(self.dir)
             self.dir_created = True
 
