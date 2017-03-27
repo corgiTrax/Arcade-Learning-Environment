@@ -43,7 +43,8 @@ class aleForET:
           total_reward = 0
           while not self.ale.game_over():
             key = pygame.key.get_pressed()
-            clock.tick(framerate=30)
+            frame_cnt+=1
+            clock.tick(30) # control FPS
 
             if event_handler_func != None:
                 stop, eyelink_err_code, bool_drawgc = event_handler_func(key)
@@ -51,12 +52,10 @@ class aleForET:
                     return eyelink_err_code
 
             # Display FPS
-            frame_cnt+=1
             diff_time = time.time()-last_time
             if diff_time > 1.0:
-                print 'FPS: %.1f' % (frame_cnt/diff_time)
+                print 'FPS: %.1f' % clock.get_fps()
                 last_time=time.time()
-                frame_cnt=0
                 
             # Show game image
             cur_frame_np = self.ale.getScreenRGB()
@@ -73,7 +72,7 @@ class aleForET:
 
             # Save frame to disk (160*210, i.e. not scaled; because this is faster)
             if save_screen_func != None:
-                save_screen_func(cur_frame_Surface)
+                save_screen_func(cur_frame_Surface, frame_cnt)
 
             a_index = aenum.action_map(key, self.gamename)
             a = self.legal_actions[a_index]

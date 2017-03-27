@@ -140,7 +140,7 @@ def do_trial(surf, ale):
 
 	# experiment starts
 	dw = drawgc_wrapper()
-	scr_recorder = ScreenRecorder(lambda:getEYELINK().trackerTime())
+	scr_recorder = ScreenRecorder()
 	eyelink_err_code = ale.run(dw.drawgc, scr_recorder.save, event_handler_callback_func)
 
 	# experiment ends
