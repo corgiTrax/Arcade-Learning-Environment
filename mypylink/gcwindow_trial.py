@@ -140,8 +140,7 @@ def do_trial(surf, ale):
 
 	# experiment starts
 	dw = drawgc_wrapper()
-	scr_recorder = ScreenRecorder()
-	eyelink_err_code = ale.run(dw.drawgc, scr_recorder.save, event_handler_callback_func)
+	eyelink_err_code = ale.run(dw.drawgc, save_screen_callback_func, event_handler_callback_func)
 
 	# experiment ends
 	pumpDelay(100) # adds 100 msec of data to catch final events
@@ -158,6 +157,13 @@ def do_trial(surf, ale):
 		eyelink_err_code = getEYELINK().getRecordingStatus() # Maybe this function has something to say (see document of this func)
 	print "Trial Ended. eyelink_err_code = %d (%s)" % (eyelink_err_code, eyelink_err_code_to_str(eyelink_err_code))
 	return eyelink_err_code
+
+
+scr_recorder = ScreenRecorder()
+def save_screen_callback_func(screen, frameid):
+	global scr_recorder
+	scr_recorder.save(screen, frameid)
+	getEYELINK().sendMessage("SCR_RECORDER FRAMEID %d" % frameid)
 
 bool_drawgc = False
 def event_handler_callback_func(key_pressed):
