@@ -51,6 +51,7 @@ RIGHT_EYE = 1
 LEFT_EYE = 0
 BINOCULAR = 2
 DURATION = 20000
+scr_recorder = ScreenRecorder()
 
 def set_play_beep_func(func): 
 	global play_beep_func # used by below code to play a sound
@@ -121,6 +122,16 @@ def do_trail_subfunc_starting_msg2():
 	# drawn or unblanked at zero-time, so that no data at the trial start is lost.
 	getEYELINK().sendMessage("SYNCTIME %d" % 0) # From above doc it seems we can just send 0 because we haven't drawn anything yet
 
+def do_trail_subfunc_end_recording():
+	pumpDelay(100) # adds 100 msec of data to catch final events
+	getEYELINK().stopRecording()
+	while getEYELINK().getkey():
+		pass
+	# The TRIAL_RESULT message defines the end of a trial for the EyeLink Data Viewer. 
+	# This is different than the end of recording message END that is logged when the trial recording ends. 
+	# Data viewer will not parse any messages, events, or samples that exist in the data file after this message. 
+	getEYELINK().sendMessage("TRIAL_RESULT %d" % 0)
+
 def do_trial(surf, ale):
 
 	play_beep_func(0, repeat=5)
@@ -143,23 +154,17 @@ def do_trial(surf, ale):
 	eyelink_err_code = ale.run(dw.drawgc, save_screen_callback_func, event_handler_callback_func)
 
 	# experiment ends
-	pumpDelay(100) # adds 100 msec of data to catch final events
-	getEYELINK().stopRecording()
-	while getEYELINK().getkey():
-		pass
-	# The TRIAL_RESULT message defines the end of a trial for the EyeLink Data Viewer. 
-	# This is different than the end of recording message END that is logged when the trial recording ends. 
-	# Data viewer will not parse any messages, events, or samples that exist in the data file after this message. 
-	getEYELINK().sendMessage("TRIAL_RESULT %d" % 0)
 	gc.enable()
-
+	do_trail_subfunc_end_recording()
 	if eyelink_err_code == 0:
-		eyelink_err_code = getEYELINK().getRecordingStatus() # Maybe this function has something to say (see document of this func)
+		eyelink_err_code = getEYELINK().getRecordingStatus() # This function has something to say, so get its err_code (see api doc for details)  
 	print "Trial Ended. eyelink_err_code = %d (%s)" % (eyelink_err_code, eyelink_err_code_to_str(eyelink_err_code))
+	
+	scr_recorder.compress_record_dir(remove_original_dir=True)
+	
 	return eyelink_err_code
 
 
-scr_recorder = ScreenRecorder()
 def save_screen_callback_func(screen, frameid):
 	global scr_recorder
 	scr_recorder.save(screen, frameid)
@@ -222,13 +227,23 @@ def run_trials(rom_file, screen):
 			break			
 		elif (ret_value == ABORT_EXPT):
 			getEYELINK().sendMessage("EXPERIMENT ABORTED")
-			return ABORT_EXPT
+			break
 		elif (ret_value == REPEAT_TRIAL):
 			getEYELINK().sendMessage("TRIAL REPEATED")
 		else: 
 			getEYELINK().sendMessage("TRIAL ERROR")
 			break
 
+	# Experiment ended
+	if getEYELINK() != None:
+		# File transfer and cleanup!
+		getEYELINK().setOfflineMode();                          
+		msecDelay(500);                 
+
+		#Close the file and transfer it to Display PC
+		getEYELINK().closeDataFile()
+		getEYELINK().receiveDataFile(edfFileName, scr_recorder.dir+".edf")
+		getEYELINK().close();
 	return 0
 		
 def eyelink_err_code_to_str(code):

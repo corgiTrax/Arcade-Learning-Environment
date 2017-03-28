@@ -46,6 +46,16 @@ class ScreenRecorder:
         plt.imshow(img_np)
         plt.show()
 
+    def compress_record_dir(self, remove_original_dir):
+        def make_tarfile(output_filename, source_dir):
+            import tarfile
+            with tarfile.open(output_filename, "w:bz2") as tar:
+                tar.add(source_dir, arcname=os.path.basename(source_dir))
+        make_tarfile(self.dir+".tar.bz2", self.dir)
+        if remove_original_dir:
+            import shutil
+            shutil.rmtree(self.dir)
+
         
 if __name__ == "__main__":
     import pygame, numpy as np

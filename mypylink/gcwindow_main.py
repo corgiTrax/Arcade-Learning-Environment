@@ -55,7 +55,7 @@ genv = EyeLinkCoreGraphicsPyGame(960,630,eyelinktracker)
 openGraphicsEx(genv)
 
 #Opens the EDF file.
-edfFileName = "TEST.EDF";
+edfFileName = "ATARI.EDF";
 getEYELINK().openDataFile(edfFileName)		
 	
 flushGetkeyQueue(); 
@@ -102,19 +102,6 @@ else:
 if(getEYELINK().isConnected() and not getEYELINK().breakPressed()):
 	gcwindow_trial.set_play_beep_func(genv.play_beep2)
 	gcwindow_trial.run_trials(rom_file, surf)
-
-
-# Experiment ended
-
-if getEYELINK() != None:
-	# File transfer and cleanup!
-	getEYELINK().setOfflineMode();                          
-	msecDelay(500);                 
-
-	#Close the file and transfer it to Display PC
-	getEYELINK().closeDataFile()
-	getEYELINK().receiveDataFile(edfFileName, edfFileName)
-	getEYELINK().close();
 
 #Close the experiment graphics	
 display.quit()
