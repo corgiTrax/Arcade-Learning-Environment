@@ -8,51 +8,66 @@ import sys, pygame, time
 
 
 if __name__ == "__main__":
-	if len(sys.argv) < 3:
-		print "Usage: %s saved_frames_png_dir asc_file" % (sys.argv[0])
-		sys.exit(1)
+    if len(sys.argv) < 3:
+        print "Usage: %s saved_frames_png_dir asc_file" % (sys.argv[0])
+        sys.exit(1)
 
-	png_dir_path = sys.argv[1]
-	asc_path = sys.argv[2]
+    png_dir_path = sys.argv[1]
+    asc_path = sys.argv[2]
 
-	png_files = os.listdir(png_dir_path)
-	png_files = preprocess_and_sanity_check(png_files)
+    png_files = os.listdir(png_dir_path)
+    png_files = preprocess_and_sanity_check(png_files)
+
+    # init pygame
+    xSCALE, ySCALE = 6, 3
+    w, h = 160*xSCALE, 210*ySCALE
+    pygame.init()
+    pygame.display.set_mode((w, h), RESIZABLE | DOUBLEBUF | RLEACCEL, 32)
+    screen = pygame.display.get_surface()
+
+    clock = pygame.time.Clock()
+    for (i,png) in enumerate(png_files):
+        clock.tick(30)  # control FPS 
+        s = pygame.image.load(png)
+        s = pygame.transform.scale(s, (w,h), screen)
+        pygame.display.flip()
+        pygame.event.pump()
 
 
 def preprocess_and_sanity_check(png_files):
 
-	hasWarning = False
+    hasWarning = False
 
-	for fname in png_files:
-		if not fname.endswith(".png"):
-			print ("Warning: %s is not a PNG file. Deleting it from the frames list" % fname)
-			hasWarning = True
-			png_files.remove(fname)
+    for fname in png_files:
+        if not fname.endswith(".png"):
+            print ("Warning: %s is not a PNG file. Deleting it from the frames list" % fname)
+            hasWarning = True
+            png_files.remove(fname)
 
-	def sorting_key(fname):
-		a, b = os.path.splitext(fname)
-		try:
-			frameid = int(a)
-		except ValueError as ex:
-			raise ValueError("Error: cannot convert filename '%s' to frame ID (an integer)" % fname)
-		return frameid
-	png_files = sorted(png_files, key=sorting_key)
+    def sorting_key(fname):
+        a, b = os.path.splitext(fname)
+        try:
+            frameid = int(a)
+        except ValueError as ex:
+            raise ValueError("Error: cannot convert filename '%s' to frame ID (an integer)" % fname)
+        return frameid
+    png_files = sorted(png_files, key=sorting_key)
 
-	prev_idx = 0
-	for fname in png_files:
-		# check if the index starts with one, and is free of gap (e.g. free of jumping from i to i+2)
-		a, b = os.path.splitext(fname)
-		while prev_idx + 1 != int(a):
-			print ("Warning: there is a gap between frames. Missing frame ID: %d" % (prev_idx+1))
-			hasWarning = True
-			prev_idx += 1
-		prev_idx += 1
+    prev_idx = 0
+    for fname in png_files:
+        # check if the index starts with one, and is free of gap (e.g. free of jumping from i to i+2)
+        a, b = os.path.splitext(fname)
+        while prev_idx + 1 != int(a):
+            print ("Warning: there is a gap between frames. Missing frame ID: %d" % (prev_idx+1))
+            hasWarning = True
+            prev_idx += 1
+        prev_idx += 1
 
-	if hasWarning:
-		print "There are warnings. Sleeping for 5 sec..."
-		time.sleep(5)
+    if hasWarning:
+        print "There are warnings. Sleeping for 5 sec..."
+        time.sleep(5)
 
-	return png_files
+    return png_files
 
 
 
