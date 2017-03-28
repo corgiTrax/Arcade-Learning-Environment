@@ -4,38 +4,20 @@
 # Replay the game using saved frames and gaze positions recorded in a ASC file 
 # (ASC files are converted from EDF files, which are produced by EyeLink eyetracker)
 
-import sys, pygame, time
+import sys, pygame, time, os, re
+from pygame.constants import *
 
+def frameid_from_filename(fname): 
+    """ Extract '23' from '0_blahblah/23.png' """
 
-if __name__ == "__main__":
-    if len(sys.argv) < 3:
-        print "Usage: %s saved_frames_png_dir asc_file" % (sys.argv[0])
-        sys.exit(1)
-
-    png_dir_path = sys.argv[1]
-    asc_path = sys.argv[2]
-
-    png_files = os.listdir(png_dir_path)
-    png_files = preprocess_and_sanity_check(png_files)
-
-    # init pygame
-    xSCALE, ySCALE = 6, 3
-    w, h = 160*xSCALE, 210*ySCALE
-    pygame.init()
-    pygame.display.set_mode((w, h), RESIZABLE | DOUBLEBUF | RLEACCEL, 32)
-    screen = pygame.display.get_surface()
-
-    clock = pygame.time.Clock()
-    for (i,png) in enumerate(png_files):
-        clock.tick(30)  # control FPS 
-        s = pygame.image.load(png)
-        s = pygame.transform.scale(s, (w,h), screen)
-        pygame.display.flip()
-        pygame.event.pump()
-
+    a, b = os.path.splitext(os.path.basename(fname))
+    try:
+        frameid = int(a)
+    except ValueError as ex:
+        raise ValueError("cannot convert filename '%s' to frame ID (an integer)" % fname)
+    return frameid
 
 def preprocess_and_sanity_check(png_files):
-
     hasWarning = False
 
     for fname in png_files:
@@ -44,20 +26,12 @@ def preprocess_and_sanity_check(png_files):
             hasWarning = True
             png_files.remove(fname)
 
-    def sorting_key(fname):
-        a, b = os.path.splitext(fname)
-        try:
-            frameid = int(a)
-        except ValueError as ex:
-            raise ValueError("Error: cannot convert filename '%s' to frame ID (an integer)" % fname)
-        return frameid
-    png_files = sorted(png_files, key=sorting_key)
+    png_files = sorted(png_files, key=frameid_from_filename)
 
     prev_idx = 0
     for fname in png_files:
         # check if the index starts with one, and is free of gap (e.g. free of jumping from i to i+2)
-        a, b = os.path.splitext(fname)
-        while prev_idx + 1 != int(a):
+        while prev_idx + 1 != frameid_from_filename(fname):
             print ("Warning: there is a gap between frames. Missing frame ID: %d" % (prev_idx+1))
             hasWarning = True
             prev_idx += 1
@@ -69,8 +43,90 @@ def preprocess_and_sanity_check(png_files):
 
     return png_files
 
+def read_gaze_data_asc_file(fname):
+    """ This function reads a ASC file and returns a dictionary mapping frame ID to gaze position """
 
+    with open(fname, 'r') as f:
+        lines = f.readlines()
+    frameid2pos = {}
+    frameid, xpos, ypos = 0, None, None
 
+    for (i,line) in enumerate(lines):
+
+        match_scr_msg = re.match("MSG\s+(\d+)\s+SCR_RECORDER FRAMEID (\d+)", line)
+        if match_scr_msg: # when a new id is encountered
+            assert (xpos != None and ypos != None)
+            frameid2pos[frameid] = (xpos, ypos) # attach the most recent (x,y) to the last frame id 
+            timestamp, frameid = match_scr_msg.group(1), match_scr_msg.group(2)
+            frameid = int(frameid)
+            continue
+
+        freg = "[-+]?[0-9]*\.?[0-9]+" # regex for floating point numbers
+        match_sample = re.match("(\d+)\s+(%s)\s+(%s)" % (freg, freg), line)
+        if match_sample:
+            timestamp, xpos, ypos = match_sample.group(1), match_sample.group(2), match_sample.group(3)
+            xpos, ypos = float(xpos), float(ypos)
+            continue
+
+    return frameid2pos
+
+class drawgc_wrapper:
+    def __init__(self):
+        self.cursorsize = (14, 14)
+        self.cursor = pygame.Surface(self.cursorsize)
+        self.cursor.fill((255, 255, 255, 127))
+        pygame.draw.circle(self.cursor, (255, 0, 0), (self.cursorsize[0] // 2, self.cursorsize[1] // 2) , 6)
+
+    def draw_gc(self, screen, gaze_position):
+        '''draw the gaze-contingent window on screen '''
+        region_topleft = (gaze_position[0] - self.cursorsize[0] // 2, gaze_position[1] - self.cursorsize[1] // 2)
+        screen.blit(self.cursor, region_topleft) # Draws and shows the cursor content;
+
+if __name__ == "__main__":
+    if len(sys.argv) < 3:
+        print "Usage: %s saved_frames_png_dir asc_file" % (sys.argv[0])
+        sys.exit(0)
+
+    png_dir_path = sys.argv[1]
+    asc_path = sys.argv[2]
+
+    png_files = [png_dir_path + "/" + x for x in os.listdir(png_dir_path)]
+    png_files = preprocess_and_sanity_check(png_files)
+
+    # init pygame and other stuffs
+    xSCALE, ySCALE = 6, 3
+    w, h = 160*xSCALE, 210*ySCALE
+    pygame.init()
+    pygame.display.set_mode((w, h), RESIZABLE | DOUBLEBUF | RLEACCEL, 32)
+    screen = pygame.display.get_surface()
+    frameid2pos = read_gaze_data_asc_file(asc_path)
+    dw = drawgc_wrapper()
+    TARGET_FPS = 30
+
+    last_time = time.time()
+    clock = pygame.time.Clock()
+    for (i,png) in enumerate(png_files):
+        clock.tick(TARGET_FPS)  # control FPS 
+
+        # Display FPS
+        diff_time = time.time()-last_time
+        if diff_time > 1.0:
+            print 'FPS: %.1f Duration: %ds(%d%%)' % (clock.get_fps(), len(png_files)/TARGET_FPS, 100*i/len(png_files))
+            last_time=time.time()
+
+        # Load PNG file and draw the frame and the gaze-contingent window
+        s = pygame.image.load(png)
+        s = pygame.transform.scale(s, (w,h))
+        screen.blit(s, (0,0))
+        try:
+            gaze_pos = frameid2pos[frameid_from_filename(png)]
+            dw.draw_gc(screen, gaze_pos)
+        except KeyError as ex: 
+            print "Warning: No gaze data for frame ID %d" % ex.args[0]
+        pygame.display.flip()
+        pygame.event.pump()
+
+    print "Replay ended."
 
 # The method used in this script to align a gaze position to each frame is:
 # For frame #i, attach the gaze position immediately before frame #i+1.
