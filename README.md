@@ -1,15 +1,17 @@
-[![Build Status](https://travis-ci.org/mgbellemare/Arcade-Learning-Environment.svg?branch=master)](https://travis-ci.org/mgbellemare/Arcade-Learning-Environment)
-
-<img align="right" src="doc/manual/figures/ale.gif" width=50>
-
 # To do
 - [] Experiment and config class
 - [] Eye tracking experts to validate experimental setups
 - [] Pilot study
+- [x] finished?
 
 ## Next
 
-# Arcade-Learning-Environment: An Evaluation Platform for General Agents
+[![Build Status](https://travis-ci.org/mgbellemare/Arcade-Learning-Environment.svg?branch=master)](https://travis-ci.org/mgbellemare/Arcade-Learning-Environment)
+
+<img align="right" src="doc/manual/figures/ale.gif" width=50>
+
+
+### Arcade-Learning-Environment: An Evaluation Platform for General Agents
 
 The Arcade Learning Environment (ALE) -- a platform for AI research.
 
