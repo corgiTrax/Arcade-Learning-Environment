@@ -1,8 +1,8 @@
 # To do
-- [] Experiment and config class
-- [] Eye tracking experts to validate experimental setups
-- [] Pilot study
-- [x] finished?
+- [x] Data recording and decoding
+- [ ] Experiment and config class
+- [ ] Eye tracking experts to validate experimental setups
+- [ ] Pilot study
 
 ## Next
 
