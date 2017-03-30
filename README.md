@@ -2,6 +2,13 @@
 
 <img align="right" src="doc/manual/figures/ale.gif" width=50>
 
+TODO list for EYE-ALE Project
+# To do
+- [] Experiment and config class
+- [] Eye tracking experts to validate experimental setups
+- [] Pilot study
+
+
 # Arcade-Learning-Environment: An Evaluation Platform for General Agents
 
 The Arcade Learning Environment (ALE) -- a platform for AI research.
