@@ -1,5 +1,6 @@
 # To do
 - [x] Ask experts to validate experimental setups
+- [ ] Record actions in to EDF file 
 - [ ] Real pause and resume implementation
 - [ ] Recalibration implmentation
 - [ ] Experiment and config class
@@ -11,7 +12,6 @@
 - [ ] Subject consensus files (ask Sariel) 
 - [ ] Write experimental instruction for both experimentor and subjects; note that experimentor should center the screen; experimentor should stay with subjects during experiment 
 - [ ] Score leaderboard
-- [ ] Data recording and decoding
 - [ ] Pilot study
 
 ## Next
