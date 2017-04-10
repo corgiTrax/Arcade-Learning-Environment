@@ -51,7 +51,8 @@ class ScreenRecorder:
             import tarfile
             with tarfile.open(output_filename, "w:bz2") as tar:
                 tar.add(source_dir, arcname=os.path.basename(source_dir))
-        make_tarfile(self.dir+".tar.bz2", self.dir)
+        if self.dir_created:
+            make_tarfile(self.dir+".tar.bz2", self.dir)
         if remove_original_dir:
             import shutil
             shutil.rmtree(self.dir)

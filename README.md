@@ -1,7 +1,17 @@
 # To do
-- [x] Data recording and decoding
+- [x] Ask experts to validate experimental setups
+- [ ] Real pause and resume implementation
+- [ ] Recalibration implmentation
 - [ ] Experiment and config class
-- [ ] Eye tracking experts to validate experimental setups
+- [ ] Game time limits (15 minutes per session then break)
+- [ ] Calibration after each trial
+- [ ] 5-point check image after each trial, mark and throw away bad data
+- [ ] Record calibration statistics (error in validation)
+- [ ] Demographical information survey (ask Sariel)
+- [ ] Subject consensus files (ask Sariel) 
+- [ ] Write experimental instruction for both experimentor and subjects; note that experimentor should center the screen; experimentor should stay with subjects during experiment 
+- [ ] Score leaderboard
+- [ ] Data recording and decoding
 - [ ] Pilot study
 
 ## Next

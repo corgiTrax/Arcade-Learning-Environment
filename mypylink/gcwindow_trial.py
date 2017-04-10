@@ -242,7 +242,7 @@ def run_trials(rom_file, screen):
 
 		#Close the file and transfer it to Display PC
 		getEYELINK().closeDataFile()
-		getEYELINK().receiveDataFile(edfFileName, scr_recorder.dir+".edf")
+		getEYELINK().receiveDataFile("ATARI.EDF", scr_recorder.dir+".edf")
 		getEYELINK().close();
 	return 0
 		
