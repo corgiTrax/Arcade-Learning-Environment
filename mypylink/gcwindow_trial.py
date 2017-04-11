@@ -166,9 +166,11 @@ def do_trial(surf, ale):
 
 
 def save_screen_callback_func(screen, frameid):
+	# the drawing of current frame should align with the recording of eye
+	# position as close as possible. So we put sendMessage at the first line.
+	getEYELINK().sendMessage("SCR_RECORDER FRAMEID %d" % frameid)
 	global scr_recorder
 	scr_recorder.save(screen, frameid)
-	getEYELINK().sendMessage("SCR_RECORDER FRAMEID %d" % frameid)
 
 bool_drawgc = False
 def event_handler_callback_func(key_pressed):
