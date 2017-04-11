@@ -13,6 +13,7 @@
 - [ ] Write experimental instruction for both experimentor and subjects; note that experimentor should center the screen; experimentor should stay with subjects during experiment 
 - [ ] Score leaderboard
 - [ ] Pilot study
+- [ ] Fix bug: skip calibration resulting in "recording folder does not exists"
 
 ## Next
 
