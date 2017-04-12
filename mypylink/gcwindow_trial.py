@@ -38,13 +38,7 @@ import sys
 from aleForET import aleForET
 from IPython import embed
 from ScreenRecorder import ScreenRecorder
-
-#if you need to save bitmap features and/or backdrop features set
-#BITMAP_SAVE_BACK_DROP to  true. This will require numpy or Numeric modules. Also
-#in some configurations calling array3d segfaults. 
-BITMAP_SAVE_BACK_DROP = False
-if BITMAP_SAVE_BACK_DROP:
-	from pygame.surfarray import *
+import action_enums
 
 
 RIGHT_EYE = 1
@@ -158,10 +152,16 @@ def do_trial(surf, ale):
 	do_trail_subfunc_end_recording()
 	if eyelink_err_code == 0:
 		eyelink_err_code = getEYELINK().getRecordingStatus() # This function has something to say, so get its err_code (see api doc for details)  
-	print "Trial Ended. eyelink_err_code = %d (%s)" % (eyelink_err_code, eyelink_err_code_to_str(eyelink_err_code))
+	print "Trial Ended. eyelink_err_code = %d (%s) Compressing recorded frames..." % (eyelink_err_code, eyelink_err_code_to_str(eyelink_err_code))
 	
 	scr_recorder.compress_record_dir(remove_original_dir=True)
-	
+
+	# After the recording is done, we should run "Validation".
+	# So here doTrackerSetup() is called, and then the experimenter clicks "Validate". If the validation result is 
+	# good, do nothing. If bad, the experimenter marks this experiment as "bad" on paper. (the code won't do the marking, for now)
+	play_beep_func(1, repeat=5)
+	print "Switched the eye tracker to Setup menu. Now you may perform validation."
+	getEYELINK().doTrackerSetup()
 	return eyelink_err_code
 
 
@@ -173,13 +173,16 @@ def save_screen_callback_func(screen, frameid):
 	scr_recorder.save(screen, frameid)
 
 bool_drawgc = False
-def event_handler_callback_func(key_pressed):
+def event_handler_callback_func(key_pressed, atari_action):
 	global bool_drawgc
 	# First check if host PC is still recording
 	# This will block the thread when "abort trial" is clicked at host PC and the "abort trail" menu is shown 
 	error = getEYELINK().isRecording() 
 	if error != 0: # happens when "abort trial" is clicked at host PC
 		return True, error, bool_drawgc
+
+	if atari_action != action_enums.PLAYER_A_NOOP:
+		getEYELINK().sendMessage("key_pressed atari_action %d" % (atari_action))
 
 	if key_pressed[K_ESCAPE]:
 		print("Exiting the game...")

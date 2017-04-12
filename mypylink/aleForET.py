@@ -42,12 +42,15 @@ class aleForET:
         for episode in xrange(10):
           total_reward = 0
           while not self.ale.game_over():
-            key = pygame.key.get_pressed()
-            frame_cnt+=1
             clock.tick(30) # control FPS
+            frame_cnt+=1
+
+            key = pygame.key.get_pressed()
+            a_index = aenum.action_map(key, self.gamename)
+            a = self.legal_actions[a_index]
 
             if event_handler_func != None:
-                stop, eyelink_err_code, bool_drawgc = event_handler_func(key)
+                stop, eyelink_err_code, bool_drawgc = event_handler_func(key, a)
                 if stop:
                     return eyelink_err_code
 
@@ -73,9 +76,6 @@ class aleForET:
             # Save frame to disk (160*210, i.e. not scaled; because this is faster)
             if save_screen_func != None:
                 save_screen_func(cur_frame_Surface, frame_cnt)
-
-            a_index = aenum.action_map(key, self.gamename)
-            a = self.legal_actions[a_index]
 
             # Apply an action and get the resulting reward
             reward = self.ale.act(a);
