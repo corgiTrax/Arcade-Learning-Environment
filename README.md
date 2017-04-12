@@ -1,12 +1,12 @@
 # To do
 - [x] Ask experts to validate experimental setups
-- [ ] Record actions in to EDF file 
-- [ ] Real pause and resume implementation
+- [x] Record actions in to EDF file 
+- [ ] (DELAYED) Real pause and resume implementation
 - [ ] Recalibration implmentation
 - [ ] Experiment and config class
 - [ ] Game time limits (15 minutes per session then break)
 - [ ] Calibration after each trial
-- [ ] 5-point check image after each trial, mark and throw away bad data
+- [x] 5-point check image after each trial, mark and throw away bad data
 - [ ] Record calibration statistics (error in validation)
 - [ ] Demographical information survey (ask Sariel)
 - [ ] Subject consensus files (ask Sariel) 
