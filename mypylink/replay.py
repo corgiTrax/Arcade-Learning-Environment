@@ -4,7 +4,7 @@
 # Replay the game using saved frames and gaze positions recorded in a ASC file 
 # (ASC files are converted from EDF files, which are produced by EyeLink eyetracker)
 
-import sys, pygame, time, os, re
+import sys, pygame, time, os, re, tarfile, StringIO
 from pygame.constants import *
 
 def frameid_from_filename(fname): 
@@ -85,7 +85,7 @@ class drawgc_wrapper:
 
 class DrawStatus:
     draw_many_gazes = False
-    cur_frame_id = 0
+    cur_frame_id = 1
     total_frame = None
     target_fps = 60
     pause = False
@@ -105,28 +105,33 @@ def event_handler_func():
         elif event.key == K_F3:
             p = float(input("Seeking through the video. Enter a percentage in float: "))
             ds.cur_frame_id = int(p/100*ds.total_frame)
-        elif event.key == K_ESCAPE:
+        elif event.key == K_SPACE:
             ds.pause = not ds.pause
-        elif event.key == K_F7:
+        elif event.key == K_F9:
             ds.draw_many_gazes = not ds.draw_many_gazes
+            print "draw all gazes belonging to a frame: %s" % ("ON" if ds.draw_many_gazes else "OFF")
         elif event.key == K_F11:
-            print "Setting target FPS to %d" % ds.target_fps
             ds.target_fps -= 2
-        elif event.key == K_F12:
             print "Setting target FPS to %d" % ds.target_fps
+        elif event.key == K_F12:
             ds.target_fps += 2
+            print "Setting target FPS to %d" % ds.target_fps
     ds.cur_frame_id = max(0,min(ds.cur_frame_id, ds.total_frame))
+    ds.target_fps = max(1, ds.target_fps)
 
 if __name__ == "__main__":
     if len(sys.argv) < 3:
         print "Usage: %s saved_frames_png_dir asc_file" % (sys.argv[0])
         sys.exit(0)
 
-    png_dir_path = sys.argv[1]
+    tar = tarfile.open(sys.argv[1], 'r')
     asc_path = sys.argv[2]
 
-    png_files = [png_dir_path + "/" + x for x in os.listdir(png_dir_path)]
+    png_files = tar.getnames()
     png_files = preprocess_and_sanity_check(png_files)
+    png_contents = {frameid_from_filename(png): StringIO.StringIO(tar.extractfile(png).read()) 
+        for png in tar.getnames() if png.endswith(".png")}
+
 
     # init pygame and other stuffs
     xSCALE, ySCALE = 6, 3
@@ -142,8 +147,7 @@ if __name__ == "__main__":
 
     last_time = time.time()
     clock = pygame.time.Clock()
-    while ds.cur_frame_id <= ds.total_frame:
-        png = png_files[ds.cur_frame_id]
+    while ds.cur_frame_id < ds.total_frame:
         clock.tick(ds.target_fps)  # control FPS 
 
         # Display FPS
@@ -157,16 +161,15 @@ if __name__ == "__main__":
 
         if not ds.pause:
             # Load PNG file and draw the frame and the gaze-contingent window
-            s = pygame.image.load(png)
+            s = pygame.image.load(png_contents[ds.cur_frame_id])
             s = pygame.transform.scale(s, (w,h))
             screen.blit(s, (0,0))
-            frameid = frameid_from_filename(png)
-            if frameid in frameid2pos and len(frameid2pos[frameid])>0:
-                for gaze_pos in frameid2pos[frameid]:
+            if ds.cur_frame_id in frameid2pos and len(frameid2pos[ds.cur_frame_id])>0:
+                for gaze_pos in frameid2pos[ds.cur_frame_id]:
                     dw.draw_gc(screen, gaze_pos)
                     if not ds.draw_many_gazes: break
             else:
-                print "Warning: No gaze data for frame ID %d" % frameid
+                print "Warning: No gaze data for frame ID %d" % ds.cur_frame_id
             pygame.display.flip()
             ds.cur_frame_id += 1
 
