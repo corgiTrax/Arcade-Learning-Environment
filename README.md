@@ -13,7 +13,9 @@
 - [ ] Write experimental instruction for both experimentor and subjects; note that experimentor should center the screen; experimentor should stay with subjects during experiment 
 - [ ] Score leaderboard
 - [ ] Pilot study
-- [ ] Fix bug: skip calibration resulting in "recording folder does not exists"
+- [ ] replay.py: change the algorithm of attaching gaze positon to a frame. Add constraint to constraint the gaze must be between two frames. So  some frames can not have gaze data.
+- [ ] replay.py: read from tar.bz2 directly
+- [ ] automatically run edf2asc after each trial
 
 ## Next
 
