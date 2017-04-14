@@ -101,7 +101,7 @@ if __name__ == "__main__":
     screen = pygame.display.get_surface()
     frameid2pos = read_gaze_data_asc_file(asc_path)
     dw = drawgc_wrapper()
-    TARGET_FPS = 30
+    TARGET_FPS = 60
 
     last_time = time.time()
     clock = pygame.time.Clock()

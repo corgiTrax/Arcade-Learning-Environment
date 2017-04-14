@@ -181,8 +181,7 @@ def event_handler_callback_func(key_pressed, atari_action):
 	if error != 0: # happens when "abort trial" is clicked at host PC
 		return True, error, bool_drawgc
 
-	if atari_action != action_enums.PLAYER_A_NOOP:
-		getEYELINK().sendMessage("key_pressed atari_action %d" % (atari_action))
+	getEYELINK().sendMessage("key_pressed atari_action %d" % (atari_action))
 
 	if key_pressed[K_ESCAPE]:
 		print("Exiting the game...")

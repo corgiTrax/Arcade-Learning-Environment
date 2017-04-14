@@ -42,7 +42,7 @@ class aleForET:
         for episode in xrange(10):
           total_reward = 0
           while not self.ale.game_over():
-            clock.tick(30) # control FPS
+            clock.tick(40) # control FPS
             frame_cnt+=1
 
             key = pygame.key.get_pressed()
