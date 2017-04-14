@@ -48,17 +48,16 @@ def read_gaze_data_asc_file(fname):
 
     with open(fname, 'r') as f:
         lines = f.readlines()
-    frameid2pos = {}
-    frameid, xpos, ypos = 0, None, None
+    frameid, xpos, ypos = "BEFORE-FIRST-FRAME", None, None
+    frameid2pos = {frameid: []}
 
     for (i,line) in enumerate(lines):
 
         match_scr_msg = re.match("MSG\s+(\d+)\s+SCR_RECORDER FRAMEID (\d+)", line)
         if match_scr_msg: # when a new id is encountered
-            assert (xpos != None and ypos != None)
-            frameid2pos[frameid] = (xpos, ypos) # attach the most recent (x,y) to the last frame id 
             timestamp, frameid = match_scr_msg.group(1), match_scr_msg.group(2)
             frameid = int(frameid)
+            frameid2pos[frameid] = []
             continue
 
         freg = "[-+]?[0-9]*\.?[0-9]+" # regex for floating point numbers
@@ -66,21 +65,57 @@ def read_gaze_data_asc_file(fname):
         if match_sample:
             timestamp, xpos, ypos = match_sample.group(1), match_sample.group(2), match_sample.group(3)
             xpos, ypos = float(xpos), float(ypos)
+            frameid2pos[frameid].append((xpos,ypos))
             continue
+
+    frameid2pos["AFTER-LAST-FRAME"] = frameid2pos[frameid]
+    del frameid2pos[frameid] # throw out gazes after the last frame, because the game has ended but eye tracker keeps recording
 
     return frameid2pos
 
 class drawgc_wrapper:
     def __init__(self):
-        self.cursorsize = (14, 14)
-        self.cursor = pygame.Surface(self.cursorsize)
-        self.cursor.fill((255, 255, 255, 127))
-        pygame.draw.circle(self.cursor, (255, 0, 0), (self.cursorsize[0] // 2, self.cursorsize[1] // 2) , 6)
+        self.cursor = pygame.image.load('shooting-game-target.png')
+        self.cursorsize = (self.cursor.get_width(), self.cursor.get_height())
 
     def draw_gc(self, screen, gaze_position):
         '''draw the gaze-contingent window on screen '''
         region_topleft = (gaze_position[0] - self.cursorsize[0] // 2, gaze_position[1] - self.cursorsize[1] // 2)
         screen.blit(self.cursor, region_topleft) # Draws and shows the cursor content;
+
+class DrawStatus:
+    draw_many_gazes = False
+    cur_frame_id = 0
+    total_frame = None
+    target_fps = 60
+    pause = False
+ds = DrawStatus()
+
+def event_handler_func():
+    global ds
+
+    for event in pygame.event.get() :
+      if event.type == pygame.KEYDOWN :
+        if event.key == K_F1:
+            print "Fast-backward 5 seconds"
+            ds.cur_frame_id -= 5 * ds.target_fps
+        elif event.key == K_F2:
+            print "Fast-forward 5 seconds"
+            ds.cur_frame_id += 5 * ds.target_fps
+        elif event.key == K_F3:
+            p = float(input("Seeking through the video. Enter a percentage in float: "))
+            ds.cur_frame_id = int(p/100*ds.total_frame)
+        elif event.key == K_ESCAPE:
+            ds.pause = not ds.pause
+        elif event.key == K_F7:
+            ds.draw_many_gazes = not ds.draw_many_gazes
+        elif event.key == K_F11:
+            print "Setting target FPS to %d" % ds.target_fps
+            ds.target_fps -= 2
+        elif event.key == K_F12:
+            print "Setting target FPS to %d" % ds.target_fps
+            ds.target_fps += 2
+    ds.cur_frame_id = max(0,min(ds.cur_frame_id, ds.total_frame))
 
 if __name__ == "__main__":
     if len(sys.argv) < 3:
@@ -101,30 +136,39 @@ if __name__ == "__main__":
     screen = pygame.display.get_surface()
     frameid2pos = read_gaze_data_asc_file(asc_path)
     dw = drawgc_wrapper()
-    TARGET_FPS = 30
+
+    ds.target_fps = 60
+    ds.total_frame = len(png_files)
 
     last_time = time.time()
     clock = pygame.time.Clock()
-    for (i,png) in enumerate(png_files):
-        clock.tick(TARGET_FPS)  # control FPS 
+    while ds.cur_frame_id <= ds.total_frame:
+        png = png_files[ds.cur_frame_id]
+        clock.tick(ds.target_fps)  # control FPS 
 
         # Display FPS
         diff_time = time.time()-last_time
         if diff_time > 1.0:
-            print 'FPS: %.1f Duration: %ds(%d%%)' % (clock.get_fps(), len(png_files)/TARGET_FPS, 100*i/len(png_files))
+            print 'FPS: %.1f Duration: %ds(%.1f%%)' % (clock.get_fps(), 
+                ds.total_frame/ds.target_fps, 100.0*ds.cur_frame_id/ds.total_frame)
             last_time=time.time()
 
-        # Load PNG file and draw the frame and the gaze-contingent window
-        s = pygame.image.load(png)
-        s = pygame.transform.scale(s, (w,h))
-        screen.blit(s, (0,0))
-        try:
-            gaze_pos = frameid2pos[frameid_from_filename(png)]
-            dw.draw_gc(screen, gaze_pos)
-        except KeyError as ex: 
-            print "Warning: No gaze data for frame ID %d" % ex.args[0]
-        pygame.display.flip()
-        pygame.event.pump()
+        event_handler_func()
+
+        if not ds.pause:
+            # Load PNG file and draw the frame and the gaze-contingent window
+            s = pygame.image.load(png)
+            s = pygame.transform.scale(s, (w,h))
+            screen.blit(s, (0,0))
+            frameid = frameid_from_filename(png)
+            if frameid in frameid2pos and len(frameid2pos[frameid])>0:
+                for gaze_pos in frameid2pos[frameid]:
+                    dw.draw_gc(screen, gaze_pos)
+                    if not ds.draw_many_gazes: break
+            else:
+                print "Warning: No gaze data for frame ID %d" % frameid
+            pygame.display.flip()
+            ds.cur_frame_id += 1
 
     print "Replay ended."
 
