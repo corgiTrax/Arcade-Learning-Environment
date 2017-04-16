@@ -5,16 +5,12 @@
 - [ ] Recalibration implmentation
 - [ ] Experiment and config class
 - [ ] Game time limits (15 minutes per session then break)
-- [ ] Calibration after each trial
 - [x] 5-point check image after each trial, mark and throw away bad data
-- [ ] Record calibration statistics (error in validation)
 - [ ] Demographical information survey (ask Sariel)
 - [ ] Subject consensus files (ask Sariel) 
 - [ ] Write experimental instruction for both experimentor and subjects; note that experimentor should center the screen; experimentor should stay with subjects during experiment 
 - [ ] Score leaderboard
 - [ ] Pilot study
-- [ ] replay.py: change the algorithm of attaching gaze positon to a frame. Add constraint to constraint the gaze must be between two frames. So  some frames can not have gaze data.
-- [ ] replay.py: read from tar.bz2 directly
 - [ ] automatically run edf2asc after each trial
 
 ## Next
