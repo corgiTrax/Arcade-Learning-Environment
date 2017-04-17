@@ -46,6 +46,7 @@ def untar(tar_path, output_path):
     png_files = [png for png in tar.getnames() if png.endswith('.png')]
     return png_files
 
+
 if __name__ == '__main__':
 	if len(sys.argv)<5: 
 		print "Usage: %s asc_file tar_file output_path(e.g. a directory called 'dataset') training_data_percentage(float, range [0.0, 1.0])" % sys.argv[0]
@@ -79,4 +80,4 @@ if __name__ == '__main__':
 	with open(val_file_name, 'w') as f:
 			f.write('\n'.join(xy_str_val))
 
-	print "Done. Outputs are:\n %s\n %s" % (train_file_name, val_file_name)
+	print "Done. Outputs are:\n %s (%d examples)\n %s (%d examples)" % (train_file_name, len(xy_str_train), val_file_name, len(xy_str_val))
