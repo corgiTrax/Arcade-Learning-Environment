@@ -15,13 +15,17 @@ def read_labeled_image_list(image_list_file):
     Returns:
        a list of filenames, a list of labels. 
     """
-    f = open(image_list_file, 'r')
+    with open(image_list_file, 'r') as f:
+        lines = f.readlines()
     filenames = []
     labels = []
-    for line in f:
-        filename, label = line[:-1].split(' ')
-        filenames.append(os.path.join(os.path.dirname(image_list_file), filename))
-        labels.append(int(label))
+    for (i,line) in enumerate(lines):
+        try:
+            filename, label = line.strip().split(' ')
+            filenames.append(os.path.join(os.path.dirname(image_list_file), filename))
+            labels.append(int(label))
+        except Exception as ex:
+            printdebug("Exception at line %d: %s Content: \n%s" % (i+1, str(ex), line))
     return filenames, labels
     
 
@@ -39,7 +43,7 @@ def read_images_from_disk(input_queue):
     return example, label
     
     
-def create_input_pipeline(LABEL_FILE, batch_size, num_epochs): 
+def create_input_pipeline(LABEL_FILE, SHAPE, batch_size, num_epochs): 
     """
         num_epochs: a number, or None. The document of tf.train.slice_input_producer says:
         "If it's a number, the queue will generate OutOfRange error after $num_epochs repetations"
@@ -60,33 +64,37 @@ def create_input_pipeline(LABEL_FILE, batch_size, num_epochs):
     # Batching (input tensors backed by a queue; and then combine inputs into a batch)
     image_batch, label_batch = tf.train.batch([one_image, one_label],
                                                batch_size=batch_size,
-                                               shapes=(SHAPE,()), capacity=3*batch_size)
+                                               shapes=(SHAPE,()), capacity=3*batch_size,
+                                               allow_smaller_final_batch=True)
     return image_batch, label_batch, len(images)
     
-
-def printdebug(str, logfile=None):
-    if logfile is None:
-        print('  ----   DEBUG: '+str)
-    else:
+logfile = None
+def setlogfile(path):
+    global logfile
+    logfile = open(path, 'a')
+def printdebug(str):
+    global logfile
+    print('  ----   DEBUG: '+str)
+    if logfile is not None:
         logfile.write('  ----   DEBUG: '+str+'\n')
         logfile.flush()
 
-print("  ----   input_pipeline.py is imported -----")
-
-# dataset-specific definitions
-LABELS_FILE_TRAIN = 'mem_dataset/3_Apr-13-18-54-21-train-label.txt'
-LABELS_FILE_VAL = 'mem_dataset/3_Apr-13-18-54-21-val-label.txt'
-SHAPE = (210,160,3) # height * width * channel This cannot read from file and needs to be provided here
+printdebug("  ----   input_pipeline.py is imported -----")
 
 
 if __name__ == "__main__":
     sess = tf.Session()
     
     batch_size=100
-    
+
+    # dataset-specific definitions
+    LABELS_FILE_TRAIN = 'mem_dataset/3_Apr-13-18-54-21-train.txt'
+    LABELS_FILE_VAL = 'mem_dataset/3_Apr-13-18-54-21-val.txt'
+    SHAPE = (210,160,3) # height * width * channel This cannot read from file and needs to be provided here
+
     # create input pipelines for training set and validation set
-    train_image_batch, train_label_batch, TRAIN_SIZE = create_input_pipeline(LABELS_FILE_TRAIN, batch_size, num_epochs=None)
-    val_image_batch, val_label_batch, VAL_SIZE = create_input_pipeline(LABELS_FILE_VAL, batch_size, num_epochs=None)
+    train_image_batch, train_label_batch, TRAIN_SIZE = create_input_pipeline(LABELS_FILE_TRAIN, SHAPE, batch_size, num_epochs=None)
+    val_image_batch, val_label_batch, VAL_SIZE = create_input_pipeline(LABELS_FILE_VAL, SHAPE, batch_size, num_epochs=None)
     printdebug("TRAIN_SIZE: %d VAL_SIZE: %d BATCH_SIZE: %d " % (TRAIN_SIZE, VAL_SIZE, batch_size))
 
     # Required. 
