@@ -42,12 +42,10 @@ def read_images_from_disk(input_queue):
     example = tf.image.decode_png(file_contents, channels=3)
     return example, label
     
-    
+# every time calling create_input_pipeline() requires us to run the following code again:
+# "sess.run([tf.global_variables_initializer(), tf.local_variables_initializer()]); threads = tf.train.start_queue_runners(sess=sess,coord=coord)"
+# but no one wants to do that, which makes the whole "Input Pipeline" thing in tf much more useless; makes "num_epochs" much more useless.
 def create_input_pipeline(LABEL_FILE, SHAPE, batch_size, num_epochs): 
-    """
-        num_epochs: a number, or None. The document of tf.train.slice_input_producer says:
-        "If it's a number, the queue will generate OutOfRange error after $num_epochs repetations"
-    """
     images, labels = read_labeled_image_list(LABEL_FILE)
 
     # Makes an input queue

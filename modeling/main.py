@@ -5,12 +5,11 @@ from tensorflow.contrib.learn.python.learn.estimators import model_fn as model_f
 from InputPipeline import *
 from IPython import embed
 import tensorflow.contrib.layers as L
-
 NUM_CLASSES = 6
-LABELS_FILE_TRAIN = 'mem_dataset/3_Apr-13-18-54-21-train.txt'
-LABELS_FILE_VAL = 'mem_dataset/3_Apr-13-18-54-21-val.txt'
+LABELS_FILE_TRAIN = 'mem_dataset/6_Apr-13-19-14-59-train.txt'
+LABELS_FILE_VAL = 'mem_dataset/6_Apr-13-19-14-59-val.txt'
+MODEL_DIR = 'modeldir/6'
 SHAPE = (210,160,3) # height * width * channel This cannot read from file and needs to be provided here
-
 
 class Dataset:
   train_image_batch = None
@@ -25,7 +24,7 @@ class Dataset:
       self.train_image_batch, self.train_label_batch, self.train_size = create_input_pipeline(LABELS_FILE_TRAIN, SHAPE, batch_size=100, num_epochs=num_epochs)
     return {"img": self.train_image_batch}, self.train_label_batch
   def val_input_fn(self, recreate=False, num_epochs=1):
-    if self.val_image_batch is None:
+    if self.val_image_batch is None or recreate:
       printdebug("create_input_pipeline() for validation")
       self.val_image_batch, self.val_label_batch, self.val_size = create_input_pipeline(LABELS_FILE_VAL, SHAPE, batch_size=100, num_epochs=num_epochs)
     return {"img": self.val_image_batch}, self.val_label_batch
@@ -83,7 +82,8 @@ if __name__ == "__main__":
 
   d=Dataset()
   model_params = {"learning_rate": 0.01}
-  nn = tf.contrib.learn.Estimator(model_fn=model_fn, params=model_params, model_dir='modeldir')
-  nn.fit(input_fn=d.train_input_fn, steps=1000)
+  nn = tf.contrib.learn.Estimator(model_fn=model_fn, params=model_params, model_dir=MODEL_DIR)
+  #nn.fit(input_fn=d.train_input_fn, steps=10000)
   nn.evaluate(input_fn=lambda:d.train_input_fn(recreate=True, num_epochs=1))
-  nn.evaluate(input_fn=d.val_input_fn)
+  nn.evaluate(input_fn=lambda:d.val_input_fn(recreate=True))
+
