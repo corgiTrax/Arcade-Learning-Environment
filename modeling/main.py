@@ -10,14 +10,11 @@ LABELS_FILE_TRAIN = 'mem_dataset/3_Apr-13-18-54-21-train.txt'
 LABELS_FILE_VAL = 'mem_dataset/3_Apr-13-18-54-21-val.txt'
 SHAPE = (210,160,3) # height * width * channel This cannot read from file and needs to be provided here
 BATCH_SIZE=100
-MODEL_DIR = 'expr_3_sgd'
-resume_model = True
+MODEL_DIR = 'Expr_3_sgd'
+resume_model = False    
 
 MU.save_GPU_mem_keras()
-
-def lossfunc(target, pred): 
-    return K.backend.sparse_categorical_crossentropy(output=pred,target=target, from_logits=True)
-MU.serialize_model_keras_bug_fix(lossfunc)
+MU.keras_model_serialization_bug_fix()
 
 expr = MU.ExprCreaterAndResumer(MODEL_DIR)
 if resume_model:
@@ -42,14 +39,14 @@ else:
     model=Model(inputs=inputs, outputs=[logits, prob])
 
     sgd = K.optimizers.SGD(lr=0.01)
-    model.compile(loss={"prob":None, "logits": lossfunc },
+    model.compile(loss={"prob":None, "logits": MU.loss_func},
                  optimizer=sgd,
-                 metrics={"logits": MU.acc})
+                 metrics={"logits": MU.acc_})
 
 expr.dump_src_code_and_model_def(sys.argv[0], model)
 
 d=input_utils.Dataset(LABELS_FILE_TRAIN, LABELS_FILE_VAL)
-model.fit(d.train_imgs, d.train_lbl, batch_size=100, epochs=10,
+model.fit(d.train_imgs, d.train_lbl, batch_size=100, epochs=1,
     validation_data=(d.val_imgs, d.val_lbl),
     shuffle=True)
 
@@ -58,3 +55,5 @@ expr.save_weight_and_training_config_state(model)
 score = model.evaluate(d.val_imgs, d.val_lbl, BATCH_SIZE)
 expr.printdebug("eval score:" + str(score))
 
+# TODO start to test different optimizers, model archetecture, avoid overfitting
+# TODO monitor loss at tensorboard

@@ -3,12 +3,6 @@ import shutil, os, time, re
 from IPython import embed
 import ipdb
 
-def acc(y_true, y_pred):
-  return tf.reduce_mean(
-    tf.cast(tf.nn.in_top_k(
-      targets=tf.squeeze(tf.cast(y_true,tf.int32)), 
-      predictions=y_pred,k=1),tf.float32))
-
 def save_GPU_mem_keras():
     # don't let tf eat all the memory on eldar-11
     config = tf.ConfigProto()
@@ -22,12 +16,12 @@ class ExprCreaterAndResumer:
         if not os.path.exists(rootdir):
             os.makedirs(rootdir)
         expr_dirs = os.listdir(rootdir)
-        indices = [int(re.match("(\d+)_", x).group(1)) for x in expr_dirs]
-        highest_indices = max(indices) if len(indices)>0 else -1
+        expr_num = [int(re.match("(\d+)_", x).group(1)) for x in expr_dirs]
+        highest_idx = np.argmax(expr_num) if len(expr_num)>0 else -1
 
-        self.dir_lasttime = rootdir + '/' + expr_dirs[highest_indices] if highest_indices != -1 else None
+        self.dir_lasttime = "%s/%s" % (rootdir, expr_dirs[highest_idx]) if highest_idx != -1 else None
         # dir name is like "5_Mar-09-12-27-59"
-        self.dir = rootdir + '/' +  str(highest_indices+1) + \
+        self.dir = rootdir + '/' +  str(expr_num[highest_idx]+1 if highest_idx != -1 else 0) + \
             '_' + time.strftime("%b-%d-%H-%M-%S")
         os.mkdir(self.dir)
         self.logfile = open(self.dir +"/log.txt", 'a')
@@ -56,6 +50,18 @@ class ExprCreaterAndResumer:
         self.logfile.write('  ----   DEBUG: '+str+'\n')
         self.logfile.flush()
  
-def serialize_model_keras_bug_fix(obj_to_serialize):
+def keras_model_serialization_bug_fix(): # stupid keras
     from keras.utils.generic_utils import get_custom_objects
-    get_custom_objects().update({obj_to_serialize.__name__: obj_to_serialize})
+    f=lambda obj_to_serialize: \
+        get_custom_objects().update({obj_to_serialize.__name__: obj_to_serialize})
+    f(loss_func)
+    f(acc_)
+
+def loss_func(target, pred): 
+    return K.backend.sparse_categorical_crossentropy(output=pred,target=target, from_logits=True)
+
+def acc_(y_true, y_pred): # don't rename it to acc or accuracy (otherwise stupid keras will replace this func with its own accuracy function when serializing )
+  return tf.reduce_mean(
+    tf.cast(tf.nn.in_top_k(
+      targets=tf.squeeze(tf.cast(y_true,tf.int32)), 
+      predictions=y_pred,k=1),tf.float32))
