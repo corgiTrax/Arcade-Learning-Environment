@@ -15,14 +15,14 @@ class Dataset:
     print "Reading all validation data into memory..."
     self.val_imgs, self.val_lbl = read_np(LABELS_FILE_VAL)
     self.val_size = len(self.val_lbl)
-
+    print "Performing standardization (x-mean)..."
     self.standardize()
+    print "Done."
 
   def standardize(self):
-    mean, std = np.mean(self.train_imgs, axis=(0,1,2)), np.std(self.train_imgs, axis=(0,1,2))
-    self.train_imgs = (self.train_imgs-mean)/std
-    self.val_imgs = (self.val_imgs-mean)/std
-
+    mean = np.mean(self.train_imgs, axis=(0,1,2))
+    self.train_imgs = self.train_imgs-mean
+    self.val_imgs = self.val_imgs-mean
 
 def read_np(label_file):
     """

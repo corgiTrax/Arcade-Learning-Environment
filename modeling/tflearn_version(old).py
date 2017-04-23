@@ -9,7 +9,7 @@ import input_utils
 NUM_CLASSES = 6
 LABELS_FILE_TRAIN = 'mem_dataset/3_Apr-13-18-54-21-train.txt'
 LABELS_FILE_VAL = 'mem_dataset/3_Apr-13-18-54-21-val.txt'
-MODEL_DIR = 'modeldir/3'
+MODEL_DIR = 'tflearn_modeldir/3'
 SHAPE = (210,160,3) # height * width * channel This cannot read from file and needs to be provided here
 
 class Dataset:
