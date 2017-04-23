@@ -5,7 +5,10 @@ from keras.preprocessing.image import ImageDataGenerator
 from keras.models import Sequential, Model
 from keras.layers import Dense, Dropout, Activation, Flatten, BatchNormalization, Input
 from keras.layers import Conv2D, MaxPooling2D
+import tensorflow as tf
 import numpy as np
+
+from IPython import embed
 
 
 batch_size = 100
@@ -45,8 +48,9 @@ model=Model(inputs=inputs, outputs=[logits, prob])
 
 sgd = keras.optimizers.SGD(lr=0.01)
 
-# Let's train the model using RMSprop
-model.compile(loss=[None, 'sparse_categorical_crossentropy'],
+model.compile(loss=[lambda target, pred: keras.backend.sparse_categorical_crossentropy(output=pred,target=target, from_logits=True), 
+  lambda target, pred:  tf.constant(0.0)
+  ],
               optimizer=sgd,
               metrics={"prob":'accuracy'})
 
@@ -56,8 +60,8 @@ mean, std = np.mean(x_train, axis=(0,1,2)), np.std(x_train, axis=(0,1,2))
 x_train = (x_train-mean)/std
 x_test = (x_test-mean)/std
 
-model.fit(x_train, y_train,
+model.fit(x_train, [y_train, np.empty_like(y_train)],
           batch_size=batch_size,
           epochs=epochs,
-          validation_data=(x_test, y_test),
+          validation_data=(x_test, [y_test, np.empty_like(y_test)]),
           shuffle=True)
