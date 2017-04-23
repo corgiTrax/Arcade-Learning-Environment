@@ -21,20 +21,6 @@ print('x_train shape:', x_train.shape)
 print(x_train.shape[0], 'train samples')
 print(x_test.shape[0], 'test samples')
 
-# # Convert class vectors to binary class matrices.
-# y_train = keras.utils.to_categorical(y_train, num_classes)
-# y_test = keras.utils.to_categorical(y_test, num_classes)
-
-# model = Sequential()
-# model.add(Flatten(input_shape=x_train.shape[1:]))
-# model.add(Dense(512))
-# model.add(Activation("relu"))
-# model.add(BatchNormalization())
-# model.add(Dense(512))
-# model.add(Activation("relu"))
-# model.add(BatchNormalization())
-# model.add(Dense(num_classes, activation="softmax", name='prob'))
-
 inputs=Input(shape=x_train.shape[1:])
 x=inputs # inputs is used by the line "Model(inputs, ... )" below
 x=Flatten()(x)
@@ -54,11 +40,9 @@ def acc(y_true, y_pred):
       targets=tf.squeeze(tf.cast(y_true,tf.int32)), 
       predictions=y_pred,k=1),tf.float32))
 
-model.compile(loss={"logits":lambda target, pred: keras.backend.sparse_categorical_crossentropy(output=pred,target=target, from_logits=True), 
-  "prob": lambda x,y: tf.constant(0.0)
-  },
+model.compile(loss={"logits":lambda target, pred: keras.backend.sparse_categorical_crossentropy(output=pred,target=target, from_logits=True)},
           optimizer=sgd,
-          metrics={"prob":acc})
+          metrics={"logits":acc})
 
 x_train = x_train.astype('float32')
 x_test = x_test.astype('float32')
@@ -66,10 +50,9 @@ mean, std = np.mean(x_train, axis=(0,1,2)), np.std(x_train, axis=(0,1,2))
 x_train = (x_train-mean)/std
 x_test = (x_test-mean)/std
 
-model.fit(x_train, {"logits": y_train, "prob":y_train},
+model.fit(x_train, {"logits": y_train},
           batch_size=batch_size,
           epochs=epochs,
-          validation_data=(x_test,  {"logits": y_test, "prob":y_test}),
+          validation_data=(x_test,  {"logits": y_test}),
           shuffle=True)
-
 embed()
