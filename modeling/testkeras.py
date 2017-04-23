@@ -13,7 +13,7 @@ from IPython import embed
 
 batch_size = 100
 num_classes = 10
-epochs = 2
+epochs = 10
 
 # The data, shuffled and split between train and test sets:
 (x_train, y_train), (x_test, y_test) = cifar10.load_data()
@@ -48,11 +48,17 @@ model=Model(inputs=inputs, outputs=[logits, prob])
 
 sgd = keras.optimizers.SGD(lr=0.01)
 
-model.compile(loss=[lambda target, pred: keras.backend.sparse_categorical_crossentropy(output=pred,target=target, from_logits=True), 
-  lambda target, pred:  tf.constant(0.0)
-  ],
-              optimizer=sgd,
-              metrics={"prob":'accuracy'})
+def acc(y_true, y_pred):
+  return tf.reduce_mean(
+    tf.cast(tf.nn.in_top_k(
+      targets=tf.squeeze(tf.cast(y_true,tf.int32)), 
+      predictions=y_pred,k=1),tf.float32))
+
+model.compile(loss={"logits":lambda target, pred: keras.backend.sparse_categorical_crossentropy(output=pred,target=target, from_logits=True), 
+  "prob": lambda x,y: tf.constant(0.0)
+  },
+          optimizer=sgd,
+          metrics={"prob":acc})
 
 x_train = x_train.astype('float32')
 x_test = x_test.astype('float32')
@@ -60,8 +66,10 @@ mean, std = np.mean(x_train, axis=(0,1,2)), np.std(x_train, axis=(0,1,2))
 x_train = (x_train-mean)/std
 x_test = (x_test-mean)/std
 
-model.fit(x_train, [y_train, np.empty_like(y_train)],
+model.fit(x_train, {"logits": y_train, "prob":y_train},
           batch_size=batch_size,
           epochs=epochs,
-          validation_data=(x_test, [y_test, np.empty_like(y_test)]),
+          validation_data=(x_test,  {"logits": y_test, "prob":y_test}),
           shuffle=True)
+
+embed()
