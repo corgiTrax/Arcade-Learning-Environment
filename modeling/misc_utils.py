@@ -12,7 +12,7 @@ def save_GPU_mem_keras():
 
 
 class ExprCreaterAndResumer:
-    def __init__(self, rootdir):
+    def __init__(self, rootdir, postfix=None):
         if not os.path.exists(rootdir):
             os.makedirs(rootdir)
         expr_dirs = os.listdir(rootdir)
@@ -22,9 +22,9 @@ class ExprCreaterAndResumer:
         self.dir_lasttime = "%s/%s" % (rootdir, expr_dirs[highest_idx]) if highest_idx != -1 else None
         # dir name is like "5_Mar-09-12-27-59"
         self.dir = rootdir + '/' +  str(expr_num[highest_idx]+1 if highest_idx != -1 else 0) + \
-            '_' + time.strftime("%b-%d-%H-%M-%S")
+            '_' + (postfix if postfix else time.strftime("%b-%d-%H-%M-%S") )
         os.mkdir(self.dir)
-        self.logfile = open(self.dir +"/log.txt", 'a')
+        self.logfile = open(self.dir +"/log.txt", 'a', 0) # no buffer
 
     def load_weight_and_training_config_and_state(self):
         """
@@ -65,3 +65,9 @@ def acc_(y_true, y_pred): # don't rename it to acc or accuracy (otherwise stupid
     tf.cast(tf.nn.in_top_k(
       targets=tf.squeeze(tf.cast(y_true,tf.int32)), 
       predictions=y_pred,k=1),tf.float32))
+
+
+class PrintLrCallback(K.callbacks.Callback):
+    def on_epoch_end(self, epoch, logs={}):
+        print ("lr: %f" % K.backend.get_value(self.model.optimizer.lr))
+

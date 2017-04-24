@@ -29,3 +29,7 @@ mypylink/screen_record
 *.lai
 *.la
 *.a
+
+# Keras Model
+*.hdf5
+
