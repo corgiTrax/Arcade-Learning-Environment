@@ -38,8 +38,8 @@ def preprocess_and_sanity_check(png_files):
         prev_idx += 1
 
     if hasWarning:
-        print "There are warnings. Sleeping for 5 sec..."
-        time.sleep(5)
+        print "There are warnings. Sleeping for 2 sec..."
+        time.sleep(2)
 
     return png_files
 
@@ -84,7 +84,7 @@ class drawgc_wrapper:
         screen.blit(self.cursor, region_topleft) # Draws and shows the cursor content;
 
 class DrawStatus:
-    draw_many_gazes = False
+    draw_many_gazes = True
     cur_frame_id = 1
     total_frame = None
     target_fps = 60
@@ -121,12 +121,13 @@ def event_handler_func():
 
 if __name__ == "__main__":
     if len(sys.argv) < 3:
-        print "Usage: %s saved_frames_png_dir asc_file" % (sys.argv[0])
+        print "Usage: %s saved_frames_png_tar asc_file" % (sys.argv[0])
         sys.exit(0)
 
     tar = tarfile.open(sys.argv[1], 'r')
     asc_path = sys.argv[2]
 
+    print "Uncompressing PNG tar file into memory..."
     png_files = tar.getnames()
     png_files = preprocess_and_sanity_check(png_files)
     png_contents = {frameid_from_filename(png): StringIO.StringIO(tar.extractfile(png).read()) 

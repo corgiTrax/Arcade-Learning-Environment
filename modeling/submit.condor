@@ -1,0 +1,18 @@
+# doc at : http://research.cs.wisc.edu/htcondor/manual/current/condor_submit.html
+arguments = main.py
++Group ="GRAD"
++Project ="AI_ROBOTICS"
++ProjectDescription="ale"
++GPUJob=true
+Universe = vanilla
+
+# UTCS has 18 such machine, to take a look, run 'condor_status  -constraint 'GTX1080==true' 
+Requirements=(TARGET.GTX1080== true)
+
+executable = /u/zhuode93/anaconda2/bin/ipython 
+getenv = true
+output = CondorOutput/out.$(Cluster) 
+error = CondorOutput/err.$(Cluster)
+log = CondorOutput/log.txt
+Queue
+
