@@ -103,7 +103,7 @@ def event_handler_func():
             print "Fast-forward 5 seconds"
             ds.cur_frame_id += 5 * ds.target_fps
         elif event.key == K_F3:
-            p = float(input("Seeking through the video. Enter a percentage in float: "))
+            p = float(raw_input("Seeking through the video. Enter a percentage in float: "))
             ds.cur_frame_id = int(p/100*ds.total_frame)
         elif event.key == K_SPACE:
             ds.pause = not ds.pause
