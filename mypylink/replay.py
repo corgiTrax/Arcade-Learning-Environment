@@ -6,6 +6,7 @@
 
 import sys, pygame, time, os, re, tarfile, cStringIO as StringIO
 from pygame.constants import *
+import vip_constants as V
 
 def frameid_from_filename(fname): 
     """ Extract '23' from '0_blahblah/23.png' """
@@ -141,8 +142,7 @@ if __name__ == "__main__":
     tar.extractall("/dev/shm/")
 
     # init pygame and other stuffs
-    xSCALE, ySCALE = 6, 3
-    w, h = 160*xSCALE, 210*ySCALE
+    w, h = 160*V.xSCALE, 210*V.ySCALE
     pygame.init()
     pygame.display.set_mode((w, h), RESIZABLE | DOUBLEBUF | RLEACCEL, 32)
     screen = pygame.display.get_surface()
