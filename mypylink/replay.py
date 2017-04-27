@@ -4,7 +4,7 @@
 # Replay the game using saved frames and gaze positions recorded in a ASC file 
 # (ASC files are converted from EDF files, which are produced by EyeLink eyetracker)
 
-import sys, pygame, time, os, re, tarfile, StringIO
+import sys, pygame, time, os, re, tarfile, cStringIO as StringIO
 from pygame.constants import *
 
 def frameid_from_filename(fname): 
@@ -96,12 +96,18 @@ def event_handler_func():
 
     for event in pygame.event.get() :
       if event.type == pygame.KEYDOWN :
-        if event.key == K_F1:
+        if event.key == K_UP:
             print "Fast-backward 5 seconds"
             ds.cur_frame_id -= 5 * ds.target_fps
-        elif event.key == K_F2:
+        elif event.key == K_DOWN:
             print "Fast-forward 5 seconds"
             ds.cur_frame_id += 5 * ds.target_fps
+        if event.key == K_LEFT:
+            print "Moving to previous frame"
+            ds.cur_frame_id -= 1
+        elif event.key == K_RIGHT:
+            print "Moving to next frame"
+            ds.cur_frame_id += 1
         elif event.key == K_F3:
             p = float(raw_input("Seeking through the video. Enter a percentage in float: "))
             ds.cur_frame_id = int(p/100*ds.total_frame)
@@ -127,12 +133,12 @@ if __name__ == "__main__":
     tar = tarfile.open(sys.argv[1], 'r')
     asc_path = sys.argv[2]
 
-    print "Uncompressing PNG tar file into memory..."
     png_files = tar.getnames()
     png_files = preprocess_and_sanity_check(png_files)
-    png_contents = {frameid_from_filename(png): StringIO.StringIO(tar.extractfile(png).read()) 
-        for png in tar.getnames() if png.endswith(".png")}
-
+    print "\nYou can control the replay using keyboard. Try pressing space/up/down/left/right." 
+    print "For all available keys, see event_handler_func() code.\n"
+    print "Uncompressing PNG tar file into memory (/dev/shm/)..."
+    tar.extractall("/dev/shm/")
 
     # init pygame and other stuffs
     xSCALE, ySCALE = 6, 3
@@ -140,6 +146,7 @@ if __name__ == "__main__":
     pygame.init()
     pygame.display.set_mode((w, h), RESIZABLE | DOUBLEBUF | RLEACCEL, 32)
     screen = pygame.display.get_surface()
+    print "Reading gaze data in ASC file into memory..."
     frameid2pos = read_gaze_data_asc_file(asc_path)
     dw = drawgc_wrapper()
 
@@ -160,18 +167,19 @@ if __name__ == "__main__":
 
         event_handler_func()
 
+        # Load PNG file and draw the frame and the gaze-contingent window
+        s = pygame.image.load("/dev/shm/" + png_files[ds.cur_frame_id])
+        s = pygame.transform.scale(s, (w,h))
+        screen.blit(s, (0,0))
+        if ds.cur_frame_id in frameid2pos and len(frameid2pos[ds.cur_frame_id])>0:
+            for gaze_pos in frameid2pos[ds.cur_frame_id]:
+                dw.draw_gc(screen, gaze_pos)
+                if not ds.draw_many_gazes: break
+        else:
+            print "Warning: No gaze data for frame ID %d" % ds.cur_frame_id
+        pygame.display.flip()
+
         if not ds.pause:
-            # Load PNG file and draw the frame and the gaze-contingent window
-            s = pygame.image.load(png_contents[ds.cur_frame_id])
-            s = pygame.transform.scale(s, (w,h))
-            screen.blit(s, (0,0))
-            if ds.cur_frame_id in frameid2pos and len(frameid2pos[ds.cur_frame_id])>0:
-                for gaze_pos in frameid2pos[ds.cur_frame_id]:
-                    dw.draw_gc(screen, gaze_pos)
-                    if not ds.draw_many_gazes: break
-            else:
-                print "Warning: No gaze data for frame ID %d" % ds.cur_frame_id
-            pygame.display.flip()
             ds.cur_frame_id += 1
 
     print "Replay ended."
