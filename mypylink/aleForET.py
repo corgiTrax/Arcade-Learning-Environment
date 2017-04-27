@@ -6,6 +6,7 @@ from ale_python_interface import ALEInterface
 import pygame, numpy as np
 from IPython import embed
 import action_enums as aenum
+import vip_constants as V
 
 class aleForET:
     def __init__(self,rom_file, screen):
@@ -15,10 +16,9 @@ class aleForET:
 
         self.ale = ALEInterface()
         GAME_W, GAME_H = 160, 210
-        xSCALE, ySCALE = 6, 3
 
         # Setting up the pygame screen Surface 
-        self.size = GAME_W * xSCALE, GAME_H * ySCALE
+        self.size = GAME_W * V.xSCALE, GAME_H * V.ySCALE
 
         # Get & Set the desired settings
         self.ale.setInt('random_seed', 123)
