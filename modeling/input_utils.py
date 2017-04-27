@@ -49,7 +49,7 @@ def convert_gaze_pos_to_heap_map(frameid2pos):
     for (fid, gaze_pos_list) in frameid2pos.items():
         hmap = np.zeros(shape=(GAME_H, GAME_W), dtype=np.float32)
         # To convert the gaze positon from an image of size(160*xSCALE, 210*ySCALE), 
-        # we can first create a heap map of size (160*xSCALE, 210*ySCALE) and rescale it to (160, 210) using interpolation in one of (‘nearest’, ‘lanczos’, ‘bilinear’, ‘bicubic’ or ‘cubic’).
+        # we can first create a heap map of size (160*xSCALE, 210*ySCALE) and rescale it to (160, 210) using interpolation in one of ('nearest', 'lanczos', 'bilinear', 'bicubic' or 'cubic').
         # or we can just do something simple like here: for each gaze pos (x,y), just compute (x/xSCALE, y/ySCALE) using integer division.
         for (x,y) in gaze_pos_list: 
             try:

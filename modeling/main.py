@@ -51,7 +51,7 @@ else:
 expr.dump_src_code_and_model_def(sys.argv[0], model)
 
 d=input_utils.Dataset(LABELS_FILE_TRAIN, LABELS_FILE_VAL,SHAPE)
-model.fit(d.train_imgs, d.train_lbl, batch_size=100, epochs=60,
+model.fit(d.train_imgs, d.train_lbl, BATCH_SIZE, epochs=60,
     validation_data=(d.val_imgs, d.val_lbl),
     shuffle=True,verbose=2,
     callbacks=[K.callbacks.TensorBoard(log_dir=expr.dir),
