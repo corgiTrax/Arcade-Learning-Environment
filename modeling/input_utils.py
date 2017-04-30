@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 
-import os, threading
+import os, threading, re
 import numpy as np, tensorflow as tf
 from IPython import embed
 from scipy import misc
@@ -53,11 +53,10 @@ def convert_gaze_pos_to_heap_map(frameid2pos):
         # or we can just do something simple like here: for each gaze pos (x,y), just compute (x/xSCALE, y/ySCALE) using integer division.
         for (x,y) in gaze_pos_list: 
             try:
-                # add 1/4 to this point as "heat" (we do "/4" because we want to control the input scale to CNN. And usually a point gets at most 32 gazes. so the maximum value is 32/4=8)
-                hmap[int(y/V.ySCALE), int(x/V.xSCALE)] += 0.25
+                hmap[int(y/V.ySCALE), int(x/V.xSCALE)] += 1
             except IndexError: # the computed X,Y position is not in range [0,160) and [0, 210)
                 bad_count += 1
-        frameid2heatmap[fid] = hmap
+        frameid2heatmap[fid] = hmap / (np.sum(hmap, axis=None) + 1e-5) # normalize to a prob distribution; +1e-5 to avoid /0 when no gaze
         tot_count += len(gaze_pos_list)
     print "Bad gaze (x,y) sample: %d (%.2f%%, total gaze sample: %d)" % (bad_count, 100*float(bad_count)/tot_count, tot_count)
     print "'Bad' means the gaze position is outside the 160*210 screen"
@@ -81,6 +80,14 @@ class Dataset:
     mean = np.mean(self.train_imgs, axis=(0,1,2))
     self.train_imgs = self.train_imgs-mean
     self.val_imgs = self.val_imgs-mean
+
+
+class DatasetWithGaze(Dataset):
+  def __init__(self, LABELS_FILE_TRAIN, LABELS_FILE_VAL, SHAPE):
+    super(DatasetWithGaze, self).__init__(LABELS_FILE_TRAIN, LABELS_FILE_VAL, SHAPE)
+    
+
+
 
 def read_np(label_file):
     """
@@ -131,4 +138,3 @@ def read_np_parallel(label_file, SHAPE, num_thread=10):
     for t in threads: t.start()
     for t in threads: t.join()
     return imgs, labels
-
