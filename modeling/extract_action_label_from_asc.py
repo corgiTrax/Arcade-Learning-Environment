@@ -1,51 +1,13 @@
 #!/usr/bin/env python
 
 import sys, re, tarfile, os
-
-def frameid_from_filename(fname): 
-    """ Extract '23' from '0_blahblah/23.png' """
-
-    a, b = os.path.splitext(os.path.basename(fname))
-    try:
-        frameid = int(a)
-    except ValueError as ex:
-        raise ValueError("cannot convert filename '%s' to frame ID (an integer)" % fname)
-    return frameid
-
-def read_gaze_data_asc_file(fname):
-    """ This function reads a ASC file and returns a dictionary mapping frame ID to gaze position """
-
-    with open(fname, 'r') as f:
-        lines = f.readlines()
-    frameid = "BEFORE-FIRST-FRAME"
-    frameid2action = {frameid: None}
-
-    for (i,line) in enumerate(lines):
-
-        match_scr_msg = re.match("MSG\s+(\d+)\s+SCR_RECORDER FRAMEID (\d+)", line)
-        if match_scr_msg: # when a new id is encountered
-            timestamp, frameid = match_scr_msg.group(1), match_scr_msg.group(2)
-            frameid = int(frameid)
-            frameid2action[frameid] = None
-            continue
-
-        match_action = re.match("MSG\s+(\d+)\s+key_pressed atari_action (\d+)", line)
-        if match_action:
-            timestamp, action_label = match_action.group(1), match_action.group(2)
-            if frameid2action[frameid] is None:
-            	frameid2action[frameid] = int(action_label)
-            else:
-            	print "Warning: there are more than 1 action for frame id %d. Not supposed to happen." % frameid
-            continue
-
-    return frameid2action
+from input_utils import read_gaze_data_asc_file, frameid_from_filename
 
 def untar(tar_path, output_path):
     tar = tarfile.open(tar_path, 'r')
     tar.extractall(output_path)
     png_files = [png for png in tar.getnames() if png.endswith('.png')]
     return png_files
-
 
 if __name__ == '__main__':
 	if len(sys.argv)<5: 
@@ -54,7 +16,7 @@ if __name__ == '__main__':
 	asc_file, tar_file, output_path, percent = sys.argv[1], sys.argv[2], sys.argv[3], float(sys.argv[4])
 	
 	print "reading asc_file..."
-	frameid2action = read_gaze_data_asc_file(asc_file)
+	_, frameid2action = read_gaze_data_asc_file(asc_file)
 
 	print "Untaring file..."
 	png_files = untar(tar_file, output_path)
