@@ -11,9 +11,10 @@ class ScreenRecorder:
     def __init__(self):
         rootdir = 'screen_record'
         if not os.path.exists(rootdir):
-            os.mkdir(rootdir)
-        indices = [int(re.match("(\d+)_", x).group(1)) for x in os.listdir(rootdir)]
-        highest_indices = max(indices) if len(indices)>0 else -1
+            os.makedirs(rootdir)
+        re_matches = [re.match("(\d+)_", x) for x in os.listdir(rootdir)]
+        expr_num = [int(x.group(1)) for x in re_matches if x is not None]
+        highest_indices = max(expr_num) if len(expr_num)>0 else -1
         
         # dir name is like "5_Mar-09-12-27-59"
         self.dir = rootdir + '/' +  str(highest_indices+1) + \
