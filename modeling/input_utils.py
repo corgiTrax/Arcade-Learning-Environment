@@ -80,6 +80,7 @@ class Dataset(object):
   train_imgs, train_lbl, train_fid, train_size = None, None, None, None
   val_imgs, val_lbl, val_fid, val_size = None, None, None, None
   def __init__(self, LABELS_FILE_TRAIN, LABELS_FILE_VAL, SHAPE):
+    self.mean_file=LABELS_FILE_TRAIN + '.mean.npy'
     print "Reading all training data into memory..."
     self.train_imgs, self.train_lbl, self.train_fid = read_np_parallel(LABELS_FILE_TRAIN, SHAPE)
     self.train_size = len(self.train_lbl)
@@ -91,7 +92,12 @@ class Dataset(object):
     print "Done."
 
   def standardize(self):
-    mean = np.mean(self.train_imgs, axis=(0,1,2))
+    if os.path.exists(self.mean_file):
+        mean = np.load(self.mean_file)
+        print "Saved mean file found (%s); skip mean computation." % self.mean_file
+    else:
+        mean = np.mean(self.train_imgs, axis=(0,1,2))
+        np.save(self.mean_file, mean)
     self.train_imgs -= mean # done in-place --- "x-=mean" is faster than "x=x-mean"
     self.val_imgs -= mean
 
@@ -100,12 +106,12 @@ class DatasetWithGaze(Dataset):
   frameid2pos, frameid2heatmap, frameid2action_notused = None, None, None
   train_GHmap, val_GHmap = None, None # GHmap means gaze heap map
   
-  def __init__(self, LABELS_FILE_TRAIN, LABELS_FILE_VAL, SHAPE, GAZE_POS_ASC_FILE):
+  def __init__(self, LABELS_FILE_TRAIN, LABELS_FILE_VAL, SHAPE, GAZE_POS_ASC_FILE, bg_prob_density):
     super(DatasetWithGaze, self).__init__(LABELS_FILE_TRAIN, LABELS_FILE_VAL, SHAPE)
     print "Reading gaze data ASC file, and converting per-frame gaze positions to heat map..."
     self.frameid2pos, self.frameid2action_notused = read_gaze_data_asc_file(GAZE_POS_ASC_FILE)
-    self.train_GHmap = np.zeros([self.train_size, SHAPE[0], SHAPE[1], 1], dtype=np.float32)
-    self.val_GHmap = np.zeros([self.val_size, SHAPE[0], SHAPE[1], 1], dtype=np.float32)
+    self.train_GHmap = np.full([self.train_size, SHAPE[0], SHAPE[1], 1], dtype=np.float32, fill_value=bg_prob_density)
+    self.val_GHmap = np.full([self.val_size, SHAPE[0], SHAPE[1], 1], dtype=np.float32, fill_value=bg_prob_density)
     self.prepare_gaze_heap_map_data()
 
   def prepare_gaze_heap_map_data(self):
