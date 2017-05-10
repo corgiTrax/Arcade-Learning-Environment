@@ -4,7 +4,6 @@ import os, threading, re
 import numpy as np, tensorflow as tf
 from IPython import embed
 from scipy import misc
-import cPickle as pickle
 import vip_constants as V
 
 def frameid_from_filename(fname): 
@@ -80,6 +79,7 @@ class Dataset(object):
   train_imgs, train_lbl, train_fid, train_size = None, None, None, None
   val_imgs, val_lbl, val_fid, val_size = None, None, None, None
   def __init__(self, LABELS_FILE_TRAIN, LABELS_FILE_VAL, SHAPE):
+    self.mean_file=LABELS_FILE_TRAIN + '.mean.npy'
     print "Reading all training data into memory..."
     self.train_imgs, self.train_lbl, self.train_fid = read_np_parallel(LABELS_FILE_TRAIN, SHAPE)
     self.train_size = len(self.train_lbl)
@@ -91,7 +91,12 @@ class Dataset(object):
     print "Done."
 
   def standardize(self):
-    mean = np.mean(self.train_imgs, axis=(0,1,2))
+    if os.path.exists(self.mean_file):
+        mean = np.load(self.mean_file)
+        print "Saved mean file found (%s); skip mean computation." % self.mean_file
+    else:
+        mean = np.mean(self.train_imgs, axis=(0,1,2))
+        np.save(self.mean_file, mean)
     self.train_imgs -= mean # done in-place --- "x-=mean" is faster than "x=x-mean"
     self.val_imgs -= mean
 
@@ -100,12 +105,12 @@ class DatasetWithGaze(Dataset):
   frameid2pos, frameid2heatmap, frameid2action_notused = None, None, None
   train_GHmap, val_GHmap = None, None # GHmap means gaze heap map
   
-  def __init__(self, LABELS_FILE_TRAIN, LABELS_FILE_VAL, SHAPE, GAZE_POS_ASC_FILE):
+  def __init__(self, LABELS_FILE_TRAIN, LABELS_FILE_VAL, SHAPE, GAZE_POS_ASC_FILE, bg_prob_density):
     super(DatasetWithGaze, self).__init__(LABELS_FILE_TRAIN, LABELS_FILE_VAL, SHAPE)
     print "Reading gaze data ASC file, and converting per-frame gaze positions to heat map..."
     self.frameid2pos, self.frameid2action_notused = read_gaze_data_asc_file(GAZE_POS_ASC_FILE)
-    self.train_GHmap = np.zeros([self.train_size, SHAPE[0], SHAPE[1], 1], dtype=np.float32)
-    self.val_GHmap = np.zeros([self.val_size, SHAPE[0], SHAPE[1], 1], dtype=np.float32)
+    self.train_GHmap = np.full([self.train_size, SHAPE[0], SHAPE[1], 1], dtype=np.float32, fill_value=bg_prob_density)
+    self.val_GHmap = np.full([self.val_size, SHAPE[0], SHAPE[1], 1], dtype=np.float32, fill_value=bg_prob_density)
     self.prepare_gaze_heap_map_data()
 
   def prepare_gaze_heap_map_data(self):
@@ -120,29 +125,13 @@ class DatasetWithGaze(Dataset):
     print "Bad gaze (x,y) sample: %d (%.2f%%, total gaze sample: %d)" % (bad_count, 100*float(bad_count)/tot_count, tot_count)
     print "'Bad' means the gaze position is outside the 160*210 screen"
 
-def read_np(label_file):
+def read_np_parallel(label_file, SHAPE, num_thread=6):
     """
     Read the whole dataset into memory. 
     Remember to run "imgs.nbytes" to see how much memory it uses
     Provide a label file (text file) which has "{image_path} {label}\n" per line.
     Returns a numpy array of the images, and a numpy array of labels
     """
-    labels, fids = [], []
-    imgs_255 = []  # misc.imread() returns an img as a 0~255 np array
-    with open(label_file,'r') as f:
-        d = os.path.dirname(label_file)
-        for line in f:
-            png_file, lbl = line.strip().split(' ')
-            png = misc.imread(os.path.join(d, png_file))
-            imgs_255.append(png)
-            labels.append(int(lbl))
-            fids.append(frameid_from_filename(png_file))
-    imgs_255 = np.asarray(imgs_255, dtype=np.float32)
-    imgs = imgs_255 / 255.0
-    labels = np.asarray(labels, dtype=np.int32)
-    return imgs, labels, fids
-
-def read_np_parallel(label_file, SHAPE, num_thread=10):    
     labels, fids = [], []
     png_files = []
     with open(label_file,'r') as f:

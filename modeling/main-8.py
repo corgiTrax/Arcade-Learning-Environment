@@ -6,19 +6,21 @@ import input_utils, misc_utils as MU
 import ipdb
 
 NUM_CLASSES=6
-LABELS_FILE_TRAIN = '/scratch/cluster/zhuode93/dataset/6_Apr-13-19-14-59-train.txt'
-LABELS_FILE_VAL = '/scratch/cluster/zhuode93/dataset/6_Apr-13-19-14-59-val.txt'
+BASE_FILE_NAME = "/scratch/cluster/zhuode93/dataset/17_May-08-21-26-37"
+LABELS_FILE_TRAIN = BASE_FILE_NAME + '-train.txt' 
+LABELS_FILE_VAL =  BASE_FILE_NAME + '-val.txt' 
+GAZE_POS_ASC_FILE = BASE_FILE_NAME + '.asc'
 SHAPE = (210,160,3) # height * width * channel This cannot read from file and needs to be provided here
 BATCH_SIZE=100
-num_epoch = 40
-MODEL_DIR = '6Expr'
+num_epoch = 50
+MODEL_DIR = 'GazeExpr17'
 resume_model = False
 
 MU.save_GPU_mem_keras()
 MU.keras_model_serialization_bug_fix()
 
-expr = MU.ExprCreaterAndResumer(MODEL_DIR)
-sys.stdout, sys.stderr = expr.logfile, expr.logfile
+expr = MU.ExprCreaterAndResumer(MODEL_DIR,postfix="baseline")
+#sys.stdout, sys.stderr = expr.logfile, expr.logfile
 
 if resume_model:
     model = expr.load_weight_and_training_config_and_state()
@@ -59,6 +61,3 @@ expr.save_weight_and_training_config_state(model)
 
 score = model.evaluate(d.val_imgs, d.val_lbl, BATCH_SIZE, 0)
 expr.printdebug("eval score:" + str(score))
-
-# TODO start to test different optimizers, model archetecture, avoid overfitting
-# TODO monitor loss at tensorboard

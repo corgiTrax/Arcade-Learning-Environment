@@ -11,8 +11,8 @@ Requirements=(TARGET.GTX1080== true)
 
 executable = /u/zhuode93/anaconda2/bin/ipython 
 getenv = true
-output = CondorOutput/out.$(Cluster) 
-error = CondorOutput/err.$(Cluster)
+output = CondorOutput/$(Cluster).out
+error = CondorOutput/$(Cluster).err
 log = CondorOutput/log.txt
 Queue
 

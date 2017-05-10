@@ -16,7 +16,8 @@ class ExprCreaterAndResumer:
         if not os.path.exists(rootdir):
             os.makedirs(rootdir)
         expr_dirs = os.listdir(rootdir)
-        expr_num = [int(re.match("(\d+)_", x).group(1)) for x in expr_dirs]
+        re_matches = [re.match("(\d+)_", x) for x in expr_dirs]
+        expr_num = [int(x.group(1)) for x in re_matches if x is not None]
         highest_idx = np.argmax(expr_num) if len(expr_num)>0 else -1
 
         self.dir_lasttime = "%s/%s" % (rootdir, expr_dirs[highest_idx]) if highest_idx != -1 else None
