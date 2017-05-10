@@ -4,7 +4,6 @@ import os, threading, re
 import numpy as np, tensorflow as tf
 from IPython import embed
 from scipy import misc
-import cPickle as pickle
 import vip_constants as V
 
 def frameid_from_filename(fname): 
@@ -126,29 +125,13 @@ class DatasetWithGaze(Dataset):
     print "Bad gaze (x,y) sample: %d (%.2f%%, total gaze sample: %d)" % (bad_count, 100*float(bad_count)/tot_count, tot_count)
     print "'Bad' means the gaze position is outside the 160*210 screen"
 
-def read_np(label_file):
+def read_np_parallel(label_file, SHAPE, num_thread=6):
     """
     Read the whole dataset into memory. 
     Remember to run "imgs.nbytes" to see how much memory it uses
     Provide a label file (text file) which has "{image_path} {label}\n" per line.
     Returns a numpy array of the images, and a numpy array of labels
     """
-    labels, fids = [], []
-    imgs_255 = []  # misc.imread() returns an img as a 0~255 np array
-    with open(label_file,'r') as f:
-        d = os.path.dirname(label_file)
-        for line in f:
-            png_file, lbl = line.strip().split(' ')
-            png = misc.imread(os.path.join(d, png_file))
-            imgs_255.append(png)
-            labels.append(int(lbl))
-            fids.append(frameid_from_filename(png_file))
-    imgs_255 = np.asarray(imgs_255, dtype=np.float32)
-    imgs = imgs_255 / 255.0
-    labels = np.asarray(labels, dtype=np.int32)
-    return imgs, labels, fids
-
-def read_np_parallel(label_file, SHAPE, num_thread=10):    
     labels, fids = [], []
     png_files = []
     with open(label_file,'r') as f:
