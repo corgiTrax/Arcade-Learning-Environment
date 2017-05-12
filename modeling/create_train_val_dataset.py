@@ -2,11 +2,13 @@
 
 import sys, re, tarfile, os
 from input_utils import read_gaze_data_asc_file, frameid_from_filename
+from IPython import embed
 
 def untar(tar_path, output_path):
     tar = tarfile.open(tar_path, 'r')
     tar.extractall(output_path)
     png_files = [png for png in tar.getnames() if png.endswith('.png')]
+    png_files = sorted(png_files,key=frameid_from_filename)
     return png_files
 
 if __name__ == '__main__':
@@ -15,7 +17,7 @@ if __name__ == '__main__':
 		sys.exit(0)
 	asc_file, tar_file, output_path, percent = sys.argv[1], sys.argv[2], sys.argv[3], float(sys.argv[4])
 	
-	print "reading asc_file..."
+	print "Reading asc file..."
 	_, frameid2action = read_gaze_data_asc_file(asc_file)
 
 	print "Untaring file..."
