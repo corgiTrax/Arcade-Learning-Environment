@@ -8,7 +8,8 @@ import pygame
 from IPython import embed
 
 class ScreenRecorder:
-    def __init__(self):
+    def __init__(self, unique_trial_id=666):
+        self.unique_trial_id=unique_trial_id
         rootdir = 'screen_record'
         if not os.path.exists(rootdir):
             os.makedirs(rootdir)
@@ -26,7 +27,7 @@ class ScreenRecorder:
             os.mkdir(self.dir)
             self.dir_created = True
 
-        fname = "%s/%s.png" % (self.dir, str(frameid)) # png is lossless
+        fname = "%s/%s_%s.png" % (self.dir, str(self.unique_trial_id), str(frameid)) # png is lossless
         pygame.image.save(screen, fname)
 
     def load_to_np(self, fname, size_param_used_when_playing):

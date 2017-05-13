@@ -12,7 +12,9 @@ RIGHT_EYE = 1
 LEFT_EYE = 0
 BINOCULAR = 2
 step_by_step_mode = None
-scr_recorder = ScreenRecorder()
+unique_trial_id = int(time.time()) % 100000
+scr_recorder = ScreenRecorder(unique_trial_id)
+
 
 # A class used to store the states required by drawgc()
 class drawgc_wrapper:
@@ -134,7 +136,7 @@ def do_trial(surf, ale):
 def save_screen_callback_func(screen, frameid):
 	# the drawing of current frame should align with the recording of eye
 	# position as close as possible. So we put sendMessage at the first line.
-	getEYELINK().sendMessage("SCR_RECORDER FRAMEID %d" % frameid)
+	getEYELINK().sendMessage("SCR_RECORDER FRAMEID %d UTID %d" % (frameid, unique_trial_id))
 	global scr_recorder
 	scr_recorder.save(screen, frameid)
 
