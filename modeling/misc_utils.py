@@ -42,6 +42,12 @@ class ExprCreaterAndResumer:
         shutil.copyfile(fname, self.dir + '/' + os.path.basename(fname))
         with open(self.dir + '/model.yaml', 'w') as f:
             f.write(kerasmodel.to_yaml())
+        # copy all py files 
+        snapshot_dir = self.dir + '/all_py_files_snapshot'
+        os.makedirs(snapshot_dir)
+        py_files = [os.path.dirname(fname)+'/'+x for x in os.listdir(os.path.dirname(fname)) if x.endswith('.py')]
+        for py in py_files:
+            shutil.copyfile(py, snapshot_dir + '/' + os.path.basename(py))
 
     def save_weight_and_training_config_state(self, model):
         model.save(self.dir + '/model.hdf5')
