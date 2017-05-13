@@ -11,10 +11,13 @@ def frameid_from_filename(fname):
 
     a, b = os.path.splitext(os.path.basename(fname))
     try:
-        frameid = int(a)
+        UTID, frameid = a.split('_')
     except ValueError as ex:
-        raise ValueError("cannot convert filename '%s' to frame ID (an integer)" % fname)
-    return frameid
+        raise ValueError("cannot convert filename '%s' to frame ID" % fname)
+    return make_unique_frame_id(UTID, frameid)
+
+def make_unique_frame_id(UTID, frameid):
+    return (hash(UTID), int(frameid))
 
 def read_gaze_data_asc_file(fname):
     """ This function reads a ASC file and returns 
@@ -29,10 +32,10 @@ def read_gaze_data_asc_file(fname):
 
     for (i,line) in enumerate(lines):
 
-        match_scr_msg = re.match("MSG\s+(\d+)\s+SCR_RECORDER FRAMEID (\d+)", line)
+        match_scr_msg = re.match("MSG\s+(\d+)\s+SCR_RECORDER FRAMEID (\d+) UTID (\w+)", line)
         if match_scr_msg: # when a new id is encountered
-            timestamp, frameid = match_scr_msg.group(1), match_scr_msg.group(2)
-            frameid = int(frameid)
+            timestamp, frameid, UTID = match_scr_msg.group(1), match_scr_msg.group(2), match_scr_msg.group(3)
+            frameid = make_unique_frame_id(UTID, frameid)
             frameid2pos[frameid] = []
             frameid2action[frameid] = None
             continue
