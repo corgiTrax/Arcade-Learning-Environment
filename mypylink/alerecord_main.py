@@ -12,7 +12,7 @@ RIGHT_EYE = 1
 LEFT_EYE = 0
 BINOCULAR = 2
 step_by_step_mode = None
-unique_trial_id = int(time.time()) % 100000
+unique_trial_id = int(time.time()) % 10000000
 scr_recorder = ScreenRecorder(unique_trial_id)
 
 
