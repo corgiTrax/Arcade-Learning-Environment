@@ -1,10 +1,11 @@
-import time, gc, sys
+import gc, sys, time as T # avoid collision with pygame.time
 from EyeLinkCoreGraphicsPyGame import EyeLinkCoreGraphicsPyGame
 from pylink import *
 from pygame import *
 from aleForET import aleForET
 from IPython import embed
 from ScreenRecorder import ScreenRecorder
+import vip_constants as V
 import action_enums
 
 
@@ -12,8 +13,8 @@ RIGHT_EYE = 1
 LEFT_EYE = 0
 BINOCULAR = 2
 step_by_step_mode = None
-unique_trial_id = int(time.time()) % 10000000
-scr_recorder = ScreenRecorder(unique_trial_id)
+unique_trial_id = None
+scr_recorder = None
 
 
 # A class used to store the states required by drawgc()
@@ -95,6 +96,7 @@ def do_trial(surf, ale):
 
 	play_beep_func(0, repeat=5)
 	try:
+		print "Now performing: drift correction"
 		getEYELINK().doDriftCorrect(surf.get_rect().w // 2, surf.get_rect().h // 2, 1, 0)
 	except: # When ESC is pressed or "Abort" buttun clicked, an exception will be thrown
 		pass
@@ -106,9 +108,12 @@ def do_trial(surf, ale):
 
 	surf.fill((255, 255, 255, 255))
 	getEYELINK().flushKeybuttons(0)
+	event.pump() # discard all events (usually key events) prior to experiment
 	gc.disable() # disable python garbage collection for the entire experiment
 
 	# experiment starts
+	global scr_recorder
+	scr_recorder=ScreenRecorder(unique_trial_id)
 	dw = drawgc_wrapper()
 	if step_by_step_mode:
 		eyelink_err_code = ale.run_in_step_by_step_mode(dw.drawgc, save_screen_callback_func, event_handler_callback_func, record_a_and_r_callback_func)
@@ -136,7 +141,7 @@ def do_trial(surf, ale):
 def save_screen_callback_func(screen, frameid):
 	# the drawing of current frame should align with the recording of eye
 	# position as close as possible. So we put sendMessage at the first line.
-	getEYELINK().sendMessage("SCR_RECORDER FRAMEID %d UTID %d" % (frameid, unique_trial_id))
+	getEYELINK().sendMessage("SCR_RECORDER FRAMEID %d UTID %s" % (frameid, unique_trial_id))
 	global scr_recorder
 	scr_recorder.save(screen, frameid)
 
@@ -243,13 +248,14 @@ if __name__ == "__main__":
 		print(str(ex) + '\nEyeLink("100.1.1.1") is None, using dummy EyeLink interface')
 	        eyelinktracker = EyeLink(None)
 
-	if len(sys.argv) < 3:
-		print 'Usage:', sys.argv[0], 'rom_file', "step_by_step_mode(true|false)"
+	if len(sys.argv) < 4:
+		print 'Usage:', sys.argv[0], 'rom_file', "step_by_step_mode(true|false)", "expr_name"
 		sys.exit()
 	rom_file = sys.argv[1]
 	step_by_step_mode = sys.argv[2].upper() == "TRUE"
+	unique_trial_id = "%s_%d" % (sys.argv[3], int(T.time())%10000000)
 
-	genv = EyeLinkCoreGraphicsPyGame(960,630,eyelinktracker)
+	genv = EyeLinkCoreGraphicsPyGame(160*V.xSCALE,210*V.ySCALE,eyelinktracker)
 	openGraphicsEx(genv)
 
 	#Opens the EDF file.

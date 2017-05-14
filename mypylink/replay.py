@@ -7,16 +7,7 @@
 import sys, pygame, time, os, re, tarfile, cStringIO as StringIO
 from pygame.constants import *
 import vip_constants as V
-
-def frameid_from_filename(fname): 
-    """ Extract '23' from '0_blahblah/23.png' """
-
-    a, b = os.path.splitext(os.path.basename(fname))
-    try:
-        frameid = int(a)
-    except ValueError as ex:
-        raise ValueError("cannot convert filename '%s' to frame ID (an integer)" % fname)
-    return frameid
+from input_utils import frameid_from_filename, read_gaze_data_asc_file
 
 def preprocess_and_sanity_check(png_files):
     hasWarning = False
@@ -32,7 +23,7 @@ def preprocess_and_sanity_check(png_files):
     prev_idx = 0
     for fname in png_files:
         # check if the index starts with one, and is free of gap (e.g. free of jumping from i to i+2)
-        while prev_idx + 1 != frameid_from_filename(fname):
+        while prev_idx + 1 != frameid_from_filename(fname)[1]:
             print ("Warning: there is a gap between frames. Missing frame ID: %d" % (prev_idx+1))
             hasWarning = True
             prev_idx += 1
@@ -43,36 +34,6 @@ def preprocess_and_sanity_check(png_files):
         time.sleep(2)
 
     return png_files
-
-def read_gaze_data_asc_file(fname):
-    """ This function reads a ASC file and returns a dictionary mapping frame ID to gaze position """
-
-    with open(fname, 'r') as f:
-        lines = f.readlines()
-    frameid, xpos, ypos = "BEFORE-FIRST-FRAME", None, None
-    frameid2pos = {frameid: []}
-
-    for (i,line) in enumerate(lines):
-
-        match_scr_msg = re.match("MSG\s+(\d+)\s+SCR_RECORDER FRAMEID (\d+)", line)
-        if match_scr_msg: # when a new id is encountered
-            timestamp, frameid = match_scr_msg.group(1), match_scr_msg.group(2)
-            frameid = int(frameid)
-            frameid2pos[frameid] = []
-            continue
-
-        freg = "[-+]?[0-9]*\.?[0-9]+" # regex for floating point numbers
-        match_sample = re.match("(\d+)\s+(%s)\s+(%s)" % (freg, freg), line)
-        if match_sample:
-            timestamp, xpos, ypos = match_sample.group(1), match_sample.group(2), match_sample.group(3)
-            xpos, ypos = float(xpos), float(ypos)
-            frameid2pos[frameid].append((xpos,ypos))
-            continue
-
-    frameid2pos["AFTER-LAST-FRAME"] = frameid2pos[frameid]
-    del frameid2pos[frameid] # throw out gazes after the last frame, because the game has ended but eye tracker keeps recording
-
-    return frameid2pos
 
 class drawgc_wrapper:
     def __init__(self):
@@ -140,6 +101,7 @@ if __name__ == "__main__":
     print "For all available keys, see event_handler_func() code.\n"
     print "Uncompressing PNG tar file into memory (/dev/shm/)..."
     tar.extractall("/dev/shm/")
+    UTIDhash = frameid_from_filename(png_files[2])[0]
 
     # init pygame and other stuffs
     w, h = 160*V.xSCALE, 210*V.ySCALE
@@ -147,7 +109,7 @@ if __name__ == "__main__":
     pygame.display.set_mode((w, h), RESIZABLE | DOUBLEBUF | RLEACCEL, 32)
     screen = pygame.display.get_surface()
     print "Reading gaze data in ASC file into memory..."
-    frameid2pos = read_gaze_data_asc_file(asc_path)
+    frameid2pos, _ = read_gaze_data_asc_file(asc_path)
     dw = drawgc_wrapper()
 
     ds.target_fps = 60
@@ -171,8 +133,9 @@ if __name__ == "__main__":
         s = pygame.image.load("/dev/shm/" + png_files[ds.cur_frame_id])
         s = pygame.transform.scale(s, (w,h))
         screen.blit(s, (0,0))
-        if ds.cur_frame_id in frameid2pos and len(frameid2pos[ds.cur_frame_id])>0:
-            for gaze_pos in frameid2pos[ds.cur_frame_id]:
+        UFID=(UTIDhash, ds.cur_frame_id) # Unique frame ID in 'frameid2pos' is defined as a tuple: (UTID's hash value, frame number)
+        if UFID in frameid2pos and len(frameid2pos[UFID])>0:
+            for gaze_pos in frameid2pos[UFID]:
                 dw.draw_gc(screen, gaze_pos)
                 if not ds.draw_many_gazes: break
         else:
@@ -184,14 +147,12 @@ if __name__ == "__main__":
 
     print "Replay ended."
 
-# The method used in this script to align a gaze position to each frame is:
-# For frame #i, attach the gaze position immediately before frame #i+1.
-# That is, search for the last gaze position immediately before "MSG <timestamp> SCR_RECORDER FRAMEID i+1",
+
 # An example having only 3 frames is given below
 
 '''
 MSG     472750 SCR_RECORDER FRAMEID 1
-472750    485.3   305.9  1020.0 ...
+472750    485.3   305.9  1020.0 ... 
 472751    485.6   306.7  1019.0 ...
 472752    485.9   307.8  1018.0 ...
 472753    486.1   308.8  1017.0 ...
@@ -223,9 +184,9 @@ MSG     472750 SCR_RECORDER FRAMEID 1
 472779    484.7   308.1  1032.0 ...
 472780    484.6   308.1  1032.0 ...
 472781    484.3   308.2  1036.0 ...
-472782    484.1   308.3  1040.0 ...   <----- this gaze position gets attached to frame 1
+472782    484.1   308.3  1040.0 ...   
 MSG     472783 SCR_RECORDER FRAMEID 2
-472783    484.2   308.4  1044.0 ...
+472783    484.2   308.4  1044.0 ... 
 472784    484.4   308.1  1041.0 ...
 472785    484.7   307.8  1037.0 ...
 472786    484.7   307.3  1034.0 ...
@@ -256,7 +217,7 @@ MSG     472783 SCR_RECORDER FRAMEID 2
 472811    482.9   308.0  1044.0 ...
 472812    483.3   307.8  1048.0 ...
 472813    483.6   308.5  1052.0 ...
-472814    484.0   309.3  1050.0 ...  <----- this position gets attached to frame 2 
+472814    484.0   309.3  1050.0 ... 
 MSG     472815 SCR_RECORDER FRAMEID 3 <----- Frame 3, the last frame, has no gaze position attached to it
 472815    484.2   309.2  1048.0 ...
 472816    484.4   309.0  1047.0 ...
