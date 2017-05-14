@@ -66,9 +66,6 @@ def read_gaze_data_asc_file(fname):
     return frameid2pos, frameid2action
 
 def convert_gaze_pos_to_heap_map(gaze_pos_list, out):
-    # To convert the gaze positon from a heap map of size(160*xSCALE, 210*ySCALE), 
-    # we can first create a heap map of size (160*xSCALE, 210*ySCALE) and rescale it to (160, 210) using interpolation in one of ('nearest', 'lanczos', 'bilinear', 'bicubic' or 'cubic').
-    # or we can just do something simple like here: for each gaze pos (x,y), just compute (x/xSCALE, y/ySCALE) using integer division.
     h,w = out.shape[0], out.shape[1]
     bad_count = 0
     for (x,y) in gaze_pos_list: 

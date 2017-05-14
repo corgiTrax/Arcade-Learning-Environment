@@ -6,20 +6,20 @@ import input_utils, misc_utils as MU
 import ipdb
 
 NUM_CLASSES=6
-BASE_FILE_NAME = "/scratch/cluster/zhuode93/dataset/17_May-08-21-26-37"
+BASE_FILE_NAME = "/scratch/cluster/zhuode93/dataset/26_RZ_4724011_May-13-20-09-02"
 LABELS_FILE_TRAIN = BASE_FILE_NAME + '-train.txt' 
 LABELS_FILE_VAL =  BASE_FILE_NAME + '-val.txt' 
 GAZE_POS_ASC_FILE = BASE_FILE_NAME + '.asc'
 SHAPE = (84,84,1) # height * width * channel This cannot read from file and needs to be provided here
 BATCH_SIZE=100
-num_epoch = 50
-MODEL_DIR = 'GazeExpr17'
+num_epoch = 60
+MODEL_DIR = 'GazeExpr26'
 resume_model = False
 
 MU.save_GPU_mem_keras()
 MU.keras_model_serialization_bug_fix()
 
-expr = MU.ExprCreaterAndResumer(MODEL_DIR,postfix="baseline_noShuf_8484")
+expr = MU.ExprCreaterAndResumer(MODEL_DIR,postfix="baseline")
 # sys.stdout, sys.stderr = expr.logfile, expr.logfile
 
 if resume_model:
@@ -50,7 +50,7 @@ else:
 expr.dump_src_code_and_model_def(sys.argv[0], model)
 
 d=input_utils.Dataset(LABELS_FILE_TRAIN, LABELS_FILE_VAL, SHAPE)
-model.fit(d.train_imgs, d.train_lbl, BATCH_SIZE, epochs=60,
+model.fit(d.train_imgs, d.train_lbl, BATCH_SIZE, epochs=num_epoch,
     validation_data=(d.val_imgs, d.val_lbl),
     shuffle=True,verbose=2,
     callbacks=[K.callbacks.TensorBoard(log_dir=expr.dir),
