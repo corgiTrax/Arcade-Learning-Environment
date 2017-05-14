@@ -1,17 +1,18 @@
 #!/usr/bin/env python
 
 import os, re, threading
-import numpy as np, tensorflow as tf
+import numpy as np
 from IPython import embed
 from scipy import misc
 import vip_constants as V
 
 def frameid_from_filename(fname): 
-    """ Extract '23' from '0_blahblah/23.png' """
+    """ Extract 'exprname_randnum_23' from '0_blahblah/exprname_randnum_23.png' """
 
     a, b = os.path.splitext(os.path.basename(fname))
     try:
-        UTID, frameid = a.split('_')
+        exprname, randnum, frameid = a.split('_')
+        UTID = exprname + '_' + randnum
     except ValueError as ex:
         raise ValueError("cannot convert filename '%s' to frame ID" % fname)
     return make_unique_frame_id(UTID, frameid)
