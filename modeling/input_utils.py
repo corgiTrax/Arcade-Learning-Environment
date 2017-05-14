@@ -107,9 +107,9 @@ class DatasetWithGaze(Dataset):
     self.frameid2pos, self.frameid2action_notused = read_gaze_data_asc_file(GAZE_POS_ASC_FILE)
     self.train_GHmap = np.full([self.train_size, RESIZE_SHAPE[0], RESIZE_SHAPE[1], 1], dtype=np.float32, fill_value=bg_prob_density)
     self.val_GHmap = np.full([self.val_size, RESIZE_SHAPE[0], RESIZE_SHAPE[1], 1], dtype=np.float32, fill_value=bg_prob_density)
-    self.prepare_gaze_heap_map_data()
+    self.prepare_train_val_gaze_data()
 
-  def prepare_gaze_heap_map_data(self):
+  def prepare_train_val_gaze_data(self):
     """Assign a heap map for each frame in train and val dataset"""
     bad_count, tot_count = 0, 0
     for (i,fid) in enumerate(self.train_fid):
