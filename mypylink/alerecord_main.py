@@ -14,7 +14,7 @@ LEFT_EYE = 0
 BINOCULAR = 2
 step_by_step_mode = None
 unique_trial_id = None
-scr_recorder = ScreenRecorder()
+scr_recorder = None
 
 
 # A class used to store the states required by drawgc()
@@ -112,6 +112,8 @@ def do_trial(surf, ale):
 	gc.disable() # disable python garbage collection for the entire experiment
 
 	# experiment starts
+	global scr_recorder
+	scr_recorder=ScreenRecorder(unique_trial_id)
 	dw = drawgc_wrapper()
 	if step_by_step_mode:
 		eyelink_err_code = ale.run_in_step_by_step_mode(dw.drawgc, save_screen_callback_func, event_handler_callback_func, record_a_and_r_callback_func)
@@ -141,7 +143,7 @@ def save_screen_callback_func(screen, frameid):
 	# position as close as possible. So we put sendMessage at the first line.
 	getEYELINK().sendMessage("SCR_RECORDER FRAMEID %d UTID %s" % (frameid, unique_trial_id))
 	global scr_recorder
-	scr_recorder.save(screen, frameid, unique_trial_id)
+	scr_recorder.save(screen, frameid)
 
 bool_drawgc = False
 def event_handler_callback_func(key_pressed):
