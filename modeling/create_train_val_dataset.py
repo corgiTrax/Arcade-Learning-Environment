@@ -30,7 +30,7 @@ if __name__ == '__main__':
 		if fid in frameid2action and frameid2action[fid] != None:
 			xy_str.append('%s %d' % (png, frameid2action[fid]))
 		else:
-			print "Warning: Cannot find the label for frame ID %d. Skipping this frame." % fid
+			print "Warning: Cannot find the label for frame ID %s. Skipping this frame." % str(fid)
 	
 	xy_str_train = xy_str[:int(percent*len(xy_str))]
 	xy_str_val =   xy_str[int(percent*len(xy_str)):]
