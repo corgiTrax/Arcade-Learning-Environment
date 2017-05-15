@@ -1,0 +1,7 @@
+30 RZ seaquest data ok random_seed:88
+31 RZ seaquest data ok random_seed:66
+33 RZ seaquest data ok random_seed:80
+35 RZ seaquest data ok random_seed:3
+36 RZ seaquest data ok random_seed:3
+37 RZ seaquest data ok random_seed:58
+38 RZ seaquest data ok random_seed:20
