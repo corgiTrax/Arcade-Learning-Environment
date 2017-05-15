@@ -125,9 +125,6 @@ def do_trial(surf, ale):
 	do_trial_subfunc_end_recording()
 	if eyelink_err_code == 0:
 		eyelink_err_code = getEYELINK().getRecordingStatus() # This function has something to say, so get its err_code (see api doc for details)  
-	print "Trial Ended. eyelink_err_code = %d (%s) Compressing recorded frames..." % (eyelink_err_code, eyelink_err_code_to_str(eyelink_err_code))
-	
-	scr_recorder.compress_record_dir(remove_original_dir=True)
 
 	# After the recording is done, we should run "Validation".
 	# So here doTrackerSetup() is called, and then the experimenter clicks "Validate". If the validation result is 
@@ -135,6 +132,9 @@ def do_trial(surf, ale):
 	play_beep_func(1, repeat=5)
 	print "Switched the eye tracker to Setup menu. Now you may perform validation."
 	getEYELINK().doTrackerSetup()
+
+	print "Trial Ended. eyelink_err_code = %d (%s) Compressing recorded frames..." % (eyelink_err_code, eyelink_err_code_to_str(eyelink_err_code))
+	scr_recorder.compress_record_dir(remove_original_dir=True)
 	return eyelink_err_code
 
 
