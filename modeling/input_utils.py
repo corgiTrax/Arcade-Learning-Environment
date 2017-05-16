@@ -31,7 +31,7 @@ def preprocess_gaze_heatmap(GHmap, sigmaH, sigmaW, bg_prob_density, debug_plot_r
     #     max_per_GH_correct_shape = tf.reshape(max_per_GH, [tf.shape(max_per_GH)[0],1,1,1])
     #     # normalize values to range [0,1], on a per heap-map basis
     #     x = x/max_per_GH_correct_shape
-    #     # add a uniform background 0.2, so that range becomes [1.0,2.0], and background is 2x smaller than max
+    #     # add a uniform background 1.0, so that range becomes [1.0,2.0], and background is 2x smaller than max
     #     x = x + 1.0
     #     return x
     # model.add(K.layers.Lambda(lambda x: GH_normalization_and_add_background(x)))
