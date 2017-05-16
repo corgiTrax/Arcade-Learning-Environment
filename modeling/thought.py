@@ -1,6 +1,3 @@
-from input_utils import *
-from scipy.ndimage.filters import gaussian_filter
-
 class DatasetWithGazeWindow(Dataset):
     def __init__(self, LABELS_FILE_TRAIN, LABELS_FILE_VAL, RESIZE_SHAPE, GAZE_POS_ASC_FILE, bg_prob_density,
         window_left_bound_ms=1000, window_right_bound_ms=0):
@@ -10,11 +7,26 @@ class DatasetWithGazeWindow(Dataset):
       self.window_left_bound, self.window_right_bound = window_left_bound_ms, window_right_bound_ms
       print "Reading gaze data ASC file, and converting per-frame gaze positions to heat map..."
       all_gaze, all_frame = self.read_gaze_data_asc_file_proprietary(GAZE_POS_ASC_FILE)
+      print "Running rescale_and_clip_gaze_pos()..."
       self.rescale_and_clip_gaze_pos(all_gaze)
       self.train_GHmap = np.empty([self.train_size, RESIZE_SHAPE[0], RESIZE_SHAPE[1], 1], dtype=np.float32)
       self.val_GHmap = np.empty([self.val_size, RESIZE_SHAPE[0], RESIZE_SHAPE[1], 1], dtype=np.float32)
-      self.frameid2GH, self.frameid2gazetuple = self.convert_gaze_data_to_map(all_gaze, all_frame)
+      print "Running convert_gaze_data_to_map()..."
+      import time
+      t1=time.time()
+      self.frameid2GH, self.frameid2gazetuple = self.convert_gaze_data_to_heat_map_proprietary(all_gaze, all_frame)
       self.prepare_train_val_gaze_data()
+      print "Done. Elapsed Time: ", time.time()-t1
+      
+    def prepare_train_val_gaze_data(self):
+        print "Assign a heap map for each frame in train and val dataset..."
+        for (i,fid) in enumerate(self.train_fid):
+            self.train_GHmap[i] = self.frameid2GH[fid]
+        for (i,fid) in enumerate(self.val_fid):
+            self.val_GHmap[i] = self.frameid2GH[fid]
+        print "Applying Gaussian Filter and normalization on train/val gaze heat map..."
+        self.train_GHmap = preprocess_gaze_heatmap(self.train_GHmap, 10, 10)
+        self.val_GHmap = preprocess_gaze_heatmap(self.val_GHmap, 10, 10)
 
     def read_gaze_data_asc_file_proprietary(self, fname):
         """
@@ -76,7 +88,7 @@ class DatasetWithGazeWindow(Dataset):
         print "Bad gaze (x,y) sample: %d (%.2f%%, total gaze sample: %d)" % (bad_count, 100*float(bad_count)/len(all_gaze), len(all_gaze))
         print "'Bad' means the gaze position is outside the 160*210 screen"
 
-    def convert_gaze_data_to_map(self, all_gaze, all_frame):
+    def convert_gaze_data_to_heat_map_proprietary(self, all_gaze, all_frame):
         GH = np.full([self.RESIZE_SHAPE[0], self.RESIZE_SHAPE[1], 1], dtype=np.float32, fill_value=self.bg_prob_density)
         left, right = 0,0
         frameid2GH = {}
@@ -110,14 +122,8 @@ class DatasetWithGazeWindow(Dataset):
             if gaze_for_cur_frame: # non-empty
                 assert gaze_for_cur_frame[-1][1] < frame_t # simple sanity-check: the timestamp of the latest gaze position should be smaller than the timestamp of current frame
 
-            frameid2GH[frameid] = gaussian_filter(GH,sigma=10)
+            frameid2GH[frameid] = GH.copy()
             frameid2gazetuple[frameid] = gaze_for_cur_frame
 
         return frameid2GH, frameid2gazetuple
 
-    def prepare_train_val_gaze_data(self):
-        """Assign a heap map for each frame in train and val dataset"""
-        for (i,fid) in enumerate(self.train_fid):
-            self.train_GHmap[i] = self.frameid2GH[fid]
-        for (i,fid) in enumerate(self.val_fid):
-            self.val_GHmap[i] = self.frameid2GH[fid]
