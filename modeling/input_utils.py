@@ -6,7 +6,7 @@ from IPython import embed
 from scipy import misc
 import vip_constants as V
 
-def preprocess_gaze_heatmap(GHmap, sigmaH, sigmaW, debug_plot_result=False):
+def preprocess_gaze_heatmap(GHmap, sigmaH, sigmaW, bg_prob_density, debug_plot_result=False):
     from scipy.stats import multivariate_normal
     import tensorflow as tf, keras as K # don't move this to the top, as people who import this file might not have keras or tf
 
@@ -17,19 +17,26 @@ def preprocess_gaze_heatmap(GHmap, sigmaH, sigmaW, debug_plot_result=False):
     assert gkernel.sum() > 0.95, "Simple sanity check: prob density should add up to nearly 1.0"
 
     model = K.models.Sequential()
+    
     model.add(K.layers.Lambda(lambda x: tf.pad(x,[(0,0),(lh,lh),(lw,lw),(0,0)],'REFLECT'),
         input_shape=(GHmap.shape[1],GHmap.shape[2],1)))
+
+    model.add(K.layers.Lambda(lambda x: x+bg_prob_density))
+
     model.add(K.layers.Conv2D(1, kernel_size=gkernel.shape, strides=1, padding="valid", use_bias=False,
               activation="linear", kernel_initializer=K.initializers.Constant(gkernel)))
+
     def GH_normalization_and_add_background(x):
         max_per_GH = tf.reduce_max(x,axis=[1,2,3])
         max_per_GH_correct_shape = tf.reshape(max_per_GH, [tf.shape(max_per_GH)[0],1,1,1])
         # normalize values to range [0,1], on a per heap-map basis
         x = x/max_per_GH_correct_shape
         # add a uniform background 0.2, so that range becomes [0.2,1.2], and background is 6x smaller than max
-        x = x + 0.2 
+        x = x + 1.0
         return x
+
     model.add(K.layers.Lambda(lambda x: GH_normalization_and_add_background(x)))
+
     model.compile(optimizer='rmsprop', # not used
           loss='categorical_crossentropy', # not used
           metrics=None)
@@ -41,7 +48,8 @@ def preprocess_gaze_heatmap(GHmap, sigmaH, sigmaW, debug_plot_result=False):
         import matplotlib.pyplot as plt
         f, axarr = plt.subplots(1,2)
         axarr[0].imshow(gkernel)
-        axarr[1].imshow(output[np.random.randint(output.shape[0]),...,0])"""
+        rnd=np.random.randint(output.shape[0]); print "rand idx:", rnd
+        axarr[1].imshow(output[rnd,...,0])"""
         embed()
     
     shape_before, shape_after = GHmap.shape, output.shape
@@ -231,8 +239,8 @@ class DatasetWithGazeWindow(Dataset):
         for (i,fid) in enumerate(self.val_fid):
             self.val_GHmap[i] = self.frameid2GH[fid]
         print "Applying Gaussian Filter and normalization on train/val gaze heat map..."
-        self.train_GHmap = preprocess_gaze_heatmap(self.train_GHmap, 10, 10)
-        self.val_GHmap = preprocess_gaze_heatmap(self.val_GHmap, 10, 10)
+        self.train_GHmap = preprocess_gaze_heatmap(self.train_GHmap, 10, 10, self.bg_prob_density)
+        self.val_GHmap = preprocess_gaze_heatmap(self.val_GHmap, 10, 10, self.bg_prob_density)
 
     def read_gaze_data_asc_file_proprietary(self, fname):
         """
@@ -295,7 +303,7 @@ class DatasetWithGazeWindow(Dataset):
         print "'Bad' means the gaze position is outside the 160*210 screen"
 
     def convert_gaze_data_to_heat_map_proprietary(self, all_gaze, all_frame):
-        GH = np.full([self.RESIZE_SHAPE[0], self.RESIZE_SHAPE[1], 1], dtype=np.float32, fill_value=self.bg_prob_density)
+        GH = np.zeros([self.RESIZE_SHAPE[0], self.RESIZE_SHAPE[1], 1], dtype=np.float32)
         left, right = 0,0
         frameid2GH = {}
         frameid2gazetuple={}
