@@ -12,7 +12,7 @@ LABELS_FILE_VAL =  BASE_FILE_NAME + '-val.txt'
 GAZE_POS_ASC_FILE = BASE_FILE_NAME + '.asc'
 SHAPE = (84,84,1) # height * width * channel This cannot read from file and needs to be provided here
 BATCH_SIZE=100
-num_epoch = 60
+num_epoch = 30
 MODEL_DIR = 'GazeExpr26'
 resume_model = False
 
