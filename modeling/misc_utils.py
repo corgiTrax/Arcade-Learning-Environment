@@ -10,7 +10,6 @@ def save_GPU_mem_keras():
     sess = tf.Session(config=config)
     K.backend.set_session(sess)
 
-
 class ExprCreaterAndResumer:
     def __init__(self, rootdir, postfix=None):
         if not os.path.exists(rootdir):
@@ -51,6 +50,11 @@ class ExprCreaterAndResumer:
 
     def save_weight_and_training_config_state(self, model):
         model.save(self.dir + '/model.hdf5')
+
+    def redirect_output_to_logfile_if_not_on(self, hostname):
+        import socket, sys
+        if socket.gethostname() != hostname:
+            sys.stdout, sys.stderr = self.logfile, self.logfile
 
     def printdebug(self, str):
         print('  ----   DEBUG: '+str)
