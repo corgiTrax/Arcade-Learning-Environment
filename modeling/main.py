@@ -10,7 +10,7 @@ BASE_FILE_NAME = "/scratch/cluster/zhuode93/dataset/26_RZ_4724011_May-13-20-09-0
 LABELS_FILE_TRAIN = BASE_FILE_NAME + '-train.txt' 
 LABELS_FILE_VAL =  BASE_FILE_NAME + '-val.txt' 
 GAZE_POS_ASC_FILE = BASE_FILE_NAME + '.asc'
-SHAPE = (210,160,1) # height * width * channel This cannot read from file and needs to be provided here
+SHAPE = (84,84,1) # height * width * channel This cannot read from file and needs to be provided here
 BATCH_SIZE=100
 num_epoch = 25
 MODEL_DIR = 'GazeExpr26'
@@ -19,8 +19,8 @@ resume_model = False
 MU.save_GPU_mem_keras()
 MU.keras_model_serialization_bug_fix()
 
-expr = MU.ExprCreaterAndResumer(MODEL_DIR,postfix="newNormalize_g1s_gaussian10")
-sys.stdout, sys.stderr = expr.logfile, expr.logfile
+expr = MU.ExprCreaterAndResumer(MODEL_DIR,postfix="84_BG1.0_g1s_gaussian10")
+expr.redirect_output_to_logfile_if_not_on("eldar-11")
 
 if resume_model:
     model = expr.load_weight_and_training_config_and_state()
@@ -65,7 +65,8 @@ else:
 
 expr.dump_src_code_and_model_def(sys.argv[0], model)
 
-d=input_utils.DatasetWithGazeWindow(LABELS_FILE_TRAIN, LABELS_FILE_VAL, SHAPE, GAZE_POS_ASC_FILE, bg_prob_density=0.0)
+d=input_utils.DatasetWithGazeWindow(LABELS_FILE_TRAIN, LABELS_FILE_VAL, SHAPE, GAZE_POS_ASC_FILE, 
+    bg_prob_density=1.0, gaussian_sigma=10)
 
 model.fit([d.train_imgs, d.train_GHmap], d.train_lbl, BATCH_SIZE, epochs=num_epoch,
     validation_data=([d.val_imgs, d.val_GHmap], d.val_lbl),

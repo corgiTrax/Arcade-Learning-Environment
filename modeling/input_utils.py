@@ -10,7 +10,7 @@ def preprocess_gaze_heatmap(GHmap, sigmaH, sigmaW, bg_prob_density, debug_plot_r
     from scipy.stats import multivariate_normal
     import tensorflow as tf, keras as K # don't move this to the top, as people who import this file might not have keras or tf
 
-    lh, lw = 4*sigmaH, 4*sigmaW
+    lh, lw = int(4*sigmaH), int(4*sigmaW)
     x, y = np.mgrid[-lh:lh+1:1, -lw:lw+1:1] # so the kernel size is [lh*2+1,lw*2+1]
     pos = np.dstack((x, y))
     gkernel=multivariate_normal.pdf(pos,mean=[0,0],cov=[[sigmaH*sigmaH,0],[0,sigmaW*sigmaW]])
@@ -25,17 +25,16 @@ def preprocess_gaze_heatmap(GHmap, sigmaH, sigmaW, bg_prob_density, debug_plot_r
 
     model.add(K.layers.Conv2D(1, kernel_size=gkernel.shape, strides=1, padding="valid", use_bias=False,
               activation="linear", kernel_initializer=K.initializers.Constant(gkernel)))
-
-    def GH_normalization_and_add_background(x):
-        max_per_GH = tf.reduce_max(x,axis=[1,2,3])
-        max_per_GH_correct_shape = tf.reshape(max_per_GH, [tf.shape(max_per_GH)[0],1,1,1])
-        # normalize values to range [0,1], on a per heap-map basis
-        x = x/max_per_GH_correct_shape
-        # add a uniform background 0.2, so that range becomes [0.2,1.2], and background is 6x smaller than max
-        x = x + 1.0
-        return x
-
-    model.add(K.layers.Lambda(lambda x: GH_normalization_and_add_background(x)))
+    # The following normalization hurts accuracy. I don't know why. But intuitively it should increase accuracy
+    # def GH_normalization_and_add_background(x):
+    #     max_per_GH = tf.reduce_max(x,axis=[1,2,3])
+    #     max_per_GH_correct_shape = tf.reshape(max_per_GH, [tf.shape(max_per_GH)[0],1,1,1])
+    #     # normalize values to range [0,1], on a per heap-map basis
+    #     x = x/max_per_GH_correct_shape
+    #     # add a uniform background 0.2, so that range becomes [1.0,2.0], and background is 2x smaller than max
+    #     x = x + 1.0
+    #     return x
+    # model.add(K.layers.Lambda(lambda x: GH_normalization_and_add_background(x)))
 
     model.compile(optimizer='rmsprop', # not used
           loss='categorical_crossentropy', # not used
@@ -213,11 +212,12 @@ class ForkJoiner():
         for t in self.threads: t.join()
 
 class DatasetWithGazeWindow(Dataset):
-    def __init__(self, LABELS_FILE_TRAIN, LABELS_FILE_VAL, RESIZE_SHAPE, GAZE_POS_ASC_FILE, bg_prob_density,
+    def __init__(self, LABELS_FILE_TRAIN, LABELS_FILE_VAL, RESIZE_SHAPE, GAZE_POS_ASC_FILE, bg_prob_density, gaussian_sigma,
         window_left_bound_ms=1000, window_right_bound_ms=0):
       super(DatasetWithGazeWindow, self).__init__(LABELS_FILE_TRAIN, LABELS_FILE_VAL, RESIZE_SHAPE)
       self.RESIZE_SHAPE = RESIZE_SHAPE
       self.bg_prob_density = bg_prob_density
+      self.gaussian_sigma=gaussian_sigma
       self.window_left_bound, self.window_right_bound = window_left_bound_ms, window_right_bound_ms
       print "Reading gaze data ASC file, and converting per-frame gaze positions to heat map..."
       all_gaze, all_frame = self.read_gaze_data_asc_file_proprietary(GAZE_POS_ASC_FILE)
@@ -230,7 +230,7 @@ class DatasetWithGazeWindow(Dataset):
       t1=time.time()
       self.frameid2GH, self.frameid2gazetuple = self.convert_gaze_data_to_heat_map_proprietary(all_gaze, all_frame)
       self.prepare_train_val_gaze_data()
-      print "Done. Elapsed Time: ", time.time()-t1
+      print "Done. convert_gaze_data_to_heat_map() and convolution used: %fs" % (time.time()-t1)
       
     def prepare_train_val_gaze_data(self):
         print "Assign a heap map for each frame in train and val dataset..."
@@ -239,8 +239,10 @@ class DatasetWithGazeWindow(Dataset):
         for (i,fid) in enumerate(self.val_fid):
             self.val_GHmap[i] = self.frameid2GH[fid]
         print "Applying Gaussian Filter and normalization on train/val gaze heat map..."
-        self.train_GHmap = preprocess_gaze_heatmap(self.train_GHmap, 10, 10, self.bg_prob_density)
-        self.val_GHmap = preprocess_gaze_heatmap(self.val_GHmap, 10, 10, self.bg_prob_density)
+        sigmaH = self.gaussian_sigma * self.RESIZE_SHAPE[0] / 210.0
+        sigmaW = self.gaussian_sigma * self.RESIZE_SHAPE[1] / 160.0
+        self.train_GHmap = preprocess_gaze_heatmap(self.train_GHmap, sigmaH, sigmaW, self.bg_prob_density)
+        self.val_GHmap = preprocess_gaze_heatmap(self.val_GHmap, sigmaH, sigmaW, self.bg_prob_density)
 
     def read_gaze_data_asc_file_proprietary(self, fname):
         """
