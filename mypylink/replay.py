@@ -37,7 +37,7 @@ def preprocess_and_sanity_check(png_files):
 
 class drawgc_wrapper:
     def __init__(self):
-        self.cursor = pygame.image.load('shooting-game-target.png')
+        self.cursor = pygame.image.load('target.png')
         self.cursorsize = (self.cursor.get_width(), self.cursor.get_height())
 
     def draw_gc(self, screen, gaze_position):
@@ -88,12 +88,12 @@ def event_handler_func():
     ds.target_fps = max(1, ds.target_fps)
 
 if __name__ == "__main__":
-    if len(sys.argv) < 3:
-        print "Usage: %s saved_frames_png_tar asc_file" % (sys.argv[0])
+    if len(sys.argv) < 2:
+        print "Usage: %s saved_frames_png_tar" % (sys.argv[0])
         sys.exit(0)
 
     tar = tarfile.open(sys.argv[1], 'r')
-    asc_path = sys.argv[2]
+    asc_path = sys.argv[1].split(".")[0] + ".asc"
 
     png_files = tar.getnames()
     png_files = preprocess_and_sanity_check(png_files)

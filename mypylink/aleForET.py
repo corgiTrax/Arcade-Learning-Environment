@@ -2,6 +2,7 @@
 # Author: Zhuode Liu
 import time, sys, os
 from random import randrange
+from random import randint
 from ale_python_interface import ALEInterface
 import pygame, numpy as np
 from IPython import embed
@@ -21,16 +22,18 @@ class aleForET:
         self.size = GAME_W * V.xSCALE, GAME_H * V.ySCALE
 
         # Get & Set the desired settings
-        self.ale.setInt('random_seed', 123)
-        self.ale.setBool('sound', False)
+        self.seed = randint(0,200)
+        print("Random seed for this trial: ", self.seed) # need to record this in data file
+        self.ale.setInt('random_seed', self.seed) # dafault: 123
+        self.ale.setBool('sound', True)
         self.ale.setBool('display_screen', False)
         self.ale.setBool('color_averaging', False)
         self.ale.setFloat('repeat_action_probability', 0.0)
-
+        
         # Load the ROM file
         self.ale.loadROM(rom_file)
         self.gamename = os.path.basename(rom_file).split('.')[0]
-
+        
         # Get the list of legal actions
         self.legal_actions = self.ale.getLegalActionSet()
 
@@ -134,7 +137,7 @@ class aleForET:
 
                     pygame.display.flip()
                     pygame.event.pump() # need this line to get new key pressed
-
+                
                 # Apply an action and get the resulting reward
                 a = self.legal_actions[a_index]
                 reward = self.ale.act(a);
@@ -144,6 +147,6 @@ class aleForET:
 
             print 'Episode', episode, 'ended with score:', total_reward
             self.ale.reset_game()
-
+        
         TRIAL_OK = 0 # copied from EyeLink's constant
         return TRIAL_OK

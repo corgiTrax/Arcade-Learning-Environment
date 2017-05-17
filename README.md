@@ -1,8 +1,7 @@
 # To do
 - [x] Ask experts to validate experimental setups
 - [x] Record actions in to EDF file 
-- [ ] (DELAYED) Real pause and resume implementation
-- [ ] Recalibration implmentation
+- [ ] Save and reload game
 - [ ] Experiment and config class
 - [ ] Game time limits (15 minutes per session then break)
 - [x] 5-point check image after each trial, mark and throw away bad data
@@ -10,8 +9,10 @@
 - [ ] Subject consensus files (ask Sariel) 
 - [ ] Write experimental instruction for both experimentor and subjects; note that experimentor should center the screen; experimentor should stay with subjects during experiment 
 - [ ] Score leaderboard
-- [ ] Pilot study
 - [ ] automatically run edf2asc after each trial
+- [ ] Record random seed to data file
+- [ ] Practice game for subjects (without calling record and eye tracking)
+
 
 ## Next
 
