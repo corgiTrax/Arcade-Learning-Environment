@@ -5,3 +5,14 @@
 36 RZ seaquest data ok random_seed:3
 37 RZ seaquest data ok random_seed:58
 38 RZ seaquest data ok random_seed:20
+39 RZ seaquest data ok random_seed:35
+
+
+========================================
+40 RZ mspacman data ok random_seed:127
+
+========================================
+41 RZ enduro   data ok random_seed:115
+
+========================================
+42 RZ breakout data ok random_seed:144
