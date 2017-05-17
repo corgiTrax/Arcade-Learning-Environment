@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 
-import sys, re, tarfile, os
+import sys, re, tarfile, os, shutil
 from input_utils import read_gaze_data_asc_file, frameid_from_filename
 from IPython import embed
 
@@ -39,9 +39,15 @@ if __name__ == '__main__':
 	val_file_name =   output_path + "/" + asc_filename + '-val.txt'
 
 	with open(train_file_name, 'w') as f:
-			f.write('\n'.join(xy_str_train))
+		f.write('\n'.join(xy_str_train))
+		f.write('\n')
 
 	with open(val_file_name, 'w') as f:
-			f.write('\n'.join(xy_str_val))
+		f.write('\n'.join(xy_str_val))
+		f.write('\n')
 
+	shutil.copyfile(asc_file, output_path+'/'+os.path.basename(asc_file))
+
+	print "Copied ASC file to ", output_path
 	print "Done. Outputs are:\n %s (%d examples)\n %s (%d examples)" % (train_file_name, len(xy_str_train), val_file_name, len(xy_str_val))
+
