@@ -39,10 +39,12 @@ if __name__ == '__main__':
 	val_file_name =   output_path + "/" + asc_filename + '-val.txt'
 
 	with open(train_file_name, 'w') as f:
-			f.write('\n'.join(xy_str_train))
+		f.write('\n'.join(xy_str_train))
+		f.write('\n')
 
 	with open(val_file_name, 'w') as f:
-			f.write('\n'.join(xy_str_val))
+		f.write('\n'.join(xy_str_val))
+		f.write('\n')
 
 	shutil.copyfile(asc_file, output_path+'/'+os.path.basename(asc_file))
 
