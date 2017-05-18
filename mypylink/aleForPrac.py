@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 # Author: Zhuode Liu
 import time, sys, os
-from random import randrange
+from random import randrange, randint
 from ale_python_interface import ALEInterface
 import pygame
 import numpy as np
@@ -23,10 +23,10 @@ class aleForET:
         self.size = GAME_W * V.xSCALE, GAME_H * V.ySCALE
 
         # Get & Set the desired settings
-        self.ale.setInt('random_seed', 123)
+        self.ale.setInt('random_seed', randint(0,200))
         self.ale.setBool('sound', True)
         self.ale.setBool('display_screen', False)
-        self.ale.setBool('color_averaging', False)
+        self.ale.setBool('color_averaging', True)
         self.ale.setFloat('repeat_action_probability', 0.0)
 
         # Load the ROM file
