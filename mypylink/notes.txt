@@ -1,3 +1,11 @@
+Stimulus size:
+vertical: 15 9/12 inch = 40.005cm
+horizontal: 25 5/12 inch = 64.5583cm
+distance: 31 inch = 78.74cm
+
+after 44 color_averaging is turned on
+
+=======================================
 30 RZ seaquest data ok random_seed:88
 31 RZ seaquest data ok random_seed:66
 33 RZ seaquest data ok random_seed:80
@@ -6,13 +14,16 @@
 37 RZ seaquest data ok random_seed:58
 38 RZ seaquest data ok random_seed:20
 39 RZ seaquest data ok random_seed:35
+43 RZ seaquest data ok random_seed:41
 
 
 ========================================
 40 RZ mspacman data ok random_seed:127
+45 RZ mspacman data ok random_seed:100
 
 ========================================
 41 RZ enduro   data ok random_seed:115
 
 ========================================
 42 RZ breakout data ok random_seed:144
+44 RZ breakout data 1.05 degree error random seed: 200

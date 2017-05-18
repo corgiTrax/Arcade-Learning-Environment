@@ -23,11 +23,11 @@ class aleForET:
 
         # Get & Set the desired settings
         self.seed = randint(0,200)
-        print("Random seed for this trial: ", self.seed) # need to record this in data file
+        # print("Random seed for this trial: ", self.seed) # need to record this in data file
         self.ale.setInt('random_seed', self.seed) # dafault: 123
         self.ale.setBool('sound', True)
         self.ale.setBool('display_screen', False)
-        self.ale.setBool('color_averaging', False)
+        self.ale.setBool('color_averaging', True)
         self.ale.setFloat('repeat_action_probability', 0.0)
         
         # Load the ROM file
