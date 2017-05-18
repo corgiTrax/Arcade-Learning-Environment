@@ -1,3 +1,9 @@
+Stimulus size:
+vertical: 15 9/12 inch = 40.005cm
+horizontal: 25 5/12 inch = 64.5583cm
+distance: 31 inch = 78.74cm
+
+
 30 RZ seaquest data ok random_seed:88
 31 RZ seaquest data ok random_seed:66
 33 RZ seaquest data ok random_seed:80
