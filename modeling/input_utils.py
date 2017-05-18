@@ -10,21 +10,22 @@ def preprocess_gaze_heatmap(GHmap, sigmaH, sigmaW, bg_prob_density, debug_plot_r
     from scipy.stats import multivariate_normal
     import tensorflow as tf, keras as K # don't move this to the top, as people who import this file might not have keras or tf
 
-    lh, lw = int(4*sigmaH), int(4*sigmaW)
-    x, y = np.mgrid[-lh:lh+1:1, -lw:lw+1:1] # so the kernel size is [lh*2+1,lw*2+1]
-    pos = np.dstack((x, y))
-    gkernel=multivariate_normal.pdf(pos,mean=[0,0],cov=[[sigmaH*sigmaH,0],[0,sigmaW*sigmaW]])
-    assert gkernel.sum() > 0.95, "Simple sanity check: prob density should add up to nearly 1.0"
-
     model = K.models.Sequential()
-    
-    model.add(K.layers.Lambda(lambda x: tf.pad(x,[(0,0),(lh,lh),(lw,lw),(0,0)],'REFLECT'),
-        input_shape=(GHmap.shape[1],GHmap.shape[2],1)))
 
-    model.add(K.layers.Lambda(lambda x: x+bg_prob_density))
+    model.add(K.layers.Lambda(lambda x: x+bg_prob_density, input_shape=(GHmap.shape[1],GHmap.shape[2],1)))
 
-    model.add(K.layers.Conv2D(1, kernel_size=gkernel.shape, strides=1, padding="valid", use_bias=False,
+    if sigmaH > 0.0 and sigmaW > 0.0:
+        lh, lw = int(4*sigmaH), int(4*sigmaW)
+        x, y = np.mgrid[-lh:lh+1:1, -lw:lw+1:1] # so the kernel size is [lh*2+1,lw*2+1]
+        pos = np.dstack((x, y))
+        gkernel=multivariate_normal.pdf(pos,mean=[0,0],cov=[[sigmaH*sigmaH,0],[0,sigmaW*sigmaW]])
+        assert gkernel.sum() > 0.95, "Simple sanity check: prob density should add up to nearly 1.0"
+
+        model.add(K.layers.Lambda(lambda x: tf.pad(x,[(0,0),(lh,lh),(lw,lw),(0,0)],'REFLECT')))
+        model.add(K.layers.Conv2D(1, kernel_size=gkernel.shape, strides=1, padding="valid", use_bias=False,
               activation="linear", kernel_initializer=K.initializers.Constant(gkernel)))
+    else:
+        print "WARNING: Gaussian filter's sigma is 0, i.e. no blur."
     # The following normalization hurts accuracy. I don't know why. But intuitively it should increase accuracy
     # def GH_normalization_and_add_background(x):
     #     max_per_GH = tf.reduce_max(x,axis=[1,2,3])
