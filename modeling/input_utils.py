@@ -35,7 +35,7 @@ def preprocess_gaze_heatmap(GHmap, sigmaH, sigmaW, bg_prob_density, debug_plot_r
     #     x = x + 1.0
     #     return x
     # model.add(K.layers.Lambda(lambda x: GH_normalization_and_add_background(x)))
-
+    
     model.compile(optimizer='rmsprop', # not used
           loss='categorical_crossentropy', # not used
           metrics=None)
@@ -81,10 +81,14 @@ def read_gaze_data_asc_file(fname):
     frameid, xpos, ypos = "BEFORE-FIRST-FRAME", None, None
     frameid2pos = {frameid: []}
     frameid2action = {frameid: None}
+    scr_msg = re.compile("MSG\s+(\d+)\s+SCR_RECORDER FRAMEID (\d+) UTID (\w+)")
+    freg = "[-+]?[0-9]*\.?[0-9]+" # regex for floating point numbers
+    gaze_msg = re.compile("(\d+)\s+(%s)\s+(%s)" % (freg, freg))
+    act_msg = re.compile("MSG\s+(\d+)\s+key_pressed atari_action (\d+)")
 
     for (i,line) in enumerate(lines):
 
-        match_scr_msg = re.match("MSG\s+(\d+)\s+SCR_RECORDER FRAMEID (\d+) UTID (\w+)", line)
+        match_scr_msg = scr_msg.match(line)
         if match_scr_msg: # when a new id is encountered
             timestamp, frameid, UTID = match_scr_msg.group(1), match_scr_msg.group(2), match_scr_msg.group(3)
             frameid = make_unique_frame_id(UTID, frameid)
@@ -92,15 +96,14 @@ def read_gaze_data_asc_file(fname):
             frameid2action[frameid] = None
             continue
 
-        freg = "[-+]?[0-9]*\.?[0-9]+" # regex for floating point numbers
-        match_sample = re.match("(\d+)\s+(%s)\s+(%s)" % (freg, freg), line)
+        match_sample = gaze_msg.match(line)
         if match_sample:
             timestamp, xpos, ypos = match_sample.group(1), match_sample.group(2), match_sample.group(3)
             xpos, ypos = float(xpos), float(ypos)
             frameid2pos[frameid].append((xpos,ypos))
             continue
 
-        match_action = re.match("MSG\s+(\d+)\s+key_pressed atari_action (\d+)", line)
+        match_action = act_msg.match(line)
         if match_action:
             timestamp, action_label = match_action.group(1), match_action.group(2)
             if frameid2action[frameid] is None:
@@ -114,6 +117,12 @@ def read_gaze_data_asc_file(fname):
     if len(frameid2pos) < 1000: # simple sanity check
         print "Warning: did you provide the correct ASC file? Because the data for only %d frames is detected" % (len(frameid2pos))
         raw_input("Press any key to continue")
+
+    few_cnt = 0
+    for v in frameid2pos.values():
+        if len(v) < 10: few_cnt += 1
+    print "Warning:  %d frames have less than 10 gaze samples. (%.1f%%, total frame: %d)" % \
+        (few_cnt, 100.0*few_cnt/len(frameid2pos), len(frameid2pos))
     return frameid2pos, frameid2action
 
 def convert_gaze_pos_to_heap_map(gaze_pos_list, out):
@@ -122,7 +131,7 @@ def convert_gaze_pos_to_heap_map(gaze_pos_list, out):
     for (x,y) in gaze_pos_list: 
         try:
             out[int(y/V.SCR_H*h), int(x/V.SCR_W*w)] += 1
-        except IndexError: # the computed X,Y position is not in range [0,160) or [0, 210)
+        except IndexError: # the computed X,Y position is not in the gaze heat map
             bad_count += 1
     return bad_count
 
@@ -130,12 +139,20 @@ class Dataset(object):
   train_imgs, train_lbl, train_fid, train_size = None, None, None, None
   val_imgs, val_lbl, val_fid, val_size = None, None, None, None
   def __init__(self, LABELS_FILE_TRAIN, LABELS_FILE_VAL, RESIZE_SHAPE):
+    t1=time.time()
     print "Reading all training data into memory..."
     self.train_imgs, self.train_lbl, self.train_fid = read_np_parallel(LABELS_FILE_TRAIN, RESIZE_SHAPE)
     self.train_size = len(self.train_lbl)
     print "Reading all validation data into memory..."
     self.val_imgs, self.val_lbl, self.val_fid = read_np_parallel(LABELS_FILE_VAL, RESIZE_SHAPE)
     self.val_size = len(self.val_lbl)
+    print "Time spent to read train/val data: %.1fs" % (time.time()-t1)
+
+    from collections import defaultdict
+    d = defaultdict(int)
+    for lbl in self.val_lbl: d[lbl] += 1
+    print "Baseline Accuracy (predicting to the majority class label): %.1f%%" % (100.0*max(d.values())/len(self.val_lbl))
+
     print "Performing standardization (x-mean)..."
     self.standardize()
     print "Done."
@@ -150,16 +167,17 @@ class DatasetWithGaze(Dataset):
   frameid2pos, frameid2heatmap, frameid2action_notused = None, None, None
   train_GHmap, val_GHmap = None, None # GHmap means gaze heap map
   
-  def __init__(self, LABELS_FILE_TRAIN, LABELS_FILE_VAL, RESIZE_SHAPE, GAZE_POS_ASC_FILE, bg_prob_density):
+  def __init__(self, LABELS_FILE_TRAIN, LABELS_FILE_VAL, RESIZE_SHAPE, GAZE_POS_ASC_FILE, bg_prob_density, gaussian_sigma):
     super(DatasetWithGaze, self).__init__(LABELS_FILE_TRAIN, LABELS_FILE_VAL, RESIZE_SHAPE)
     print "Reading gaze data ASC file, and converting per-frame gaze positions to heat map..."
     self.frameid2pos, self.frameid2action_notused = read_gaze_data_asc_file(GAZE_POS_ASC_FILE)
-    self.train_GHmap = np.full([self.train_size, RESIZE_SHAPE[0], RESIZE_SHAPE[1], 1], dtype=np.float32, fill_value=bg_prob_density)
-    self.val_GHmap = np.full([self.val_size, RESIZE_SHAPE[0], RESIZE_SHAPE[1], 1], dtype=np.float32, fill_value=bg_prob_density)
-    self.prepare_train_val_gaze_data()
+    self.train_GHmap = np.zeros([self.train_size, RESIZE_SHAPE[0], RESIZE_SHAPE[1], 1], dtype=np.float32)
+    self.val_GHmap = np.zeros([self.val_size, RESIZE_SHAPE[0], RESIZE_SHAPE[1], 1], dtype=np.float32)
 
-  def prepare_train_val_gaze_data(self):
-    """Assign a heap map for each frame in train and val dataset"""
+    # Prepare train val gaze data
+    print "Running convert_gaze_pos_to_heap_map() and convolution..."
+    # Assign a heap map for each frame in train and val dataset
+    t1 = time.time()
     bad_count, tot_count = 0, 0
     for (i,fid) in enumerate(self.train_fid):
         tot_count += len(self.frameid2pos[fid])
@@ -167,8 +185,14 @@ class DatasetWithGaze(Dataset):
     for (i,fid) in enumerate(self.val_fid):
         tot_count += len(self.frameid2pos[fid])
         bad_count += convert_gaze_pos_to_heap_map(self.frameid2pos[fid], out=self.val_GHmap[i])
-    print "Bad gaze (x,y) sample: %d (%.2f%%, total gaze sample: %d)" % (bad_count, 100*float(bad_count)/tot_count, tot_count)
+    print "Bad gaze (x,y) sample: %d (%.2f%%, total gaze sample: %d)" % (bad_count, 100*float(bad_count)/tot_count, tot_count)    
     print "'Bad' means the gaze position is outside the 160*210 screen"
+
+    sigmaH = gaussian_sigma * RESIZE_SHAPE[0] / 210.0
+    sigmaW = gaussian_sigma * RESIZE_SHAPE[1] / 160.0
+    self.train_GHmap = preprocess_gaze_heatmap(self.train_GHmap, sigmaH, sigmaW, bg_prob_density)
+    self.val_GHmap = preprocess_gaze_heatmap(self.val_GHmap, sigmaH, sigmaW, bg_prob_density)
+    print "Done. convert_gaze_pos_to_heap_map() and convolution used: %.1fs" % (time.time()-t1)
 
 def read_np_parallel(label_file, RESIZE_SHAPE, num_thread=6):
     """
@@ -181,7 +205,10 @@ def read_np_parallel(label_file, RESIZE_SHAPE, num_thread=6):
     png_files = []
     with open(label_file,'r') as f:
         for line in f:
-            fname, lbl = line.strip().split(' ')
+            line=line.strip()
+            if line.startswith("#") or line == "": 
+                continue # skip comments or empty lines
+            fname, lbl = line.split(' ')
             png_files.append(fname)
             labels.append(int(lbl))
             fids.append(frameid_from_filename(fname))
@@ -226,7 +253,6 @@ class DatasetWithGazeWindow(Dataset):
       self.train_GHmap = np.empty([self.train_size, RESIZE_SHAPE[0], RESIZE_SHAPE[1], 1], dtype=np.float32)
       self.val_GHmap = np.empty([self.val_size, RESIZE_SHAPE[0], RESIZE_SHAPE[1], 1], dtype=np.float32)
       print "Running convert_gaze_data_to_map()..."
-      import time
       t1=time.time()
       self.frameid2GH, self.frameid2gazetuple = self.convert_gaze_data_to_heat_map_proprietary(all_gaze, all_frame)
       self.prepare_train_val_gaze_data()
