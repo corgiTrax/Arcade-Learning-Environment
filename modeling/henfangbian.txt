@@ -1,0 +1,17 @@
+
+### ll | grep -P "^d"
+drwxrwxrwx 15 zhuode93 grad 8.0K May 17 13:27 .
+drwxr-xr-x  4 zhuode93 grad 4.0K Apr 30 16:47 ..
+drwxr-xr-x  2 zhuode93 grad 2.5M May 13 20:30 26_RZ_4724011_May-13-20-09-02
+drwxr-xr-x  2 zhuode93 grad 1.2M May 14 19:14 30_RZ_4806587_May-14-19-04-27
+drwxr-xr-x  2 zhuode93 grad 1.3M May 14 19:56 31_RZ_4808953_May-14-19-46-50
+drwxr-xr-x  2 zhuode93 grad 1.6M May 14 22:53 33_RZ_4819615_May-14-22-41-12
+drwxr-xr-x  2 zhuode93 grad 1.4M May 15 15:40 35_RZ_4880116_May-15-15-29-53
+drwxr-xr-x  2 zhuode93 grad 1.7M May 15 16:22 36_RZ_4882422_May-15-16-08-32
+drwxr-xr-x  2 zhuode93 grad 1.9M May 15 16:52 37_RZ_4883794_May-15-16-37-01
+drwxr-xr-x  2 zhuode93 grad 2.0M May 15 17:32 38_RZ_4886422_May-15-17-15-33
+drwxr-xr-x  2 zhuode93 grad 1.6M May 16 19:53 39_RZ_4981421_May-16-19-40-17
+drwxr-xr-x  2 zhuode93 grad 1.6M May 16 20:31 40_RZ_4983433_May-16-20-19-52
+drwxr-xr-x  2 zhuode93 grad 1.3M May 16 21:03 41_RZ_4985749_May-16-20-51-18
+drwxr-xr-x  2 zhuode93 grad 1.2M May 16 21:48 42_RZ_4988291_May-16-21-33-46
+drwx------  2 zhuode93 grad 4.0K May 13 21:14 org
