@@ -13,17 +13,18 @@ GAZE_POS_ASC_FILE = BASE_FILE_NAME + '.asc'
 SHAPE = (84,84,1) # height * width * channel This cannot read from file and needs to be provided here
 BATCH_SIZE=100
 num_epoch = 25
-MODEL_DIR = 'GazeExpr3_01356789'
+MODEL_DIR = 'GazeExpr3_01356789_1GazePerFrame'
 resume_model = False
 
 MU.save_GPU_mem_keras()
 MU.keras_model_serialization_bug_fix()
 
-if len(sys.argv) < 2:
+if len(sys.argv) < 3:
     print "Usage: %s gauss " % __file__ ; sys.exit(0)
 gaussian_sigma = int(sys.argv[1])
+gaze_scale = int(sys.argv[2])
 
-expr = MU.ExprCreaterAndResumer(MODEL_DIR,postfix="PreC81_BG0.0_gCUR_gauss%d" % (gaussian_sigma))
+expr = MU.ExprCreaterAndResumer(MODEL_DIR,postfix="RevLastGazePerFrame_PreC81_gCUR_gauss%d_gazescale%d" % (gaussian_sigma, gaze_scale))
 expr.redirect_output_to_logfile_if_not_on("eldar-11")
 
 if resume_model:
@@ -65,7 +66,7 @@ else:
 expr.dump_src_code_and_model_def(sys.argv[0], model)
 
 d=input_utils.DatasetWithGaze(LABELS_FILE_TRAIN, LABELS_FILE_VAL, SHAPE, GAZE_POS_ASC_FILE, 
-       bg_prob_density=0.0, gaussian_sigma=gaussian_sigma)
+       bg_prob_density=0.0, gaussian_sigma=gaussian_sigma, gaze_scale=gaze_scale)
 # d=input_utils.DatasetWithGazeWindow(LABELS_FILE_TRAIN, LABELS_FILE_VAL, SHAPE, GAZE_POS_ASC_FILE, 
 #       bg_prob_density=0.0, gaussian_sigma=gaussian_sigma, window_left_bound_ms=350, window_right_bound_ms=200)
 

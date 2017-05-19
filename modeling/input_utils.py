@@ -76,6 +76,7 @@ def read_gaze_data_asc_file(fname):
     """ This function reads a ASC file and returns 
         a dictionary mapping frame ID to a list of gaze positions,
         a dictionary mapping frame ID to action """
+    print "WARNING: TODO EXPERIMENTAL read_gaze_data_asc_file() is using only the first/last gaze sample"
 
     with open(fname, 'r') as f:
         lines = f.readlines()
@@ -101,7 +102,8 @@ def read_gaze_data_asc_file(fname):
         if match_sample:
             timestamp, xpos, ypos = match_sample.group(1), match_sample.group(2), match_sample.group(3)
             xpos, ypos = float(xpos), float(ypos)
-            frameid2pos[frameid].append((xpos,ypos))
+            if len(frameid2pos[frameid]) == 0:  # use the first gaze sample
+                frameid2pos[frameid].append((xpos,ypos))
             continue
 
         match_action = act_msg.match(line)
@@ -124,14 +126,15 @@ def read_gaze_data_asc_file(fname):
         if len(v) < 10: few_cnt += 1
     print "Warning:  %d frames have less than 10 gaze samples. (%.1f%%, total frame: %d)" % \
         (few_cnt, 100.0*few_cnt/len(frameid2pos), len(frameid2pos))
+
     return frameid2pos, frameid2action
 
-def convert_gaze_pos_to_heap_map(gaze_pos_list, out):
+def convert_gaze_pos_to_heap_map(gaze_pos_list, out, scale):
     h,w = out.shape[0], out.shape[1]
     bad_count = 0
     for (x,y) in gaze_pos_list: 
         try:
-            out[int(y/V.SCR_H*h), int(x/V.SCR_W*w)] += 1
+            out[int(y/V.SCR_H*h), int(x/V.SCR_W*w)] += 1*scale
         except IndexError: # the computed X,Y position is not in the gaze heat map
             bad_count += 1
     return bad_count
@@ -168,7 +171,7 @@ class DatasetWithGaze(Dataset):
   frameid2pos, frameid2heatmap, frameid2action_notused = None, None, None
   train_GHmap, val_GHmap = None, None # GHmap means gaze heap map
   
-  def __init__(self, LABELS_FILE_TRAIN, LABELS_FILE_VAL, RESIZE_SHAPE, GAZE_POS_ASC_FILE, bg_prob_density, gaussian_sigma):
+  def __init__(self, LABELS_FILE_TRAIN, LABELS_FILE_VAL, RESIZE_SHAPE, GAZE_POS_ASC_FILE, bg_prob_density, gaussian_sigma,gaze_scale):
     super(DatasetWithGaze, self).__init__(LABELS_FILE_TRAIN, LABELS_FILE_VAL, RESIZE_SHAPE)
     print "Reading gaze data ASC file, and converting per-frame gaze positions to heat map..."
     self.frameid2pos, self.frameid2action_notused = read_gaze_data_asc_file(GAZE_POS_ASC_FILE)
@@ -182,10 +185,10 @@ class DatasetWithGaze(Dataset):
     bad_count, tot_count = 0, 0
     for (i,fid) in enumerate(self.train_fid):
         tot_count += len(self.frameid2pos[fid])
-        bad_count += convert_gaze_pos_to_heap_map(self.frameid2pos[fid], out=self.train_GHmap[i])
+        bad_count += convert_gaze_pos_to_heap_map(self.frameid2pos[fid], out=self.train_GHmap[i], scale=gaze_scale)
     for (i,fid) in enumerate(self.val_fid):
         tot_count += len(self.frameid2pos[fid])
-        bad_count += convert_gaze_pos_to_heap_map(self.frameid2pos[fid], out=self.val_GHmap[i])
+        bad_count += convert_gaze_pos_to_heap_map(self.frameid2pos[fid], out=self.val_GHmap[i], scale=gaze_scale)
     print "Bad gaze (x,y) sample: %d (%.2f%%, total gaze sample: %d)" % (bad_count, 100*float(bad_count)/tot_count, tot_count)    
     print "'Bad' means the gaze position is outside the 160*210 screen"
 

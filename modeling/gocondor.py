@@ -2,7 +2,8 @@
 def multi_experiment():
   l = [] # compose a list of arguments needed to be passed to the python script
   for gauss in ["0","15","25","35"]:
-    l.append(' '.join([gauss]))
+    for scale in ["1", "10", "30", "60"]:
+      l.append(' '.join([gauss, scale]))
 
   return l
 
