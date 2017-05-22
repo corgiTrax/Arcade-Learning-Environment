@@ -30,8 +30,6 @@ if resume_model:
     model = expr.load_weight_and_training_config_and_state()
     expr.printdebug("Checkpoint found. Resuming model at %s" % expr.dir_lasttime)
 else:
-    # TO TEST : multipy after 1st conv; initialize 1st conv as gaussian with 1 or 2 conv layer on gaze map
-    # TO TEST : conv1 20 filter, conv2 1 filter
     gaze_heatmaps = L.Input(shape=(SHAPE[0],SHAPE[1],1))
     g=gaze_heatmaps
     g=L.Conv2D(1, (81,81), strides=1, padding='same')(g)
@@ -81,11 +79,11 @@ expr.save_weight_and_training_config_state(model)
 score = model.evaluate([d.val_imgs, d.val_GHmap], d.val_lbl, BATCH_SIZE, 0)
 expr.printdebug("eval score:" + str(score))
 
-# copy the following lines between "d=input_utils.Dataset..." and "model.fit()" to visualize 2 intermediate layers
-# embed()
+# add 'embed()' between "d=input_utils.Dataset..." and "model.fit()", then copy & paste the following to visualize 2 intermediate layers
 # res=model.predict([d.val_imgs, d.val_GHmap])
-# res=model.predict([d.val_imgs, d.val_GHmap])
-# g2convout=K.backend.function([model.layers[0].input,K.backend.learning_phase()],[model.layers[3].output])
+# # Depending on the specfic model definition, you might need to change 'model.layers[0]', model.layers[3]' to something else
+# # In general, look at https://keras.io/getting-started/faq/#how-can-i-obtain-the-output-of-an-intermediate-layer
+# g2convout=K.backend.function([model.layers[0].input,K.backend.learning_phase()],[model.layers[3].output]) 
 # idx=1200
 # f,axarr=plt.subplots(1,5)
 # axarr[0].imshow(d.val_imgs[idx,...,0])
