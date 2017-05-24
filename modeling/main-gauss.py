@@ -5,7 +5,7 @@ from IPython import embed
 import input_utils, misc_utils as MU
 import ipdb
 
-NUM_CLASSES=6
+NUM_CLASSES=10
 BASE_FILE_NAME = "/scratch/cluster/zhuode93/dataset/cat3_01356789"
 LABELS_FILE_TRAIN = BASE_FILE_NAME + '-train.txt' 
 LABELS_FILE_VAL =  BASE_FILE_NAME + '-val.txt' 
