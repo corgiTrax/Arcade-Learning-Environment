@@ -1,18 +1,37 @@
 # To do
-- [x] Ask experts to validate experimental setups
+1. Dataset 
 - [x] Record actions in to EDF file 
 - [ ] Save and reload game
-- [ ] Experiment and config class
 - [ ] Game time limits (15 minutes per session then break)
-- [x] 5-point check image after each trial, mark and throw away bad data
+- [x] Validation after each trial, mark and throw away bad data
+- [ ] Score leaderboard
+- [ ] Automatically run edf2asc after each trial
+- [ ] Record random seed to data file
+- [ ] A recording schedule for diff. games and subjects
+
+2. Imitation
+- [ ] Make it easier to combine trials
+- [ ] Figure out why GaussianConv model does not work
+- [ ] Figure out Tau (needs to find gaze & image before easier)
+- [ ] CNN + past X frames model
+- [ ] RNN model
+
+3. Gaze modeling
+- [ ] CNN - deconv model
+- [ ] CNN - regression model
+- [ ] Superior colliculus model
+
+4. RL
+- [ ] Make it possible for model to play the game and record scores
+
+5. Psychology
+- [x] Ask experts to validate experimental setups
+- [ ] Experiment and config class
 - [ ] Demographical information survey (ask Sariel)
 - [ ] Subject consensus files (ask Sariel) 
+- [ ] Organize experimental procedure
+- [ ] Practice game for subjects + instructions
 - [ ] Write experimental instruction for both experimentor and subjects; note that experimentor should center the screen; experimentor should stay with subjects during experiment 
-- [ ] Score leaderboard
-- [ ] automatically run edf2asc after each trial
-- [ ] Record random seed to data file
-- [ ] Practice game for subjects (without calling record and eye tracking)
-
 
 ## Next
 
