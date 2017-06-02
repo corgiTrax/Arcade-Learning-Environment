@@ -8,6 +8,7 @@
 - [ ] Automatically run edf2asc after each trial
 - [ ] Record random seed to data file
 - [ ] A recording schedule for diff. games and subjects
+- [ ] Something very important I forgot about experimental settings
 
 2. Imitation
 - [ ] Make it easier to combine trials
