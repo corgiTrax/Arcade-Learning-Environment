@@ -13,6 +13,7 @@
 2. Imitation
 - [ ] Make it easier to combine trials
 - [ ] Test regularizer hypothesis (attention as)
+- [ ] Gaze-centered images as training samples
 - [ ] Make sure dropout is turned off during evaluation
 - [ ] Figure out why GaussianConv model does not work
 - [ ] Figure out Tau (needs to find gaze & image before easier)
