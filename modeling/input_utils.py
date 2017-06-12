@@ -160,9 +160,9 @@ class Dataset(object):
 
   def standardize(self):
     mean = np.mean(self.train_imgs, axis=(0,1,2))
+    #TODO does subtract mean affect anything? Seems not subtracting the mean works better for 70/30 data split
     self.train_imgs -= mean # done in-place --- "x-=mean" is faster than "x=x-mean"
     self.val_imgs -= mean
-
 
 class DatasetWithGaze(Dataset):
   frameid2pos, frameid2heatmap, frameid2action_notused = None, None, None

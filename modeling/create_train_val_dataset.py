@@ -34,9 +34,10 @@ if __name__ == '__main__':
 	
 	xy_str_train = xy_str[:int(percent*len(xy_str))]
 	xy_str_val =   xy_str[int(percent*len(xy_str)):]
-	asc_filename, _ = os.path.splitext(os.path.basename(asc_file))
-	train_file_name = output_path + "/" + asc_filename + '-train.txt'
-	val_file_name =   output_path + "/" + asc_filename + '-val.txt'
+	#asc_filename, _ = os.path.splitext(os.path.basename(asc_file))
+	tar_filename, _ = os.path.splitext(os.path.basename(tar_file))
+	train_file_name = output_path + "/" + tar_filename + '-train.txt'
+	val_file_name =   output_path + "/" + tar_filename + '-val.txt'
 
 	with open(train_file_name, 'w') as f:
 		f.write('\n'.join(xy_str_train))

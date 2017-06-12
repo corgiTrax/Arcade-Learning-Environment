@@ -69,7 +69,7 @@ def keras_model_serialization_bug_fix(): # stupid keras
     f(acc_)
 
 def loss_func(target, pred): 
-    return K.backend.sparse_categorical_crossentropy(output=pred,target=target, from_logits=True)
+    return K.backend.sparse_categorical_crossentropy(output=pred, target=target, from_logits=True)
 
 def acc_(y_true, y_pred): # don't rename it to acc or accuracy (otherwise stupid keras will replace this func with its own accuracy function when serializing )
   return tf.reduce_mean(

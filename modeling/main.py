@@ -6,14 +6,14 @@ import input_utils, misc_utils as MU
 import ipdb
 
 NUM_CLASSES=10
-BASE_FILE_NAME = "/scratch/cluster/zhuode93/dataset/cat3_01356789"
+BASE_FILE_NAME = "/scratch/cluster/zharucs/dataset/30_RZ_4806587_May-14-19-04-27"
 LABELS_FILE_TRAIN = BASE_FILE_NAME + '-train.txt' 
 LABELS_FILE_VAL =  BASE_FILE_NAME + '-val.txt' 
 GAZE_POS_ASC_FILE = BASE_FILE_NAME + '.asc'
 SHAPE = (84,84,1) # height * width * channel This cannot read from file and needs to be provided here
 BATCH_SIZE=100
 num_epoch = 25
-MODEL_DIR = 'GazeExpr3_01356789'
+MODEL_DIR = 'GazeExpr30foveated'
 resume_model = False
 
 MU.save_GPU_mem_keras()
