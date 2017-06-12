@@ -163,6 +163,31 @@ class Dataset(object):
     self.train_imgs -= mean # done in-place --- "x-=mean" is faster than "x=x-mean"
     self.val_imgs -= mean
 
+class Dataset_PastKFrames(Dataset):
+  def __init__(self, LABELS_FILE_TRAIN, LABELS_FILE_VAL, RESIZE_SHAPE, K, stride=1):
+    super(Dataset_PastKFrames, self).__init__(LABELS_FILE_TRAIN, LABELS_FILE_VAL, RESIZE_SHAPE)
+    self.train_imgs_bak, self.val_imgs_bak = self.train_imgs, self.val_imgs
+
+    t1=time.time()
+    self.train_imgs = self.transform_to_past_K_frames(self.train_imgs, K, stride)
+    self.val_imgs = self.transform_to_past_K_frames(self.val_imgs, K, stride)
+    # Trim labels. This is assuming the labels align with the training examples from the back!!
+    # Could cause the model unable to train  if this assumption does not hold
+    self.train_lbl = self.train_lbl[-self.train_imgs.shape[0]:]
+    self.val_lbl = self.val_lbl[-self.val_imgs.shape[0]:]
+    print "Time spent to transform train/val data to pask K frames: %.1fs" % (time.time()-t1)
+
+  def transform_to_past_K_frames(self, original, K, stride):
+    newdat = []
+    for i in range(K*stride, len(original)):
+        # transform the shape (K, 84, 84, CH) into (84, 84, CH*K)
+        cur = original[i : i-K*stride : -stride] # using "-stride" instead of "stride" lets the indexing include i rather than exclude i
+        cur = cur.transpose([1,2,3,0])
+        cur = cur.reshape(cur.shape[0:2]+(-1,))
+        newdat.append(cur)
+        if len(cur)>1: assert (cur[-1].shape == cur[2].shape) # simple sanity check
+    newdat_np = np.array(newdat)
+    return newdat_np
 
 class DatasetWithGaze(Dataset):
   frameid2pos, frameid2heatmap, frameid2action_notused = None, None, None
@@ -257,7 +282,7 @@ class DatasetWithGazeWindow(Dataset):
       t1=time.time()
       self.frameid2GH, self.frameid2gazetuple = self.convert_gaze_data_to_heat_map_proprietary(all_gaze, all_frame)
       self.prepare_train_val_gaze_data()
-      print "Done. convert_gaze_data_to_heat_map() and convolution used: %fs" % (time.time()-t1)
+      print "Done. convert_gaze_data_to_heat_map() and convolution used: %.1fs" % (time.time()-t1)
       
     def prepare_train_val_gaze_data(self):
         print "Assign a heap map for each frame in train and val dataset..."
