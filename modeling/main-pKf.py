@@ -6,21 +6,21 @@ import input_utils, misc_utils as MU
 import ipdb
 
 NUM_CLASSES=10
-BASE_FILE_NAME = "/scratch/cluster/zhuode93/dataset/cat{30}tr_{43}val"
+BASE_FILE_NAME = "/scratch/cluster/zhuode93/dataset/cat30_31_33"
 LABELS_FILE_TRAIN = BASE_FILE_NAME + '-train.txt' 
 LABELS_FILE_VAL =  BASE_FILE_NAME + '-val.txt' 
 GAZE_POS_ASC_FILE = BASE_FILE_NAME + '.asc' 
-k, stride = 4,2
+k, stride, ms_before = 4,2,0
 SHAPE = (84,84, k) # height * width * channel This cannot read from file and needs to be provided here
 BATCH_SIZE=100
 num_epoch = 25
-MODEL_DIR = 'GazeExpr{30}tr_{43}val'
+MODEL_DIR = 'GazeExpr30_31_33'
 resume_model = False
 
 MU.save_GPU_mem_keras()
 MU.keras_model_serialization_bug_fix()
 
-expr = MU.ExprCreaterAndResumer(MODEL_DIR,postfix="pKf_k4s2")
+expr = MU.ExprCreaterAndResumer(MODEL_DIR,postfix="pKf_k4s2_safeimpl")
 expr.redirect_output_to_logfile_if_not_on("eldar-11")
 
 if resume_model:
