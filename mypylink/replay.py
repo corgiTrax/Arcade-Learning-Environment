@@ -119,7 +119,7 @@ if __name__ == "__main__":
     last_time = time.time()
     clock = pygame.time.Clock()
     while ds.cur_frame_id < ds.total_frame:
-        #print(ds.cur_frame_id)
+        print(ds.cur_frame_id)
         clock.tick(ds.target_fps)  # control FPS 
 
         # Display FPS
