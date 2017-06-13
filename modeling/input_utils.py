@@ -222,24 +222,24 @@ class Dataset(object):
     self.val_imgs -= mean
 
 class Dataset_PastKFrames(Dataset):
-  def __init__(self, LABELS_FILE_TRAIN, LABELS_FILE_VAL, RESIZE_SHAPE, K, stride=1):
+  def __init__(self, LABELS_FILE_TRAIN, LABELS_FILE_VAL, RESIZE_SHAPE, K, stride=1, before=0):
     super(Dataset_PastKFrames, self).__init__(LABELS_FILE_TRAIN, LABELS_FILE_VAL, RESIZE_SHAPE)
     self.train_imgs_bak, self.val_imgs_bak = self.train_imgs, self.val_imgs
 
     t1=time.time()
-    self.train_imgs = self.transform_to_past_K_frames(self.train_imgs, K, stride)
-    self.val_imgs = self.transform_to_past_K_frames(self.val_imgs, K, stride)
+    self.train_imgs = self.transform_to_past_K_frames(self.train_imgs, K, stride, before)
+    self.val_imgs = self.transform_to_past_K_frames(self.val_imgs, K, stride, before)
     # Trim labels. This is assuming the labels align with the training examples from the back!!
     # Could cause the model unable to train  if this assumption does not hold
     self.train_lbl = self.train_lbl[-self.train_imgs.shape[0]:]
     self.val_lbl = self.val_lbl[-self.val_imgs.shape[0]:]
     print "Time spent to transform train/val data to pask K frames: %.1fs" % (time.time()-t1)
 
-  def transform_to_past_K_frames(self, original, K, stride):
+  def transform_to_past_K_frames(self, original, K, stride, before):
     newdat = []
-    for i in range(K*stride, len(original)):
+    for i in range(before+K*stride, len(original)):
         # transform the shape (K, 84, 84, CH) into (84, 84, CH*K)
-        cur = original[i : i-K*stride : -stride] # using "-stride" instead of "stride" lets the indexing include i rather than exclude i
+        cur = original[i-before : i-before-K*stride : -stride] # using "-stride" instead of "stride" lets the indexing include i rather than exclude i
         cur = cur.transpose([1,2,3,0])
         cur = cur.reshape(cur.shape[0:2]+(-1,))
         newdat.append(cur)
