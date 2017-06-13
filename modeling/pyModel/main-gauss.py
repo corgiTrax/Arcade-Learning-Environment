@@ -60,8 +60,6 @@ else:
     model=Model(inputs=[imgs, gaze_heatmaps], outputs=[logits, prob, g, x_intermediate])
 
     opt=K.optimizers.Adadelta(lr=1.0, rho=0.95, epsilon=1e-08, decay=0.0)
-#    opt=K.optimizers.Adam(lr=0.001, beta_1=0.9, beta_2=0.999, epsilon=1e-08, decay=0.0)
-#    opt=K.optimizers.SGD(lr=0.001, momentum=0.9, decay=0.0, nesterov=True)
 
     model.compile(loss={"prob":None, "logits": MU.loss_func},
                  optimizer=opt,metrics={"logits": MU.acc_})

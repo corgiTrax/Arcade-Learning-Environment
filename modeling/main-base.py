@@ -6,24 +6,21 @@ import input_utils, misc_utils as MU
 import ipdb
 
 NUM_CLASSES=8
-FV=int(sys.argv[1])
-BASE_FILE_NAME = "/scratch/cluster/zharucs/dataset/cat{36_FV_%d.}tr_{37_FV_%d.}val" % (FV, FV)
-#cat{40_FV_89}tr_{45_FV_89}val"
-#41_RZ_4985749_May-16-20-51-18" #cat{40}tr_{45}val"
+BASE_FILE_NAME = "/scratch/cluster/zharucs/dataset/cat{42_RZ}tr_{44_RZ}val"
 LABELS_FILE_TRAIN = BASE_FILE_NAME + '-train.txt' 
 LABELS_FILE_VAL =  BASE_FILE_NAME + '-val.txt' 
 GAZE_POS_ASC_FILE = BASE_FILE_NAME + '.asc'
 SHAPE = (84,84,1) # height * width * channel This cannot read from file and needs to be provided here
 BATCH_SIZE=100
-num_epoch = 25
+num_epoch = 50
 dropout = 0.25
-MODEL_DIR = 'Seaquest_36_37_FV_%d' % (FV)
+MODEL_DIR = 'Breakout_42_44'
 resume_model = False
 
 MU.save_GPU_mem_keras()
 MU.keras_model_serialization_bug_fix()
 
-expr = MU.ExprCreaterAndResumer(MODEL_DIR,postfix="foveated")
+expr = MU.ExprCreaterAndResumer(MODEL_DIR,postfix="baseline")
 expr.redirect_output_to_logfile_if_not_on("eldar-11")
 
 if resume_model:
@@ -55,8 +52,6 @@ else:
     model=Model(inputs=inputs, outputs=[logits, prob])
 
     opt=K.optimizers.Adadelta(lr=1.0, rho=0.95, epsilon=1e-08, decay=0.0)
-#    opt=K.optimizers.Adam(lr=0.001, beta_1=0.9, beta_2=0.999, epsilon=1e-08, decay=0.0)
-#    opt=K.optimizers.SGD(lr=0.001, momentum=0.9, decay=0.0, nesterov=True)
 
     model.compile(loss={"prob":None, "logits": MU.loss_func},
                  optimizer=opt,metrics={"logits": MU.acc_})
