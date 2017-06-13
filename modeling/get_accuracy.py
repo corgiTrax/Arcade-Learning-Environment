@@ -14,7 +14,7 @@ for root, dirs, files in os.walk(sys.argv[1]):
             for line in f:
                 if "eval" in line:
                     score = line.split()[-1][0:-1]
-                    print(score)
+                    print "%s %s" % (os.path.basename(root), score)
                     break
             f.close()
       
