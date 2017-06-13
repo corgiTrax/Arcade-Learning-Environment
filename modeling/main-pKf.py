@@ -10,7 +10,7 @@ BASE_FILE_NAME = "/scratch/cluster/zhuode93/dataset/cat30_31_33"
 LABELS_FILE_TRAIN = BASE_FILE_NAME + '-train.txt' 
 LABELS_FILE_VAL =  BASE_FILE_NAME + '-val.txt' 
 GAZE_POS_ASC_FILE = BASE_FILE_NAME + '.asc' 
-k, stride, ms_before = 4,2,None
+k, stride, ms_before = 4,2,0
 SHAPE = (84,84, k) # height * width * channel This cannot read from file and needs to be provided here
 BATCH_SIZE=100
 num_epoch = 25
@@ -20,11 +20,7 @@ resume_model = False
 MU.save_GPU_mem_keras()
 MU.keras_model_serialization_bug_fix()
 
-if len(sys.argv) < 2:
-    print "Usage: %s ms_before " % __file__ ; sys.exit(0)
-ms_before = int(sys.argv[1])
-
-expr = MU.ExprCreaterAndResumer(MODEL_DIR,postfix="pKf_k4s2_tau%d" % ms_before)
+expr = MU.ExprCreaterAndResumer(MODEL_DIR,postfix="pKf_k4s2_safeimpl")
 expr.redirect_output_to_logfile_if_not_on("eldar-11")
 
 if resume_model:
@@ -54,7 +50,7 @@ else:
 
 expr.dump_src_code_and_model_def(sys.argv[0], model)
 
-d=input_utils.Dataset_PastKFramesByTime(LABELS_FILE_TRAIN, LABELS_FILE_VAL, SHAPE, GAZE_POS_ASC_FILE, k, stride, ms_before)
+d=input_utils.Dataset_PastKFrames(LABELS_FILE_TRAIN, LABELS_FILE_VAL, SHAPE, k, stride)
 model.fit(d.train_imgs, d.train_lbl, BATCH_SIZE, epochs=num_epoch,
     validation_data=(d.val_imgs, d.val_lbl),
     shuffle=True,verbose=2,
