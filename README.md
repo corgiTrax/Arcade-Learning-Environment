@@ -11,13 +11,13 @@
 - [ ] Support for composed actions using event detection
 
 2. Imitation
-- [ ] Make it easier to combine trials
+- [x] Make it easier to combine trials(see dataset\_specification\_example.txt)
 - [ ] Test regularizer hypothesis (attention as)
 - [ ] Gaze-centered images as training samples
-- [ ] Make sure dropout is turned off during evaluation
+- [x] Make sure dropout is turned off during evaluation
 - [ ] Figure out why GaussianConv model does not work
-- [ ] Figure out Tau (needs to find gaze & image before easier)
-- [ ] CNN + past X frames model
+- [x] Figure out Tau (needs to find gaze & image before easier)
+- [x] CNN + past X frames model
 - [ ] RNN model
 
 3. Gaze modeling
