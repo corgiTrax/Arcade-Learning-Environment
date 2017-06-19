@@ -17,7 +17,8 @@
 - [x] Make sure dropout is turned off during evaluation
 - [ ] Figure out why GaussianConv model does not work
 - [x] Figure out Tau (needs to find gaze & image before easier)
-- [x] CNN + past X frames model
+- [ ] CNN + past X frames model
+- [ ] CNN + positional encoding
 - [ ] RNN model
 
 3. Gaze modeling
