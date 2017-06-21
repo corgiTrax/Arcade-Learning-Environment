@@ -2,11 +2,11 @@
 1. Dataset 
 - [x] Record actions in to EDF file 
 - [x] Save and reload game
-- [ ] Game time limits (15 minutes per session then break)
+- [x] Game time limits (15 minutes per session then break)
 - [x] Validation after each trial, mark and throw away bad data
 - [ ] Score leaderboard
-- [ ] Automatically run edf2asc after each trial
-- [ ] Record random seed to data file
+- [x] Automatically run edf2asc after each trial
+- [x] Record random seed to data file
 - [ ] A recording schedule for diff. games and subjects
 - [ ] Support for composed actions using event detection
 

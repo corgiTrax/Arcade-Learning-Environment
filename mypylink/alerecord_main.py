@@ -154,15 +154,24 @@ def event_handler_callback_func(key_pressed, caller):
 	if error != 0: # happens when "abort trial" is clicked at host PC
 		return True, error, bool_drawgc
 
+	def save_game_local_func():
+		fname = "saved_games/%s.npy" % (unique_trial_id)
+		print "Saving the game to %s ..." % fname
+		alestate = caller.saveALEState(fname)
+
+	# If trial time (15 min) is up
+	if T.time() - caller.run_start_time > 60*15:
+		print "Trial time limit exceeded."
+		save_game_local_func()
+		return True, TRIAL_OK, bool_drawgc 
+
 	if key_pressed[K_ESCAPE]:
 		print("Exiting the game...")
 		getEYELINK().sendMessage("key_pressed non-atari esc")
 		return True, SKIP_TRIAL, bool_drawgc
 	elif key_pressed[K_F1]:
-		fname = "saved_games/%s.npy" % (unique_trial_id)
-		print "Saving the game to %s ..." % fname
+		save_game_local_func()
 		getEYELINK().sendMessage("key_pressed non-atari save")
-		alestate = caller.saveALEState(fname)
 	elif key_pressed[K_F7]:
 		print("Showing gaze-contigent window....")
 		getEYELINK().sendMessage("key_pressed non-atari gcwindowON")
@@ -225,7 +234,7 @@ def run_trials(rom_file, screen, resume_state_file):
 
 		print "Calling command edf2asc..."
 		if subprocess.call('edf2asc %s' % (scr_recorder.dir+".edf"), shell=True) != 0:
-			print "\nERROR: Non-zero exit status was returned. See errors above."
+			print "\nERROR: edf2asc returned non-zero exit status."
 
 	return 0
 		

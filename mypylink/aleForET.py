@@ -50,8 +50,8 @@ class aleForET:
         last_time=time.time()
         frame_cnt=0
         clock = pygame.time.Clock()
-        # Play 10 episodes
-        for episode in xrange(10):
+        self.run_start_time = time.time()
+        while True:
             total_reward = 0
             while not self.ale.game_over():
                 clock.tick(30) # control FPS
@@ -106,8 +106,8 @@ class aleForET:
         frame_cnt=0
         bool_drawgc = False
         clock = pygame.time.Clock()
-        # Play 10 episodes
-        for episode in xrange(10):
+        self.run_start_time = time.time()
+        while True:
             total_reward = 0
             while not self.ale.game_over():
                 # Get game image
