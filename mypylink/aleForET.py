@@ -1,7 +1,6 @@
 #!/usr/bin/env python
 # Author: Zhuode Liu
 import time, sys, os
-from random import randint
 from ale_python_interface import ALEInterface
 import pygame, numpy as np
 from IPython import embed
@@ -9,21 +8,17 @@ import action_enums as aenum
 import vip_constants as V
 
 class aleForET:
-    def __init__(self,rom_file, screen, resume_state_file=None):
-        self.screen = screen
-
-        pygame.init()
-
-        self.ale = ALEInterface()
-        GAME_W, GAME_H = 160, 210
+    def __init__(self,rom_file, screen, rndseed, resume_state_file=None):
 
         # Setting up the pygame screen Surface
+        pygame.init()
+        self.screen = screen
+        GAME_W, GAME_H = 160, 210
         self.size = GAME_W * V.xSCALE, GAME_H * V.ySCALE
 
         # Get & Set the desired settings
-        self.seed = randint(0,200)
-        # print("Random seed for this trial: ", self.seed) # need to record this in data file
-        self.ale.setInt('random_seed', self.seed)
+        self.ale = ALEInterface()
+        self.ale.setInt('random_seed', rndseed)
         self.ale.setBool('sound', True)
         self.ale.setBool('display_screen', False)
         self.ale.setBool('color_averaging', True)

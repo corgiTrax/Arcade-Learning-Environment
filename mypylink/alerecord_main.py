@@ -1,4 +1,4 @@
-import gc, sys, time as T # avoid collision with pygame.time
+import subprocess, random, gc, sys, time as T # avoid collision with pygame.time
 from EyeLinkCoreGraphicsPyGame import EyeLinkCoreGraphicsPyGame
 from pylink import *
 from pygame import *
@@ -159,9 +159,10 @@ def event_handler_callback_func(key_pressed, caller):
 		getEYELINK().sendMessage("key_pressed non-atari esc")
 		return True, SKIP_TRIAL, bool_drawgc
 	elif key_pressed[K_F1]:
-		print("Saving the game...")
+		fname = "saved_games/%s.npy" % (unique_trial_id)
+		print "Saving the game to %s ..." % fname
 		getEYELINK().sendMessage("key_pressed non-atari save")
-		alestate = caller.saveALEState("saved_games/%s.npy" % (unique_trial_id))
+		alestate = caller.saveALEState(fname)
 	elif key_pressed[K_F7]:
 		print("Showing gaze-contigent window....")
 		getEYELINK().sendMessage("key_pressed non-atari gcwindowON")
@@ -180,7 +181,9 @@ def record_a_and_r_callback_func(atari_action, reward):
 def run_trials(rom_file, screen, resume_state_file):
 	''' This function is used to run all trials and handles the return value of each trial. '''
 
-	ale = aleForET(rom_file, screen, resume_state_file)
+	rndseed = random.randint(0,65535)
+	ale = aleForET(rom_file, screen, rndseed, resume_state_file)
+	getEYELINK().sendMessage("random_seed %d" % (rndseed))
 
 	# Show tracker setup screen at the beginning of the experiment.
 	# It won't return unitl we press ESC on display PC or click "Exit Setup" on host PC
@@ -219,6 +222,11 @@ def run_trials(rom_file, screen, resume_state_file):
 		getEYELINK().closeDataFile()
 		getEYELINK().receiveDataFile(edfFileName, scr_recorder.dir+".edf")
 		getEYELINK().close();
+
+		print "Calling command edf2asc..."
+		if subprocess.call('edf2asc %s' % (scr_recorder.dir+".edf"), shell=True) != 0:
+			print "\nERROR: Non-zero exit status was returned. See errors above."
+
 	return 0
 		
 def eyelink_err_code_to_str(code):
