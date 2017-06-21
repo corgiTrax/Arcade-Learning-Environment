@@ -146,7 +146,7 @@ def save_screen_callback_func(screen, frameid):
 	scr_recorder.save(screen, frameid)
 
 bool_drawgc = False
-def event_handler_callback_func(key_pressed):
+def event_handler_callback_func(key_pressed, caller):
 	global bool_drawgc
 	# First check if host PC is still recording
 	# This will block the thread when "abort trial" is clicked at host PC and the "abort trial" menu is shown 
@@ -159,13 +159,9 @@ def event_handler_callback_func(key_pressed):
 		getEYELINK().sendMessage("key_pressed non-atari esc")
 		return True, SKIP_TRIAL, bool_drawgc
 	elif key_pressed[K_F1]:
-		print("Pause the game...") # TODO how to pause the game? cannot run doTrackerSetup(), it will stop recording
-		getEYELINK().sendMessage("key_pressed non-atari pause")
-		getEYELINK().doTrackerSetup()
-	elif key_pressed[K_F5]:
-		print("Calibrate....")
-		getEYELINK().sendMessage("key_pressed non-atari calibrate")
-		getEYELINK().doTrackerSetup()
+		print("Saving the game...")
+		getEYELINK().sendMessage("key_pressed non-atari save")
+		alestate = caller.saveALEState("saved_games/%s.npy" % (unique_trial_id))
 	elif key_pressed[K_F7]:
 		print("Showing gaze-contigent window....")
 		getEYELINK().sendMessage("key_pressed non-atari gcwindowON")
@@ -181,10 +177,10 @@ def record_a_and_r_callback_func(atari_action, reward):
 	getEYELINK().sendMessage("key_pressed atari_action %d" % (atari_action))
 	getEYELINK().sendMessage("reward %d" % (reward))
 
-def run_trials(rom_file, screen):
+def run_trials(rom_file, screen, resume_state_file):
 	''' This function is used to run all trials and handles the return value of each trial. '''
 
-	ale = aleForET(rom_file, screen)
+	ale = aleForET(rom_file, screen, resume_state_file)
 
 	# Show tracker setup screen at the beginning of the experiment.
 	# It won't return unitl we press ESC on display PC or click "Exit Setup" on host PC
@@ -243,17 +239,18 @@ def set_play_beep_func(func):
 
 if __name__ == "__main__":
 	try:
-	  eyelinktracker = EyeLink("100.1.1.1")
+		eyelinktracker = EyeLink("100.1.1.1")
 	except Exception as ex:
 		print(str(ex) + '\nEyeLink("100.1.1.1") is None, using dummy EyeLink interface')
-	        eyelinktracker = EyeLink(None)
+		eyelinktracker = EyeLink(None)
 
 	if len(sys.argv) < 4:
-		print 'Usage:', sys.argv[0], 'rom_file', "step_by_step_mode(true|false)", "expr_name"
+		print 'Usage:', sys.argv[0], 'rom_file', "step_by_step_mode(true|false)", "expr_name", "[resume_state_file]"
 		sys.exit()
 	rom_file = sys.argv[1]
 	step_by_step_mode = sys.argv[2].upper() == "TRUE"
 	unique_trial_id = "%s_%d" % (sys.argv[3], int(T.time())%10000000)
+	resume_state_file = sys.argv[4] if len(sys.argv) > 4 else None
 
 	genv = EyeLinkCoreGraphicsPyGame(160*V.xSCALE,210*V.ySCALE,eyelinktracker)
 	openGraphicsEx(genv)
@@ -305,7 +302,7 @@ if __name__ == "__main__":
 
 	if(getEYELINK().isConnected() and not getEYELINK().breakPressed()):
 		set_play_beep_func(genv.play_beep2)
-		run_trials(rom_file, surf)
+		run_trials(rom_file, surf, resume_state_file)
 
 	#Close the experiment graphics	
 	display.quit()

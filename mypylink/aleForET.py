@@ -1,7 +1,6 @@
 #!/usr/bin/env python
 # Author: Zhuode Liu
 import time, sys, os
-from random import randrange
 from random import randint
 from ale_python_interface import ALEInterface
 import pygame, numpy as np
@@ -10,7 +9,7 @@ import action_enums as aenum
 import vip_constants as V
 
 class aleForET:
-    def __init__(self,rom_file, screen):
+    def __init__(self,rom_file, screen, resume_state_file=None):
         self.screen = screen
 
         pygame.init()
@@ -24,7 +23,7 @@ class aleForET:
         # Get & Set the desired settings
         self.seed = randint(0,200)
         # print("Random seed for this trial: ", self.seed) # need to record this in data file
-        self.ale.setInt('random_seed', self.seed) # dafault: 123
+        self.ale.setInt('random_seed', self.seed)
         self.ale.setBool('sound', True)
         self.ale.setBool('display_screen', False)
         self.ale.setBool('color_averaging', True)
@@ -36,6 +35,21 @@ class aleForET:
         
         # Get the list of legal actions
         self.legal_actions = self.ale.getLegalActionSet()
+        if resume_state_file:
+            self.loadALEState(resume_state_file)
+
+    def saveALEState(self, fname):
+        basedir = os.path.dirname(fname)
+        if not os.path.exists(basedir):
+            os.makedirs(basedir)
+        pALEState = self.ale.cloneSystemState() # actually it returns an int, a memory address pointing to a C++ object ALEState
+        serialized_np = self.ale.encodeState(pALEState) # this func actually takes a pointer
+        np.save(fname, serialized_np)
+
+    def loadALEState(self, fname):
+        serialized_np = np.load(fname)
+        pALEState = self.ale.decodeState(serialized_np) # actually it returns an int, a memory address pointing to a C++ object ALEState
+        self.ale.restoreSystemState(pALEState) # this func actually takes a pointer
 
     def run(self, gc_window_drawer_func = None, save_screen_func = None, event_handler_func = None, record_a_and_r_func = None):
         last_time=time.time()
@@ -50,7 +64,7 @@ class aleForET:
 
                 key = pygame.key.get_pressed()
                 if event_handler_func != None:
-                    stop, eyelink_err_code, bool_drawgc = event_handler_func(key)
+                    stop, eyelink_err_code, bool_drawgc = event_handler_func(key, self)
                     if stop:
                         return eyelink_err_code
 
@@ -118,7 +132,7 @@ class aleForET:
 
                     key = pygame.key.get_pressed()
                     if event_handler_func != None:
-                        stop, eyelink_err_code, bool_drawgc = event_handler_func(key)
+                        stop, eyelink_err_code, bool_drawgc = event_handler_func(key, self)
                         if stop:
                             return eyelink_err_code
                     a_index = aenum.action_map(key, self.gamename)
