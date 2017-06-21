@@ -1,7 +1,7 @@
 # To do
 1. Dataset 
 - [x] Record actions in to EDF file 
-- [ ] Save and reload game
+- [x] Save and reload game
 - [ ] Game time limits (15 minutes per session then break)
 - [x] Validation after each trial, mark and throw away bad data
 - [ ] Score leaderboard
