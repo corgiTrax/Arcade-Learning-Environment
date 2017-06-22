@@ -4,7 +4,7 @@
 - [x] Save and reload game
 - [x] Game time limits (15 minutes per session then break)
 - [x] Validation after each trial, mark and throw away bad data
-- [ ] Score leaderboard
+- [x] Score leaderboard
 - [x] Automatically run edf2asc after each trial
 - [x] Record random seed to data file
 - [ ] A recording schedule for diff. games and subjects
