@@ -1,4 +1,4 @@
-import subprocess, random, gc, sys, time as T # avoid collision with pygame.time
+import os, subprocess, random, gc, sys, time as T # avoid collision with pygame.time
 from EyeLinkCoreGraphicsPyGame import EyeLinkCoreGraphicsPyGame
 from pylink import *
 from pygame import *
@@ -152,10 +152,11 @@ def event_handler_callback_func(key_pressed, caller):
 	# This will block the thread when "abort trial" is clicked at host PC and the "abort trial" menu is shown 
 	error = getEYELINK().isRecording() 
 	if error != 0: # happens when "abort trial" is clicked at host PC
+		update_leaderboard_file(caller.gamename, unique_trial_id, caller.score)
 		return True, error, bool_drawgc
 
 	def save_game_local_func():
-		fname = "saved_games/%s.npy" % (unique_trial_id)
+		fname = "saved_games/%s.npz" % (unique_trial_id)
 		print "Saving the game to %s ..." % fname
 		alestate = caller.saveALEState(fname)
 
@@ -163,11 +164,13 @@ def event_handler_callback_func(key_pressed, caller):
 	if T.time() - caller.run_start_time > 60*15:
 		print "Trial time limit exceeded."
 		save_game_local_func()
+		update_leaderboard_file(caller.gamename, unique_trial_id, caller.score)
 		return True, TRIAL_OK, bool_drawgc 
 
 	if key_pressed[K_ESCAPE]:
 		print("Exiting the game...")
 		getEYELINK().sendMessage("key_pressed non-atari esc")
+		update_leaderboard_file(caller.gamename, unique_trial_id, caller.score)
 		return True, SKIP_TRIAL, bool_drawgc
 	elif key_pressed[K_F1]:
 		save_game_local_func()
@@ -183,9 +186,37 @@ def event_handler_callback_func(key_pressed, caller):
 
 	return False, None, bool_drawgc
 
+def update_leaderboard_file(gamename, UTID, score):
+	game_lines, other_lines = read_leaderboard_file(gamename)
+
+	# sort the score and keep top-10
+	game_lines.append("%s %s %d" % (gamename, UTID, score))
+	game_lines.sort(key=lambda line:int(line.strip().split(' ')[2]), reverse=True)
+	game_lines=game_lines[:min(len(game_lines),10)]
+
+	# write back to the file
+	with open('leaderboard.txt','w') as f:
+		for l in game_lines: f.write(l+'\n')
+		for l in other_lines: f.write(l+'\n')
+
+def read_leaderboard_file(gamename):
+	open('leaderboard.txt','a').close() # create the file if not exists
+	with open('leaderboard.txt','r') as f:
+		# read the whole file and extract lines pertinent to current game
+		game_lines = []
+		other_lines = []
+		for line in f:
+			line = line.strip()
+			if line.startswith(gamename):
+				game_lines.append(line)
+			else:
+				other_lines.append(line)
+	return game_lines, other_lines
+
 def record_a_and_r_callback_func(atari_action, reward):
 	getEYELINK().sendMessage("key_pressed atari_action %d" % (atari_action))
 	getEYELINK().sendMessage("reward %d" % (reward))
+
 
 def run_trials(rom_file, screen, resume_state_file):
 	''' This function is used to run all trials and handles the return value of each trial. '''
@@ -224,8 +255,8 @@ def run_trials(rom_file, screen, resume_state_file):
 	# Experiment ended
 	if getEYELINK() != None:
 		# File transfer and cleanup!
-		getEYELINK().setOfflineMode();                          
-		msecDelay(500);                 
+		getEYELINK().setOfflineMode();
+		msecDelay(500);
 
 		#Close the file and transfer it to Display PC
 		getEYELINK().closeDataFile()
@@ -268,16 +299,22 @@ if __name__ == "__main__":
 	step_by_step_mode = sys.argv[2].upper() == "TRUE"
 	unique_trial_id = "%s_%d" % (sys.argv[3], int(T.time())%10000000)
 	resume_state_file = sys.argv[4] if len(sys.argv) > 4 else None
+	gamename = os.path.basename(rom_file).split('.')[0]
 
 	genv = EyeLinkCoreGraphicsPyGame(160*V.xSCALE,210*V.ySCALE,eyelinktracker)
 	openGraphicsEx(genv)
 
+	# show leaderboard for 5 seconds
+	score_lines, _ = read_leaderboard_file(gamename)
+	genv.draw_multiline_text(['Leaderboard:'] + score_lines)
+	T.sleep(5)
+
 	#Opens the EDF file.
 	edfFileName = "ATARI.EDF";
-	getEYELINK().openDataFile(edfFileName)		
+	getEYELINK().openDataFile(edfFileName)
 		
 	flushGetkeyQueue(); 
-	getEYELINK().setOfflineMode();                          
+	getEYELINK().setOfflineMode();
 
 	#Gets the display surface and sends a mesage to EDF file;
 	surf = display.get_surface()
