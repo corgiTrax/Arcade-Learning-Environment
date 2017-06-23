@@ -1,8 +1,6 @@
 #!/usr/bin/env python
 # Author: Zhuode Liu
 import time, sys, os
-from random import randrange
-from random import randint
 from ale_python_interface import ALEInterface
 import pygame, numpy as np
 from IPython import embed
@@ -10,21 +8,17 @@ import action_enums as aenum
 import vip_constants as V
 
 class aleForET:
-    def __init__(self,rom_file, screen):
-        self.screen = screen
-
-        pygame.init()
-
-        self.ale = ALEInterface()
-        GAME_W, GAME_H = 160, 210
+    def __init__(self,rom_file, screen, rndseed, resume_state_file=None):
 
         # Setting up the pygame screen Surface
+        pygame.init()
+        self.screen = screen
+        GAME_W, GAME_H = 160, 210
         self.size = GAME_W * V.xSCALE, GAME_H * V.ySCALE
 
         # Get & Set the desired settings
-        self.seed = randint(0,200)
-        # print("Random seed for this trial: ", self.seed) # need to record this in data file
-        self.ale.setInt('random_seed', self.seed) # dafault: 123
+        self.ale = ALEInterface()
+        self.ale.setInt('random_seed', rndseed)
         self.ale.setBool('sound', True)
         self.ale.setBool('display_screen', False)
         self.ale.setBool('color_averaging', True)
@@ -33,24 +27,41 @@ class aleForET:
         # Load the ROM file
         self.ale.loadROM(rom_file)
         self.gamename = os.path.basename(rom_file).split('.')[0]
+        self.score = 0
         
         # Get the list of legal actions
         self.legal_actions = self.ale.getLegalActionSet()
+        if resume_state_file:
+            self.loadALEState(resume_state_file)
+
+    def saveALEState(self, fname):
+        basedir = os.path.dirname(fname)
+        if not os.path.exists(basedir):
+            os.makedirs(basedir)
+        pALEState = self.ale.cloneSystemState() # actually it returns an int, a memory address pointing to a C++ object ALEState
+        serialized_np = self.ale.encodeState(pALEState) # this func actually takes a pointer
+        np.savez(fname, state=serialized_np, score=self.score)
+
+    def loadALEState(self, fname):
+        npzfile = np.load(fname)
+        serialized_np = npzfile['state']
+        self.score = npzfile['score']
+        pALEState = self.ale.decodeState(serialized_np) # actually it returns an int, a memory address pointing to a C++ object ALEState
+        self.ale.restoreSystemState(pALEState) # this func actually takes a pointer
 
     def run(self, gc_window_drawer_func = None, save_screen_func = None, event_handler_func = None, record_a_and_r_func = None):
         last_time=time.time()
         frame_cnt=0
         clock = pygame.time.Clock()
-        # Play 10 episodes
-        for episode in xrange(10):
-            total_reward = 0
+        self.run_start_time = time.time()
+        while True:
             while not self.ale.game_over():
                 clock.tick(30) # control FPS
                 frame_cnt+=1
 
                 key = pygame.key.get_pressed()
                 if event_handler_func != None:
-                    stop, eyelink_err_code, bool_drawgc = event_handler_func(key)
+                    stop, eyelink_err_code, bool_drawgc = event_handler_func(key, self)
                     if stop:
                         return eyelink_err_code
 
@@ -81,25 +92,23 @@ class aleForET:
                 a_index = aenum.action_map(key, self.gamename)
                 a = self.legal_actions[a_index]
                 reward = self.ale.act(a);
-                total_reward += reward
+                self.score += reward
                 if record_a_and_r_func != None:
                     record_a_and_r_func(a, reward)
 
                 pygame.event.pump() # need this line to get new key pressed
 
-            print 'Episode', episode, 'ended with score:', total_reward
+            print 'Episode', episode, 'ended with score:', self.score
             self.ale.reset_game()
-
-        TRIAL_OK = 0 # copied from EyeLink's constant
-        return TRIAL_OK
+            self.score = 0
+        assert False, "Returning should only happen in the while True loop"
 
     def run_in_step_by_step_mode(self, gc_window_drawer_func = None, save_screen_func = None, event_handler_func = None, record_a_and_r_func = None):
         frame_cnt=0
         bool_drawgc = False
         clock = pygame.time.Clock()
-        # Play 10 episodes
-        for episode in xrange(10):
-            total_reward = 0
+        self.run_start_time = time.time()
+        while True:
             while not self.ale.game_over():
                 # Get game image
                 cur_frame_np = self.ale.getScreenRGB()
@@ -118,7 +127,7 @@ class aleForET:
 
                     key = pygame.key.get_pressed()
                     if event_handler_func != None:
-                        stop, eyelink_err_code, bool_drawgc = event_handler_func(key)
+                        stop, eyelink_err_code, bool_drawgc = event_handler_func(key, self)
                         if stop:
                             return eyelink_err_code
                     a_index = aenum.action_map(key, self.gamename)
@@ -141,12 +150,11 @@ class aleForET:
                 # Apply an action and get the resulting reward
                 a = self.legal_actions[a_index]
                 reward = self.ale.act(a);
-                total_reward += reward
+                self.score += reward
                 if record_a_and_r_func != None:
                     record_a_and_r_func(a, reward)
 
-            print 'Episode', episode, 'ended with score:', total_reward
+            print 'Episode', episode, 'ended with score:', self.score
             self.ale.reset_game()
-        
-        TRIAL_OK = 0 # copied from EyeLink's constant
-        return TRIAL_OK
+            self.score = 0
+        assert False, "Returning code should only be in the while True loop"

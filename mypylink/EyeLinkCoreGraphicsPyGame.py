@@ -278,8 +278,6 @@ class EyeLinkCoreGraphicsPyGame(pylink.EyeLinkCustomDisplay):
 		return 1
 		
 	def image_title(self, text): 
-		text = text 
-
 		sz = self.fnt.size(text[0])
 		txt = self.fnt.render(text, len(text), (0, 0, 0, 255), (255, 255, 255, 255))
 		surf = pygame.display.get_surface()
@@ -289,7 +287,22 @@ class EyeLinkCoreGraphicsPyGame(pylink.EyeLinkCustomDisplay):
 		surf.blit(txt, imsz)
 		pygame.display.flip()
 		surf.blit(txt, imsz)
-				
+
+	def draw_multiline_text(self, text_list):
+		surf = pygame.display.get_surface()
+		txt_list = []
+		for (i,text) in enumerate(text_list):
+			txt_list.append(self.fnt.render(text, len(text), (0, 0, 0, 255), (255, 255, 255, 255)))
+		# figure out x-pos if we want to print left-aligned text
+		scrsz = surf.get_rect()
+		sizes = [txt.get_rect() for txt in txt_list]
+		txt_x = (scrsz.w - max([sz.w for sz in sizes])) / 2
+		txt_y = (scrsz.h - sum([sz.h for sz in sizes])) / 2
+		for i in range(len(txt_list)):
+			txt_y += sizes[i-1].h if i > 0 else 0
+			topleft = (txt_x, txt_y)
+			surf.blit(txt_list[i], topleft)
+		pygame.display.flip()
 		
 	def draw_image_line(self, width, line, totlines, buff):		
 		#print "draw_image_line", len(buff)
