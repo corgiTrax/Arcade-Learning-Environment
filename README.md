@@ -12,12 +12,12 @@
 
 2. Imitation
 - [x] Make it easier to combine trials(see dataset\_specification\_example.txt)
-- [ ] Test regularizer hypothesis (attention as)
-- [ ] Gaze-centered images as training samples
+- [ ] Test regularizer hypothesis (attention as) (what is this???)
+- [x] Gaze-centered images as training samples
 - [x] Make sure dropout is turned off during evaluation
-- [ ] Figure out why GaussianConv model does not work
+- [ ] Figure out why GaussianConv model does not work (what is this???)
 - [x] Figure out Tau (needs to find gaze & image before easier)
-- [ ] CNN + past X frames model
+- [x] CNN + past X frames model
 - [ ] CNN + positional encoding
 - [ ] RNN model
 
