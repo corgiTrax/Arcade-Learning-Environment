@@ -66,7 +66,7 @@ model.fit(d.train_imgs, d.train_lbl, BATCH_SIZE, epochs=num_epoch,
         K.callbacks.ReduceLROnPlateau(monitor='val_loss', factor=0.5,patience=3, min_lr=0.001),
         MU.PrintLrCallback()])
 
-expr.save_weight_and_training_config_state(model)
+# expr.save_weight_and_training_config_state(model) # uncomment this line if you want to save model
 
 score = model.evaluate(d.val_imgs, d.val_lbl, BATCH_SIZE, 0)
 expr.printdebug("eval score:" + str(score))
