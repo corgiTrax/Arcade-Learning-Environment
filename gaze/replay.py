@@ -7,7 +7,7 @@
 import sys, pygame, time, os, re, tarfile, cStringIO as StringIO
 from pygame.constants import *
 import vip_constants as V
-from input_utils import frameid_from_filename, read_gaze_data_asc_file
+from input_utils import frameid_from_filename, read_gaze_data_asc_file, read_result_data
 
 def preprocess_and_sanity_check(png_files):
     hasWarning = False
@@ -36,8 +36,11 @@ def preprocess_and_sanity_check(png_files):
     return png_files
 
 class drawgc_wrapper:
-    def __init__(self):
-        self.cursor = pygame.image.load('target.png')
+    def __init__(self, category):
+        if category == 'original':
+            self.cursor = pygame.image.load('target.png')
+        elif category == 'predict':
+            self.cursor = pygame.image.load('target_predict.png')
         self.cursorsize = (self.cursor.get_width(), self.cursor.get_height())
 
     def draw_gc(self, screen, gaze_position):
@@ -88,30 +91,34 @@ def event_handler_func():
     ds.target_fps = max(1, ds.target_fps)
 
 if __name__ == "__main__":
-    if len(sys.argv) < 3:
-        print "Usage: %s saved_frames_png_tar asc_file" % (sys.argv[0])
+    if len(sys.argv) < 4:
+        print "Usage: %s saved_frames_png_tar asc_file result_file_txt" % (sys.argv[0])
         sys.exit(0)
 
     tar = tarfile.open(sys.argv[1], 'r')
     #asc_path = sys.argv[1].split(".")[0] + ".asc"
     asc_path = sys.argv[2]
+    result_path = sys.argv[3]
 
     png_files = tar.getnames()
     png_files = preprocess_and_sanity_check(png_files)
     print "\nYou can control the replay using keyboard. Try pressing space/up/down/left/right." 
     print "For all available keys, see event_handler_func() code.\n"
     print "Uncompressing PNG tar file into memory (/dev/shm/)..."
-    tar.extractall("/dev/shm/")
+    tar.extractall("/Users/zhangluxin/Desktop/ale/dataset_gaze/")
     UTIDhash = frameid_from_filename(png_files[2])[0]
 
     # init pygame and other stuffs
+    RESIZE_SHAPE = (84,84,1)
     w, h = 160*V.xSCALE, 210*V.ySCALE
     pygame.init()
     pygame.display.set_mode((w, h), RESIZABLE | DOUBLEBUF | RLEACCEL, 32)
     screen = pygame.display.get_surface()
     print "Reading gaze data in ASC file into memory..."
     frameid2pos, _ = read_gaze_data_asc_file(asc_path)
-    dw = drawgc_wrapper()
+    predicts = read_result_data(result_path, RESIZE_SHAPE)
+    dw = drawgc_wrapper('original')
+    dw_pred = drawgc_wrapper('predict')
 
     ds.target_fps = 60
     ds.total_frame = len(png_files)
@@ -132,14 +139,23 @@ if __name__ == "__main__":
         event_handler_func()
 
         # Load PNG file and draw the frame and the gaze-contingent window
-        s = pygame.image.load("/dev/shm/" + png_files[ds.cur_frame_id])
+        s = pygame.image.load("/Users/zhangluxin/Desktop/ale/dataset_gaze/" + png_files[ds.cur_frame_id])
         s = pygame.transform.scale(s, (w,h))
         screen.blit(s, (0,0))
         UFID=(UTIDhash, ds.cur_frame_id) # Unique frame ID in 'frameid2pos' is defined as a tuple: (UTID's hash value, frame number)
         if UFID in frameid2pos and len(frameid2pos[UFID])>0:
-            for gaze_pos in frameid2pos[UFID]:
-                dw.draw_gc(screen, gaze_pos)
-                if not ds.draw_many_gazes: break
+            if UFID in predicts:
+                for gaze_pos in frameid2pos[UFID]:
+                    dw.draw_gc(screen, gaze_pos)
+                    dw_pred.draw_gc(screen, predicts[UFID])
+                    if not ds.draw_many_gazes: break
+            else:
+                print "Warning: No predict gaze data for frame ID %d" % ds.cur_frame_id
+                print "Sleeping for 10 sec..."
+                time.sleep(10)
+                for gaze_pos in frameid2pos[UFID]:
+                    dw.draw_gc(screen, gaze_pos)
+                    if not ds.draw_many_gazes: break
         else:
             print "Warning: No gaze data for frame ID %d" % ds.cur_frame_id
         pygame.display.flip()

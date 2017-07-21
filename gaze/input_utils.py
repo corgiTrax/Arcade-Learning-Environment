@@ -5,6 +5,7 @@ import numpy as np
 from IPython import embed
 from scipy import misc
 import vip_constants as V
+from ast import literal_eval
 
 def preprocess_gaze_heatmap(GHmap, sigmaH, sigmaW, bg_prob_density, debug_plot_result=False):
     from scipy.stats import multivariate_normal
@@ -298,7 +299,6 @@ def read_np_parallel(label_file, RESIZE_SHAPE, num_thread=6):
             labels.append(int(lbl))
             fids.append(frameid_from_filename(fname))
             gaze.append((float(x)*RESIZE_SHAPE[1]/V.SCR_W, float(y)*RESIZE_SHAPE[0]/V.SCR_H))
-            # gaze.append((round(float(x)*RESIZE_SHAPE[1]/V.SCR_W), round(float(y)*RESIZE_SHAPE[0]/V.SCR_H)))
     N = len(labels)
     imgs = np.empty((N,RESIZE_SHAPE[0],RESIZE_SHAPE[1],1), dtype=np.float32)
     labels = np.asarray(labels, dtype=np.int32)
@@ -316,6 +316,23 @@ def read_np_parallel(label_file, RESIZE_SHAPE, num_thread=6):
     o=ForkJoiner(num_thread=num_thread, target=read_thread)
     o.join()
     return imgs, labels, gaze, fids
+
+def read_result_data(result_file, RESIZE_SHAPE):
+    """
+    Read the predicted gaze positions from a txt file
+    return a dictionary that maps fid to predicted gaze position
+    """
+    fid = "BEFORE-FIRST-FRAME"
+    predicts = {fid: (-1,-1)}
+    with open(result_file,'r') as f:
+        for line in f:
+            line=line.strip()
+            if line.startswith("#") or line == "": 
+                continue # skip comments or empty lines
+            fid, x, y = line.split(' ')
+            fid = literal_eval(fid)
+            predicts[fid] = (float(x)*V.SCR_W/RESIZE_SHAPE[1], float(y)*V.SCR_H/RESIZE_SHAPE[0])
+    return predicts
 
 class ForkJoiner():
     def __init__(self, num_thread, target):
