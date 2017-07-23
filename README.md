@@ -29,9 +29,9 @@
 4. AI playing 
 - [ ] Make it possible for model to play the game and record scores
 
-Software Archetecture
-+ Make three separate components:  Model definition, Model training, ALE game control
-+ Instead of letting one of these components manage the others, use a "main" file to assemble and manage them. Because we are probably going to use complex ways to train a model in the future: SL training, RL training, SL pretraining + RL training, interleaved SL + RL training, switching off training (pure game playing), etc. These 'strategies' can be put into the "main" file while keeping these three components intact.
+  Software Archetecture
+  + Make three separate components:  Model definition, Model training, ALE game control
+  + Instead of letting one of these components manage the others, use a "main" file to assemble and manage them. Because we are probably going to use complex ways to train a model in the future: SL training, RL training, SL pretraining + RL training, interleaved SL + RL training, switching off training (pure game playing), etc. These 'strategies' can be put into the "main" file while keeping these three components intact.
 
 
 5. Psychology
