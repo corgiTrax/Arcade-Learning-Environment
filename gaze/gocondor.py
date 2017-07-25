@@ -1,8 +1,8 @@
 #!/usr/bin/env python
 def multi_experiment():
   l = [] # compose a list of arguments needed to be passed to the python script
-  for gauss in ["0","15","25","35"]:
-    l.append(' '.join([gauss]))
+  for k in ["2","3","4"]:
+    l.append(' '.join([k]))
 
   return l
 
@@ -10,8 +10,8 @@ import sys, re, os, subprocess
 
 basestr="""
 # doc at : http://research.cs.wisc.edu/htcondor/manual/current/condor_submit.html
-arguments = /scratch/cluster/zharucs/ale/modeling/{0}
-remote_initialdir = /scratch/cluster/zharucs/ale/modeling/
+arguments = /scratch/cluster/zharucs/ale/gaze/{0}
+remote_initialdir = /scratch/cluster/zharucs/ale/gaze/
 +Group ="GRAD"
 +Project ="AI_ROBOTICS"
 +ProjectDescription="ale"

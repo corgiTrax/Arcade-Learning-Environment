@@ -105,7 +105,7 @@ if __name__ == "__main__":
     print "\nYou can control the replay using keyboard. Try pressing space/up/down/left/right." 
     print "For all available keys, see event_handler_func() code.\n"
     print "Uncompressing PNG tar file into memory (/dev/shm/)..."
-    tar.extractall("/Users/zhangluxin/Desktop/ale/dataset_gaze/")
+    tar.extractall("/scratch/cluster/zharucs/dataset_gaze/")
     UTIDhash = frameid_from_filename(png_files[2])[0]
 
     # init pygame and other stuffs
@@ -139,7 +139,7 @@ if __name__ == "__main__":
         event_handler_func()
 
         # Load PNG file and draw the frame and the gaze-contingent window
-        s = pygame.image.load("/Users/zhangluxin/Desktop/ale/dataset_gaze/" + png_files[ds.cur_frame_id])
+        s = pygame.image.load("/scratch/cluster/zharucs/dataset_gaze/" + png_files[ds.cur_frame_id])
         s = pygame.transform.scale(s, (w,h))
         screen.blit(s, (0,0))
         UFID=(UTIDhash, ds.cur_frame_id) # Unique frame ID in 'frameid2pos' is defined as a tuple: (UTID's hash value, frame number)

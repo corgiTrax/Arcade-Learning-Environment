@@ -5,7 +5,7 @@ from IPython import embed
 import input_utils, misc_utils as MU
 import ipdb
 
-BASE_FILE_NAME = "/Users/zhangluxin/Desktop/ale/dataset_gaze/cat{42_RZ}tr_{44_RZ}val"
+BASE_FILE_NAME = "/scratch/cluster/zharucs/dataset_gaze/cat{42_RZ}tr_{44_RZ}val"
 LABELS_FILE_TRAIN = BASE_FILE_NAME + '-train.txt' 
 LABELS_FILE_VAL =  BASE_FILE_NAME + '-val.txt' 
 PREDICT_FILE_TRAIN = BASE_FILE_NAME + '-train-result.txt'
@@ -73,7 +73,7 @@ train_pred = model.predict(d.train_imgs, BATCH_SIZE)
 val_pred = model.predict(d.val_imgs, BATCH_SIZE)
 
 xy_str_train = []
-for i in range(d.train_size):
+for i in range(d.train_size):v
     xy_str_train.append('(%d,%d) %f %f' % (d.train_fid[i][0], d.train_fid[i][1], train_pred[i][0], train_pred[i][1]))
 xy_str_val = []
 for i in range(d.val_size):
