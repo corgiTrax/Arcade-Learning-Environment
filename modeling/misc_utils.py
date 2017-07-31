@@ -69,7 +69,7 @@ def keras_model_serialization_bug_fix(): # stupid keras
     f(acc_)
 
 def loss_func(target, pred): 
-    return K.backend.sparse_categorical_crossentropy(output=pred,target=target, from_logits=True)
+    return K.backend.sparse_categorical_crossentropy(output=pred, target=target, from_logits=True)
 
 def acc_(y_true, y_pred): # don't rename it to acc or accuracy (otherwise stupid keras will replace this func with its own accuracy function when serializing )
   return tf.reduce_mean(
@@ -77,6 +77,11 @@ def acc_(y_true, y_pred): # don't rename it to acc or accuracy (otherwise stupid
       targets=tf.squeeze(tf.cast(y_true,tf.int32)), 
       predictions=y_pred,k=1),tf.float32))
 
+def top2acc_(y_true, y_pred):
+  return tf.reduce_mean(
+    tf.cast(tf.nn.in_top_k(
+      targets=tf.squeeze(tf.cast(y_true,tf.int32)),
+      predictions=y_pred,k=2),tf.float32))
 
 class PrintLrCallback(K.callbacks.Callback):
     def on_epoch_end(self, epoch, logs={}):

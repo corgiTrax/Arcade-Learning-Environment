@@ -1,12 +1,46 @@
 # To do
-- [x] Ask experts to validate experimental setups
+1. Dataset 
 - [x] Record actions in to EDF file 
-- [ ] Save and reload game
+- [x] Save and reload game
+- [x] Game time limits (15 minutes per session then break)
+- [x] Validation after each trial, mark and throw away bad data
+- [x] Score leaderboard
+- [x] Automatically run edf2asc after each trial
+- [x] Record random seed to data file
+- [ ] A recording schedule for diff. games and subjects
+- [ ] Support for composed actions using event detection
+
+2. Imitation
+- [x] Make it easier to combine trials(see dataset\_specification\_example.txt)
+- [ ] Test regularizer hypothesis (attention as) (what is this???)
+- [x] Gaze-centered images as training samples
+- [x] Make sure dropout is turned off during evaluation
+- [ ] Figure out why GaussianConv model does not work (what is this???)
+- [x] Figure out Tau (needs to find gaze & image before easier)
+- [x] CNN + past X frames model
+- [ ] CNN + positional encoding
+- [ ] RNN model
+
+3. Gaze modeling
+- [ ] CNN - deconv model
+- [ ] CNN - regression model
+- [ ] Superior colliculus model
+
+4. AI playing 
+- [ ] Make it possible for model to play the game and record scores
+
+  Software Archetecture
+  + Make three separate components:  Model definition, Model training, ALE game control
+  + Instead of letting one of these components manage the others, use a "main" file to assemble and manage them. Because we are probably going to use complex ways to train a model in the future: SL training, RL training, SL pretraining + RL training, interleaved SL + RL training, switching off training (pure game playing), etc. These 'strategies' can be put into the "main" file while keeping these three components intact.
+
+
+5. Psychology
+- [x] Ask experts to validate experimental setups
 - [ ] Experiment and config class
-- [ ] Game time limits (15 minutes per session then break)
-- [x] 5-point check image after each trial, mark and throw away bad data
 - [ ] Demographical information survey (ask Sariel)
 - [ ] Subject consensus files (ask Sariel) 
+- [ ] Organize experimental procedure
+- [ ] Practice game for subjects + instructions
 - [ ] Write experimental instruction for both experimentor and subjects; note that experimentor should center the screen; experimentor should stay with subjects during experiment 
 - [ ] automatically run edf2asc after each trial
 - [ ] Record random seed to data file
