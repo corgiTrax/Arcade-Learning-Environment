@@ -8,11 +8,12 @@
 - [ ] Demographical information survey (ask Sariel)
 - [ ] Subject consensus files (ask Sariel) 
 - [ ] Write experimental instruction for both experimentor and subjects; note that experimentor should center the screen; experimentor should stay with subjects during experiment 
-- [ ] Score leaderboard
 - [ ] automatically run edf2asc after each trial
 - [ ] Record random seed to data file
-- [ ] Practice game for subjects (without calling record and eye tracking)
-
+- [x] Practice game for subjects (without calling record and eye tracking)
+- [ ] Practice game instructions
+- [ ] ALE + Keras game playing agent 
+- [ ] ALE save/load
 
 ## Next
 
