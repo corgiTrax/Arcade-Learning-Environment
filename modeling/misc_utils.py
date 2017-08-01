@@ -67,6 +67,7 @@ def keras_model_serialization_bug_fix(): # stupid keras
         get_custom_objects().update({obj_to_serialize.__name__: obj_to_serialize})
     f(loss_func)
     f(acc_)
+    f(top2acc_)
 
 def loss_func(target, pred): 
     return K.backend.sparse_categorical_crossentropy(output=pred, target=target, from_logits=True)
