@@ -35,7 +35,7 @@
 
   * Now completed: baseline model AI playing seaquest trained on data 36 *
   To run it, you need to have a machine with tensorflow, keras, ale_python_interface installed, and **a monitor** (so eldar-11 cannot run it).
-  ``ipython runai_baseline.py ../roms/seaquest.bin cat\{36_FV\}tr_\{37_FV\}val.model.hdf5 cat\{36_FV\}tr_\{37_FV\}val.mean.npy``
+  ``ipython runai_baseline.py ../roms/seaquest.bin cat\{36_RZ\}tr_\{37_RZ\}val.model.hdf5 cat\{36_RZ\}tr_\{37_RZ\}val.mean.npy``
 
 
 5. Psychology
