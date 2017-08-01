@@ -20,6 +20,9 @@
 - [x] CNN + past X frames model
 - [ ] CNN + positional encoding
 - [ ] RNN model
+- [x] Foveated rendering model
+- [x] Cortical expansion model
+- [x] Log-polar transfomation
 
 3. Gaze modeling
 - [ ] CNN - deconv model
