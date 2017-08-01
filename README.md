@@ -33,8 +33,10 @@
   + Make three separate components:  Model definition, Model training, ALE game control
   + Instead of letting one of these components manage the others, use a "main" file to assemble and manage them. Because we are probably going to use complex ways to train a model in the future: SL training, RL training, SL pretraining + RL training, interleaved SL + RL training, switching off training (pure game playing), etc. These 'strategies' can be put into the "main" file while keeping these three components intact.
 
-  * Now completed: baseline model AI playing seaquest trained on data 36 *
-  To run it, you need to have a machine with tensorflow, keras, ale_python_interface installed, and **a monitor** (so eldar-11 cannot run it).
+  Now completed: baseline model AI playing seaquest trained on data 36.
+  
+  To run it, you need to have a machine with tensorflow, keras, ale_python_interface installed, and **a monitor** (so eldar-11 cannot run it). And then run:
+  
   ``ipython runai_baseline.py ../roms/seaquest.bin cat\{36_FV\}tr_\{37_FV\}val.model.hdf5 cat\{36_FV\}tr_\{37_FV\}val.mean.npy``
 
 
