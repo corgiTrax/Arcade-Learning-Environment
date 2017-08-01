@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 def multi_experiment():
   l = [] # compose a list of arguments needed to be passed to the python script
-  for k in ["2","3","4"]:
+  for k in ["0.2","0.3","0.4","0.5","0.6"]:
     l.append(' '.join([k]))
 
   return l

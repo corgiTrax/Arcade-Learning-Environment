@@ -16,6 +16,9 @@ after 44 color_averaging is turned on
 39 RZ seaquest data ok random_seed:35
 43 RZ seaquest data ok random_seed:41
 
+47 KM seaquest data ok random_seed:24
+48 KM seaquest data ok random_seed:64495
+
 
 ========================================
 40 RZ mspacman data ok random_seed:127

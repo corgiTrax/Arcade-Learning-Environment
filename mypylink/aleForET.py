@@ -19,7 +19,7 @@ class aleForET:
         # Get & Set the desired settings
         self.ale = ALEInterface()
         self.ale.setInt('random_seed', rndseed)
-        self.ale.setBool('sound', True)
+        self.ale.setBool('sound', False)
         self.ale.setBool('display_screen', False)
         self.ale.setBool('color_averaging', True)
         self.ale.setFloat('repeat_action_probability', 0.0)

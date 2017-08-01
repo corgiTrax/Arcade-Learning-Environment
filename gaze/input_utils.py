@@ -234,6 +234,10 @@ class Dataset_PastKFrames(Dataset):
     # Could cause the model unable to train  if this assumption does not hold
     self.train_lbl = self.train_lbl[-self.train_imgs.shape[0]:]
     self.val_lbl = self.val_lbl[-self.val_imgs.shape[0]:]
+
+    self.train_size = len(self.train_lbl)
+    self.val_size = len(self.val_lbl)
+
     self.train_gaze = self.train_gaze[-self.train_imgs.shape[0]:]
     self.val_gaze = self.val_gaze[-self.val_imgs.shape[0]:]
 
@@ -310,11 +314,13 @@ class DatasetWithHeatmap(Dataset):
     print "Normalizing the train/val heat map..."
     for i in range(len(self.train_GHmap)):
         SUM = self.train_GHmap[i].sum()
-        self.train_GHmap[i] /= SUM
+        if SUM != 0:
+            self.train_GHmap[i] /= SUM
 
     for i in range(len(self.val_GHmap)):
         SUM = self.val_GHmap[i].sum()
-        self.val_GHmap[i] /= SUM
+        if SUM != 0:
+            self.val_GHmap[i] /= SUM
     print "Done. convert_gaze_pos_to_heap_map() and normalize used: %.1fs" % (time.time()-t1)
 
 
@@ -372,6 +378,19 @@ def read_result_data(result_file, RESIZE_SHAPE):
             fid = literal_eval(fid)
             predicts[fid] = (float(x)*V.SCR_W/RESIZE_SHAPE[1], float(y)*V.SCR_H/RESIZE_SHAPE[0])
     return predicts
+
+def read_heatmap(heatmap_path):
+    data = np.load(heatmap_path)
+    frameids = data['fid']
+    heatmaps = data['heatmap']
+
+    fid = "BEFORE-FIRST-FRAME"
+    frameid2heatmap = {fid: []}
+    for i in range(len(frameids)):
+        # heatmaps[i] = heatmaps[i]/heatmaps[i].max() * 255.0
+        frameid2heatmap[(frameids[i][0],frameids[i][1])] = heatmaps[i,:,:,0]
+
+    return frameid2heatmap
 
 class ForkJoiner():
     def __init__(self, num_thread, target):

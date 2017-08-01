@@ -46,6 +46,12 @@
 - [ ] Organize experimental procedure
 - [ ] Practice game for subjects + instructions
 - [ ] Write experimental instruction for both experimentor and subjects; note that experimentor should center the screen; experimentor should stay with subjects during experiment 
+- [ ] automatically run edf2asc after each trial
+- [ ] Record random seed to data file
+- [x] Practice game for subjects (without calling record and eye tracking)
+- [ ] Practice game instructions
+- [ ] ALE + Keras game playing agent 
+- [ ] ALE save/load
 
 ## Next
 
