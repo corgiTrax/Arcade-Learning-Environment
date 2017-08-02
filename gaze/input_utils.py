@@ -1,11 +1,15 @@
 #!/usr/bin/env python
 
-import os, re, threading, time
+import os, re, threading, time, tarfile
 import numpy as np
 from IPython import embed
 from scipy import misc
 import vip_constants as V
 from ast import literal_eval
+import matplotlib.cm as cm
+import matplotlib.pyplot as plt
+from astropy.convolution import convolve
+from astropy.convolution.kernels import Gaussian2DKernel
 
 def preprocess_gaze_heatmap(GHmap, sigmaH, sigmaW, bg_prob_density, debug_plot_result=False):
     from scipy.stats import multivariate_normal
@@ -379,18 +383,52 @@ def read_result_data(result_file, RESIZE_SHAPE):
             predicts[fid] = (float(x)*V.SCR_W/RESIZE_SHAPE[1], float(y)*V.SCR_H/RESIZE_SHAPE[0])
     return predicts
 
-def read_heatmap(heatmap_path):
-    data = np.load(heatmap_path)
-    frameids = data['fid']
-    heatmaps = data['heatmap']
+def save_heatmap_png_files(frameids, heatmaps, dataset, save_dir):
+    if not os.path.exists(save_dir):
+        os.mkdir(save_dir)
 
     fid = "BEFORE-FIRST-FRAME"
     frameid2heatmap = {fid: []}
     for i in range(len(frameids)):
         # heatmaps[i] = heatmaps[i]/heatmaps[i].max() * 255.0
         frameid2heatmap[(frameids[i][0],frameids[i][1])] = heatmaps[i,:,:,0]
+    
+    hashID2name = {0: []}
+    for i in range(len(dataset)):
+        _, person, number, date = dataset[i].split('_')
+        UTID = person + '_' + number
+        save_path = save_dir + dataset[i]
+        hashID2name[hash(UTID)] = [save_path, UTID+'_']
+        if not os.path.exists(save_path):
+            os.mkdir(save_path) 
 
-    return frameid2heatmap
+    m = cm.ScalarMappable(cmap='hot')
+
+    print "Convolving heatmaps and saving into png files..."
+    t1 = time.time()
+    for fid in frameid2heatmap:
+        if fid == 'BEFORE-FIRST-FRAME':
+            continue
+
+        pic = convolve(frameid2heatmap[fid], Gaussian2DKernel(stddev=1))
+        pic = m.to_rgba(pic)[:,:,:3]
+        plt.imsave(hashID2name[fid[0]][0]+'/' + hashID2name[fid[0]][1] + str(fid[1]) + '.png', pic)
+    print "Done. Time spent to save heatmaps: %.1fs" % (time.time()-t1)
+
+    print "Tar the png files..."
+    t2 = time.time()
+    for hashID in hashID2name:
+        if hashID2name[hashID]:
+            make_targz_one_by_one(hashID2name[hashID][0] + '.tar.bz2', hashID2name[hashID][0])
+    print "Done. Time spent to tar files: %.1fs" % (time.time()-t2)
+
+def make_targz_one_by_one(output_filename, source_dir): 
+    tar = tarfile.open(output_filename,"w:gz")
+    for root,dir,files in os.walk(source_dir):
+        for file in files:
+            pathfile = os.path.join(root, file)
+            tar.add(pathfile)
+    tar.close()
 
 class ForkJoiner():
     def __init__(self, num_thread, target):

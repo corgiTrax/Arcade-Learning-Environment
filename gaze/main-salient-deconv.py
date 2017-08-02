@@ -9,19 +9,23 @@ import sys
 print("Usage: ipython main.py [PredictMode?]")
 print("Usage Predict Mode: ipython main.py 1 parameters Model.hdf5")
 print("Usage Training Mode: ipython main.py 0 parameters")
-TRAIN_DATASET = ['40_RZ_4983433_May-16-20-19-52']
-VAL_DATASET = ['45_RZ_5134712_May-18-14-14-00']
+#TRAIN_DATASET = ['40_RZ_4983433_May-16-20-19-52']
+#VAL_DATASET = ['45_RZ_5134712_May-18-14-14-00']
 #TRAIN_DATASET = ['42_RZ_4988291_May-16-21-33-46']
 #VAL_DATASET = ['44_RZ_5131746_May-18-13-25-32']
 #TRAIN_DATASET = ['36_RZ_4882422_May-15-16-08-32','37_RZ_4883794_May-15-16-37-01','38_RZ_4886422_May-15-17-15-33','39_RZ_4981421_May-16-19-40-17','43_RZ_5129700_May-18-12-52-16']
+TRAIN_DATASET = ['36_RZ_4882422_May-15-16-08-32']
+VAL_DATASET = ['37_RZ_4883794_May-15-16-37-01']
 #TRAIN_DATASET = ['47_KM_1535284_Jul-31-16-10-56']
 #VAL_DATASET = ['48_KM_1537673_Jul-31-16-51-20']
-BASE_FILE_NAME = "/scratch/cluster/zharucs/dataset_gaze/cat{40_RZ}tr_{45_RZ}val"
+
+#BASE_FILE_NAME = "/scratch/cluster/zharucs/dataset_gaze/cat{40_RZ}tr_{45_RZ}val"
 #BASE_FILE_NAME = "/scratch/cluster/zharucs/dataset_gaze/cat{42_RZ}tr_{44_RZ}val"
-#BASE_FILE_NAME = "/scratch/cluster/zharucs/dataset_gaze/cat{36_RZ}tr_{37_RZ}val"
+BASE_FILE_NAME = "/scratch/cluster/zharucs/dataset_gaze/cat{36_RZ}tr_{37_RZ}val"
 #BASE_FILE_NAME = "/scratch/cluster/zharucs/dataset_gaze/cat{36_38_39_43_RZ}tr_{37_RZ}val"
 #BASE_FILE_NAME = "/scratch/cluster/zharucs/dataset_gaze/cat{36_37_38_39_43_RZ}tr_{47_48_KM}val"
 #BASE_FILE_NAME = "/scratch/cluster/zharucs/dataset_gaze/cat{47_KM}tr_{48_KM}val"
+
 LABELS_FILE_TRAIN = BASE_FILE_NAME + '-train.txt' 
 LABELS_FILE_VAL =  BASE_FILE_NAME + '-val.txt' 
 GAZE_POS_ASC_FILE = BASE_FILE_NAME + '.asc'
@@ -30,11 +34,14 @@ PREDICT_FILE_VAL = BASE_FILE_NAME + '-val-result'
 SHAPE = (84,84,1) # height * width * channel This cannot read from file and needs to be provided here
 BATCH_SIZE = 50
 num_epoch = 30
+
 #MODEL_DIR = 'Seaquest_36&38&39&43_37'
 #MODEL_DIR = 'Breakout_42_44'
 #MODEL_DIR = 'Seaquest_47_48'
-MODEL_DIR = 'Pacman_40_45'
+#MODEL_DIR = 'Pacman_40_45'
 #MODEL_DIR = 'Seaquest_RZ_KM'
+MODEL_DIR = 'Seaquest_36_37'
+
 resume_model = False
 predict_mode = int(sys.argv[1]) 
 dropout = float(sys.argv[2])
@@ -83,6 +90,7 @@ else:
 
     #model=Model(inputs=inputs, outputs=[logits,prob])
     model=Model(inputs=inputs, outputs=logits)
+
     # opt=K.optimizers.Adadelta(lr=1.0, rho=0.95, epsilon=1e-08, decay=0.0)
     opt=K.optimizers.Adam(lr=0.001, beta_1=0.9, beta_2=0.999, epsilon=1e-08)
     # opt=K.optimizers.SGD(lr=0.001, momentum=0.0, decay=0.0, nesterov=False)
@@ -91,6 +99,7 @@ else:
     #model.compile(loss={"logits": 'kullback_leibler_divergence', "prob":None}, optimizer=opt, metrics={"logits": 'mean_squared_error'})
     #model.compile(loss={"logits": 'mean_squared_error', "prob":None}, optimizer=opt, metrics={"logits": 'mean_squared_error'})
     #model.compile(loss='mean_squared_error', optimizer=opt, metrics=['mean_squared_error'])
+
 d=IU.DatasetWithHeatmap(LABELS_FILE_TRAIN, LABELS_FILE_VAL, SHAPE, GAZE_POS_ASC_FILE)
 
 if not predict_mode: # if train

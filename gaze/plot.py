@@ -1,5 +1,4 @@
 import numpy as np
-from input_utils import read_heatmap
 import matplotlib.cm as cm
 import matplotlib.pyplot as plt
 import matplotlib as mpl
