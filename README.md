@@ -40,7 +40,15 @@
   
   To run it, you need to have a machine with tensorflow, keras, ale_python_interface installed, and **a monitor** (so eldar-11 cannot run it). And then run:
   
-  ``ipython runai_baseline.py ../roms/seaquest.bin cat\{36_RZ\}tr_\{37_RZ\}val.model.hdf5 cat\{36_RZ\}tr_\{37_RZ\}val.mean.npy``
+  ```
+  # run this command to see help message of this file
+  python runai.py 
+  
+  # Run baseline model playing seaquest train on 36
+  python runai.py ../roms/seaquest.bin BaselineModel cat\{36_RZ\}tr_\{37_RZ\}val.model.hdf5 cat\{36_RZ\}tr_\{37_RZ\}val.mean.npy
+  # Run pastKFrame model playing seaquest train on 36  (K=4, stride=2, before=2)
+  python runai.py ../roms/seaquest.bin PastKFrameModel cat\{36_RZ\}tr_\{37_RZ\}val-pKf.model.hdf5 cat\{36_RZ\}tr_\{37_RZ\}val.mean.npy == 4 2 0
+  ```
 
 
 5. Psychology
