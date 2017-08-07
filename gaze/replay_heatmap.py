@@ -83,6 +83,7 @@ def event_handler_func():
             ds.pause = not ds.pause
         elif event.key == K_F9:
             ds.draw_many_gazes = not ds.draw_many_gazes
+
             print "draw all gazes belonging to a frame: %s" % ("ON" if ds.draw_many_gazes else "OFF")
         elif event.key == K_F11:
             ds.target_fps -= 2
