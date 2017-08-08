@@ -1,6 +1,6 @@
 Stimulus size:
-vertical: 15 9/12 inch = 40.005cm
-horizontal: 25 5/12 inch = 64.5583cm
+vertical: 15 9/12 inch = 40.005cm | 28.50 visual degrees (210 * 4)
+horizontal: 25 5/12 inch = 64.5583cm | 44.58 visual degrees (160 * 8)
 distance: 31 inch = 78.74cm
 
 after 44 color_averaging is turned on
