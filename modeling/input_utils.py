@@ -72,6 +72,64 @@ def frameid_from_filename(fname):
 def make_unique_frame_id(UTID, frameid):
     return (hash(UTID), int(frameid))
 
+def read_gaze_data_asc_file_2(fname):
+    """
+    Reads a ASC file and returns the following:
+    all_gaze (Type:list) A tuple (utid, t, x, y) of all gaze messages in the file.
+        where utid is the trial ID to which this gaze belongs. 
+        It is extracted from the UTID of the most recent frame
+    all_frame (Type:list) A tuple (f_time, frameid, UTID) of all frame messages in the file.
+        where f_time is the time of the message. frameid is the unique ID used across the whole project.
+    frameid2action (Type: dict) a dictionary mapping frame ID to action label
+    (This function is designed to correctly handle the case that the file might be the concatenation of multiple asc files)
+    """
+
+    with open(fname, 'r') as f:
+        lines = f.readlines()
+    frameid, xpos, ypos = "BEFORE-FIRST-FRAME", None, None
+    cur_frame_utid = "BEFORE-FIRST-FRAME"
+    frameid2action = {frameid: None}
+    all_gaze = []
+    all_frame = []
+    scr_msg = re.compile("MSG\s+(\d+)\s+SCR_RECORDER FRAMEID (\d+) UTID (\w+)")
+    freg = "[-+]?[0-9]*\.?[0-9]+" # regex for floating point numbers
+    gaze_msg = re.compile("(\d+)\s+(%s)\s+(%s)" % (freg, freg))
+    act_msg = re.compile("MSG\s+(\d+)\s+key_pressed atari_action (\d+)")
+
+    for (i,line) in enumerate(lines):
+        
+        match_sample = gaze_msg.match(line)
+        if match_sample:
+            g_time, xpos, ypos = int(match_sample.group(1)), match_sample.group(2), match_sample.group(3)
+            g_time, xpos, ypos = int(g_time), float(xpos), float(ypos)
+            all_gaze.append((cur_frame_utid, g_time, xpos, ypos))
+            continue
+
+        match_scr_msg = scr_msg.match(line)
+        if match_scr_msg: # when a new id is encountered
+            f_time, frameid, UTID = match_scr_msg.group(1), match_scr_msg.group(2), match_scr_msg.group(3)
+            f_time = int(f_time)
+            cur_frame_utid = UTID
+            frameid = make_unique_frame_id(UTID, frameid)
+            all_frame.append((f_time, frameid, UTID))
+            frameid2action[frameid] = None
+            continue
+
+        match_action = act_msg.match(line)
+        if match_action:
+            timestamp, action_label = match_action.group(1), match_action.group(2)
+            if frameid2action[frameid] is None:
+                frameid2action[frameid] = int(action_label)
+            else:
+                print "Warning: there are more than 1 action for frame id %s. Not supposed to happen." % str(frameid)
+            continue
+
+    if len(all_frame) < 1000: # simple sanity check
+        print "Warning: did you provide the correct ASC file? Because the data for only %d frames is detected" % (len(frameid2pos))
+        raw_input("Press any key to continue")
+
+    return all_gaze, all_frame, frameid2action
+
 def read_gaze_data_asc_file(fname):
     """ This function reads a ASC file and returns 
         a dictionary mapping frame ID to a list of gaze positions,
@@ -89,6 +147,13 @@ def read_gaze_data_asc_file(fname):
 
     for (i,line) in enumerate(lines):
 
+        match_sample = gaze_msg.match(line)
+        if match_sample:
+            timestamp, xpos, ypos = match_sample.group(1), match_sample.group(2), match_sample.group(3)
+            xpos, ypos = float(xpos), float(ypos)
+            frameid2pos[frameid].append((xpos,ypos))
+            continue
+
         match_scr_msg = scr_msg.match(line)
         if match_scr_msg: # when a new id is encountered
             timestamp, frameid, UTID = match_scr_msg.group(1), match_scr_msg.group(2), match_scr_msg.group(3)
@@ -97,20 +162,13 @@ def read_gaze_data_asc_file(fname):
             frameid2action[frameid] = None
             continue
 
-        match_sample = gaze_msg.match(line)
-        if match_sample:
-            timestamp, xpos, ypos = match_sample.group(1), match_sample.group(2), match_sample.group(3)
-            xpos, ypos = float(xpos), float(ypos)
-            frameid2pos[frameid].append((xpos,ypos))
-            continue
-
         match_action = act_msg.match(line)
         if match_action:
             timestamp, action_label = match_action.group(1), match_action.group(2)
             if frameid2action[frameid] is None:
                 frameid2action[frameid] = int(action_label)
             else:
-                print "Warning: there are more than 1 action for frame id %d. Not supposed to happen." % frameid
+                print "Warning: there are more than 1 action for frame id %s. Not supposed to happen." % str(frameid)
             continue
 
     frameid2pos[frameid] = [] # throw out gazes after the last frame, because the game has ended but eye tracker keeps recording
@@ -136,6 +194,17 @@ def convert_gaze_pos_to_heap_map(gaze_pos_list, out):
             bad_count += 1
     return bad_count
 
+def rescale_and_clip_gaze_pos(x,y,RESIZE_H,RESIZE_W):
+    isbad=0
+    newy, newx = int(y/V.SCR_H*RESIZE_H), int(x/V.SCR_W*RESIZE_W)
+    if newx >= RESIZE_W or newx<0:
+        isbad = 1
+        newx = np.clip(newx, 0, RESIZE_W-1)
+    if newy >= RESIZE_H or newy<0:
+        isbad = 1
+        newy = np.clip(newy, 0, RESIZE_H-1)
+    return isbad, newx, newy
+
 class Dataset(object):
   train_imgs, train_lbl, train_fid, train_size = None, None, None, None
   val_imgs, val_lbl, val_fid, val_size = None, None, None, None
@@ -159,10 +228,35 @@ class Dataset(object):
     print "Done."
 
   def standardize(self):
-    mean = np.mean(self.train_imgs, axis=(0,1,2))
-    self.train_imgs -= mean # done in-place --- "x-=mean" is faster than "x=x-mean"
-    self.val_imgs -= mean
+    self.mean = np.mean(self.train_imgs, axis=(0,1,2))
+    self.train_imgs -= self.mean # done in-place --- "x-=mean" is faster than "x=x-mean"
+    self.val_imgs -= self.mean
 
+class Dataset_PastKFrames(Dataset):
+  def __init__(self, LABELS_FILE_TRAIN, LABELS_FILE_VAL, RESIZE_SHAPE, K, stride=1, before=0):
+    super(Dataset_PastKFrames, self).__init__(LABELS_FILE_TRAIN, LABELS_FILE_VAL, RESIZE_SHAPE)
+    self.train_imgs_bak, self.val_imgs_bak = self.train_imgs, self.val_imgs
+
+    t1=time.time()
+    self.train_imgs = transform_to_past_K_frames(self.train_imgs, K, stride, before)
+    self.val_imgs = transform_to_past_K_frames(self.val_imgs, K, stride, before)
+    # Trim labels. This is assuming the labels align with the training examples from the back!!
+    # Could cause the model unable to train  if this assumption does not hold
+    self.train_lbl = self.train_lbl[-self.train_imgs.shape[0]:]
+    self.val_lbl = self.val_lbl[-self.val_imgs.shape[0]:]
+    print "Time spent to transform train/val data to pask K frames: %.1fs" % (time.time()-t1)
+
+def transform_to_past_K_frames(original, K, stride, before):
+    newdat = []
+    for i in range(before+K*stride, len(original)):
+        # transform the shape (K, H, W, CH) into (H, W, CH*K)
+        cur = original[i-before : i-before-K*stride : -stride] # using "-stride" instead of "stride" lets the indexing include i rather than exclude i
+        cur = cur.transpose([1,2,3,0])
+        cur = cur.reshape(cur.shape[0:2]+(-1,))
+        newdat.append(cur)
+        if len(newdat)>1: assert (newdat[-1].shape == newdat[-2].shape) # simple sanity check
+    newdat_np = np.array(newdat)
+    return newdat_np
 
 class DatasetWithGaze(Dataset):
   frameid2pos, frameid2heatmap, frameid2action_notused = None, None, None
@@ -194,6 +288,75 @@ class DatasetWithGaze(Dataset):
     self.train_GHmap = preprocess_gaze_heatmap(self.train_GHmap, sigmaH, sigmaW, bg_prob_density)
     self.val_GHmap = preprocess_gaze_heatmap(self.val_GHmap, sigmaH, sigmaW, bg_prob_density)
     print "Done. convert_gaze_pos_to_heap_map() and convolution used: %.1fs" % (time.time()-t1)
+
+class DatasetCenteredAtLastGaze(Dataset):
+    frameid2pos, frameid2action_notused = None, None
+
+    def __init__(self, LABELS_FILE_TRAIN, LABELS_FILE_VAL, RESIZE_SHAPE, GAZE_POS_ASC_FILE, K=1, stride=1, before=0):
+        super(DatasetCenteredAtLastGaze, self).__init__(LABELS_FILE_TRAIN, LABELS_FILE_VAL, RESIZE_SHAPE)
+        self.RESIZE_SHAPE = RESIZE_SHAPE
+        print "Reading gaze data ASC file..."
+        self.frameid2pos, self.frameid2action_notused = read_gaze_data_asc_file(GAZE_POS_ASC_FILE)
+        print "Running rescale_and_clip_gaze_pos_on_frameid2pos()..."
+        self.rescale_and_clip_gaze_pos_on_frameid2pos(self.frameid2pos)
+
+        print  "Running center_img_at_gaze() on train/val data..."
+        rev = lambda (x,y): (y,x)
+        last_gaze_of = lambda gaze_pos_list: rev(gaze_pos_list[-1]) if gaze_pos_list else (RESIZE_SHAPE[0]/2, RESIZE_SHAPE[1]/2)
+        self.train_gaze_y_x = np.asarray([last_gaze_of(self.frameid2pos[fid]) for fid in self.train_fid])
+        self.train_imgs = self.center_img_at_gaze(self.train_imgs, self.train_gaze_y_x)
+        self.val_gaze_y_x = np.asarray([last_gaze_of(self.frameid2pos[fid]) for fid in self.val_fid])
+        self.val_imgs = self.center_img_at_gaze(self.val_imgs, self.val_gaze_y_x)    
+
+        print  "Making past-K-frame train/val data..."
+        t1=time.time()
+        self.train_imgs = transform_to_past_K_frames(self.train_imgs, K, stride, before)
+        self.val_imgs = transform_to_past_K_frames(self.val_imgs, K, stride, before)
+        # Trim labels. This is assuming the labels align with the training examples from the back!!
+        # Could cause the model unable to train  if this assumption does not hold
+        self.train_lbl = self.train_lbl[-self.train_imgs.shape[0]:]
+        self.val_lbl = self.val_lbl[-self.val_imgs.shape[0]:]
+        print "Time spent to transform train/val data to pask K frames: %.1fs" % (time.time()-t1)
+  
+    def rescale_and_clip_gaze_pos_on_frameid2pos(self, frameid2pos):
+        bad_count, tot_count = 0, 0
+        for fid in frameid2pos:
+            gaze_pos_list = frameid2pos[fid]
+            tot_count += len(gaze_pos_list)
+            for (i, (x, y)) in enumerate(gaze_pos_list):
+                isbad, newx, newy = rescale_and_clip_gaze_pos(x,y,self.RESIZE_SHAPE[0],self.RESIZE_SHAPE[1])
+                bad_count += isbad
+                gaze_pos_list[i] = (newx, newy)  
+        print "Bad gaze (x,y) sample: %d (%.2f%%, total gaze sample: %d)" % (bad_count, 100*float(bad_count)/tot_count, tot_count)    
+        print "'Bad' means the gaze position is outside the 160*210 screen"
+
+    def center_img_at_gaze(self, frame_dataset, gaze_y_x_dataset, debug_plot_result=False):
+        import tensorflow as tf, keras as K # don't move this to the top, as people who import this file might not have keras or tf
+        import keras.layers as L
+        gaze_y_x = L.Input(shape=(2,))
+        imgs = L.Input(shape=(frame_dataset.shape[1:]))
+        h, w = frame_dataset.shape[1:3]
+        c_img = L.ZeroPadding2D(padding=(h,w))(imgs)
+        c_img = L.Lambda(lambda x: tf.image.extract_glimpse(x, size=(2*h,2*w), offsets=(gaze_y_x+(h,w)), centered=False, normalized=False))(c_img)
+        # c_img = L.Lambda(lambda x: tf.image.resize_images(x, size=(h,w)))(c_img)
+
+        model=K.models.Model(inputs=[imgs, gaze_y_x], outputs=[c_img])
+        model.compile(optimizer='rmsprop', # not used
+          loss='categorical_crossentropy', # not used
+          metrics=None)
+        output=model.predict([frame_dataset, gaze_y_x_dataset], batch_size=500)
+        if debug_plot_result:
+            print r"""debug_plot_result is True. Entering IPython console. You can run:
+            %matplotlib
+            import matplotlib.pyplot as plt
+            plt.style.use('grayscale')
+            f, axarr = plt.subplots(1,2)
+            rnd=np.random.randint(output.shape[0]); print "rand idx:", rnd
+            axarr[0].imshow(frame_dataset[rnd,...,0])
+            axarr[1].imshow(output[rnd,...,0])"""
+            embed()
+
+        return output
 
 def read_np_parallel(label_file, RESIZE_SHAPE, num_thread=6):
     """
@@ -239,6 +402,61 @@ class ForkJoiner():
     def join(self):
         for t in self.threads: t.join()
 
+class Dataset_PastKFramesByTime(Dataset):
+  def __init__(self, LABELS_FILE_TRAIN, LABELS_FILE_VAL, RESIZE_SHAPE, GAZE_POS_ASC_FILE, K, stride=1, ms_before=0):
+    super(Dataset_PastKFramesByTime, self).__init__(LABELS_FILE_TRAIN, LABELS_FILE_VAL, RESIZE_SHAPE)
+    self.train_imgs_bak, self.val_imgs_bak = self.train_imgs, self.val_imgs
+
+    def data_is_sorted_by_timestamp(fid_list):
+        # It does (1) stable sort (2) ignore and only compare the second key (i.e.frame number)
+        sorted_fid_list = sorted(fid_list,cmp=lambda x,y:int(x[0]==y[0])*(x[1]-y[1])) 
+        return sorted_fid_list == fid_list
+    assert data_is_sorted_by_timestamp(self.train_fid)
+    assert data_is_sorted_by_timestamp(self.val_fid)
+    # Since later code extracts adjacant indice of the data via something like img[100:104], "data_is_sorted_by_timestamp" must be true.
+    # (self.train/val_fid is a list that stores the corresponding frame ID of self.train/val_imgs)
+    # If assertion failed, rewrite the dataset generation python file to satify this assumption
+
+    t1=time.time()
+    print "Reading gaze data ASC file..."
+    _, all_frame, frameid2action = read_gaze_data_asc_file_2(GAZE_POS_ASC_FILE)
+    print "Done."
+    self.train_imgs, self.train_lbl = transform_to_past_K_frames_ByTime(self.train_imgs, self.train_fid, all_frame, frameid2action, K, stride, ms_before)
+    self.val_imgs, self.val_lbl = transform_to_past_K_frames_ByTime(self.val_imgs, self.val_fid, all_frame, frameid2action, K, stride, ms_before)
+    print "Time spent to transform train/val data to pask K frames: %.1fs" % (time.time()-t1)
+
+def transform_to_past_K_frames_ByTime(frame_dataset, frame_fid_list, all_frame, frameid2action, K, stride, ms_before):
+    newdat = []
+    newlbl = []
+    frameid2time = {frameid:f_time for (f_time, frameid, UTID) in all_frame}
+    time = [frameid2time[fid] for fid in frame_fid_list] # find the timestamp for each frame in frame_dataset
+
+    l, r = 0, None # two pointers: left, right
+    for r in range(K*stride, len(frame_dataset)):
+
+        # move l to the correct position
+        if frame_fid_list[l][0] != frame_fid_list[r][0]: 
+            l=r # [0] is UTID. If not equal, l and r are in different trials; so time[l] and time[r] is incomparable; so we need to set l=r.
+        while l<r and time[r] - time[l+1] >= ms_before: 
+            l+=1
+
+        leftmost = l-K*stride # do some check to make the line "cur = frame_dataset[l : l-K*stride : -stride]" below work correctly
+        if leftmost<0 or frame_fid_list[leftmost][0] != frame_fid_list[r][0]:  
+        # the leftmost idx is not a valid idx, or is in a different trial than current frame (the frame with idx r)
+            continue
+
+        # transform the shape (K, 84, 84, CH) into (84, 84, CH*K)
+        cur = frame_dataset[l : l-K*stride : -stride] # using "-stride" instead of "stride" lets the indexing include l rather than exclude l
+        cur = cur.transpose([1,2,3,0])
+        cur = cur.reshape(cur.shape[0:2]+(-1,))
+
+        newdat.append(cur)
+        newlbl.append(frameid2action[frame_fid_list[r]])
+        if len(newdat)>1: assert (newdat[-1].shape == newdat[-2].shape) # simple sanity check
+    newdat_np = np.array(newdat)
+    newlbl_np = np.array(newlbl, dtype=np.int32)
+    return newdat_np, newlbl_np
+
 class DatasetWithGazeWindow(Dataset):
     def __init__(self, LABELS_FILE_TRAIN, LABELS_FILE_VAL, RESIZE_SHAPE, GAZE_POS_ASC_FILE, bg_prob_density, gaussian_sigma,
         window_left_bound_ms=1000, window_right_bound_ms=0):
@@ -248,16 +466,15 @@ class DatasetWithGazeWindow(Dataset):
       self.gaussian_sigma=gaussian_sigma
       self.window_left_bound, self.window_right_bound = window_left_bound_ms, window_right_bound_ms
       print "Reading gaze data ASC file, and converting per-frame gaze positions to heat map..."
-      all_gaze, all_frame = self.read_gaze_data_asc_file_proprietary(GAZE_POS_ASC_FILE)
-      print "Running rescale_and_clip_gaze_pos()..."
-      self.rescale_and_clip_gaze_pos(all_gaze)
+      all_gaze, all_frame, _ = read_gaze_data_asc_file_2(GAZE_POS_ASC_FILE)
+      self.rescale_and_clip_gaze_pos_on_all_gaze(all_gaze)
       self.train_GHmap = np.empty([self.train_size, RESIZE_SHAPE[0], RESIZE_SHAPE[1], 1], dtype=np.float32)
       self.val_GHmap = np.empty([self.val_size, RESIZE_SHAPE[0], RESIZE_SHAPE[1], 1], dtype=np.float32)
       print "Running convert_gaze_data_to_map()..."
       t1=time.time()
       self.frameid2GH, self.frameid2gazetuple = self.convert_gaze_data_to_heat_map_proprietary(all_gaze, all_frame)
       self.prepare_train_val_gaze_data()
-      print "Done. convert_gaze_data_to_heat_map() and convolution used: %fs" % (time.time()-t1)
+      print "Done. convert_gaze_data_to_heat_map() and convolution used: %.1fs" % (time.time()-t1)
       
     def prepare_train_val_gaze_data(self):
         print "Assign a heap map for each frame in train and val dataset..."
@@ -271,61 +488,11 @@ class DatasetWithGazeWindow(Dataset):
         self.train_GHmap = preprocess_gaze_heatmap(self.train_GHmap, sigmaH, sigmaW, self.bg_prob_density)
         self.val_GHmap = preprocess_gaze_heatmap(self.val_GHmap, sigmaH, sigmaW, self.bg_prob_density)
 
-    def read_gaze_data_asc_file_proprietary(self, fname):
-        """
-        Reads a ASC file and returns the following:
-        all_gaze (Type:list) A tuple (utid, t, x, y) of all gaze messages in the file.
-            where utid is the trial ID to which this gaze belongs. 
-            It is extracted from the UTID of the most recent frame
-        all_frame (Type:list) A tuple (f_time, frameid, UTID) of all frame messages in the file.
-            where f_time is the time of the message. frameid is the unique ID used across the whole project.
-        (This function is designed to correctly handle the case that the file might be the concatenation of multiple asc files)
-        """
-
-        with open(fname, 'r') as f:
-            lines = f.readlines()
-        frameid, xpos, ypos = "BEFORE-FIRST-FRAME", None, None
-        cur_frame_utid = "BEFORE-FIRST-FRAME"
-        all_gaze = []
-        all_frame = []
-        scr_msg = re.compile("MSG\s+(\d+)\s+SCR_RECORDER FRAMEID (\d+) UTID (\w+)")
-        freg = "[-+]?[0-9]*\.?[0-9]+" # regex for floating point numbers
-        gaze_msg = re.compile("(\d+)\s+(%s)\s+(%s)" % (freg, freg))
-
-        for (i,line) in enumerate(lines):
-
-            match_scr_msg = scr_msg.match(line)
-            if match_scr_msg: # when a new id is encountered
-                f_time, frameid, UTID = match_scr_msg.group(1), match_scr_msg.group(2), match_scr_msg.group(3)
-                f_time = int(f_time)
-                cur_frame_utid = UTID
-                frameid = make_unique_frame_id(UTID, frameid)
-                all_frame.append((f_time, frameid, UTID))
-                continue
-            
-            match_sample = gaze_msg.match(line)
-            if match_sample:
-                g_time, xpos, ypos = int(match_sample.group(1)), match_sample.group(2), match_sample.group(3)
-                g_time, xpos, ypos = int(g_time), float(xpos), float(ypos)
-                all_gaze.append((cur_frame_utid, g_time, xpos, ypos))
-                continue
-
-        if len(all_frame) < 1000: # simple sanity check
-            print "Warning: did you provide the correct ASC file? Because the data for only %d frames is detected" % (len(frameid2pos))
-            raw_input("Press any key to continue")
-        return all_gaze, all_frame # frameid to gaze heap map
-
-    def rescale_and_clip_gaze_pos(self, all_gaze):
+    def rescale_and_clip_gaze_pos_on_all_gaze(self, all_gaze):
         bad_count=0
-        h,w = self.RESIZE_SHAPE[0], self.RESIZE_SHAPE[1]
         for (i, (utid, t, x, y)) in enumerate(all_gaze):
-            newy, newx = int(y/V.SCR_H*h), int(x/V.SCR_W*w)
-            if newx >= w or newx<0:
-                bad_count +=1
-            if newy >= h or newy<0:
-                bad_count +=1
-            newx = np.clip(newx, 0, w-1)
-            newy = np.clip(newy, 0, h-1)
+            isbad, newx, newy = rescale_and_clip_gaze_pos(x,y,self.RESIZE_SHAPE[0],self.RESIZE_SHAPE[1])
+            bad_count += isbad
             all_gaze[i] = (utid, t, newx, newy)
 
         print "Bad gaze (x,y) sample: %d (%.2f%%, total gaze sample: %d)" % (bad_count, 100*float(bad_count)/len(all_gaze), len(all_gaze))

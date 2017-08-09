@@ -10,7 +10,8 @@ import sys, re, os, subprocess
 
 basestr="""
 # doc at : http://research.cs.wisc.edu/htcondor/manual/current/condor_submit.html
-arguments = {0}
+arguments = /scratch/cluster/zharucs/ale/modeling/{0}
+remote_initialdir = /scratch/cluster/zharucs/ale/modeling/
 +Group ="GRAD"
 +Project ="AI_ROBOTICS"
 +ProjectDescription="ale"
@@ -20,7 +21,7 @@ Universe = vanilla
 # UTCS has 18 such machine, to take a look, run 'condor_status  -constraint 'GTX1080==true' 
 Requirements=(TARGET.GTX1080== true)
 
-executable = /u/zhuode93/anaconda2/bin/ipython 
+executable = /u/zharucs/anaconda2/bin/ipython 
 getenv = true
 output = CondorOutput/$(Cluster).out
 error = CondorOutput/$(Cluster).err
@@ -31,6 +32,9 @@ Queue
 if len(sys.argv) < 2:
   print "Usage: %s target_py_file" % __file__ 
   sys.exit(1)
+if not os.path.exists("CondorOutput"):
+  os.mkdir("CondorOutput")
+print "Job output will be directed to folder ./CondorOutput"
 
 target_py_file = sys.argv[1]
 

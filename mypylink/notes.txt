@@ -1,6 +1,6 @@
 Stimulus size:
-vertical: 15 9/12 inch = 40.005cm
-horizontal: 25 5/12 inch = 64.5583cm
+vertical: 15 9/12 inch = 40.005cm | 28.50 visual degrees (210 * 4)
+horizontal: 25 5/12 inch = 64.5583cm | 44.58 visual degrees (160 * 8)
 distance: 31 inch = 78.74cm
 
 after 44 color_averaging is turned on
@@ -15,6 +15,9 @@ after 44 color_averaging is turned on
 38 RZ seaquest data ok random_seed:20
 39 RZ seaquest data ok random_seed:35
 43 RZ seaquest data ok random_seed:41
+
+47 KM seaquest data ok random_seed:24
+48 KM seaquest data ok random_seed:64495
 
 
 ========================================

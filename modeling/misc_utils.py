@@ -3,6 +3,19 @@ import shutil, os, time, re
 from IPython import embed
 import ipdb
 
+
+class Colors:
+    RED   = "\033[1;31m"
+    BLUE  = "\033[1;34m"
+    CYAN  = "\033[1;36m"
+    GREEN = "\033[0;32m"
+    RESET = "\033[0;0m"
+    BOLD    = "\033[;1m"
+    REVERSE = "\033[;7m"
+def color(str_, color):
+    return getattr(Colors,color.upper())+str(str_)+Colors.RESET
+
+
 def save_GPU_mem_keras():
     # don't let tf eat all the memory on eldar-11
     config = tf.ConfigProto()
@@ -67,9 +80,10 @@ def keras_model_serialization_bug_fix(): # stupid keras
         get_custom_objects().update({obj_to_serialize.__name__: obj_to_serialize})
     f(loss_func)
     f(acc_)
+    f(top2acc_)
 
 def loss_func(target, pred): 
-    return K.backend.sparse_categorical_crossentropy(output=pred,target=target, from_logits=True)
+    return K.backend.sparse_categorical_crossentropy(output=pred, target=target, from_logits=True)
 
 def acc_(y_true, y_pred): # don't rename it to acc or accuracy (otherwise stupid keras will replace this func with its own accuracy function when serializing )
   return tf.reduce_mean(
@@ -77,6 +91,11 @@ def acc_(y_true, y_pred): # don't rename it to acc or accuracy (otherwise stupid
       targets=tf.squeeze(tf.cast(y_true,tf.int32)), 
       predictions=y_pred,k=1),tf.float32))
 
+def top2acc_(y_true, y_pred):
+  return tf.reduce_mean(
+    tf.cast(tf.nn.in_top_k(
+      targets=tf.squeeze(tf.cast(y_true,tf.int32)),
+      predictions=y_pred,k=2),tf.float32))
 
 class PrintLrCallback(K.callbacks.Callback):
     def on_epoch_end(self, epoch, logs={}):

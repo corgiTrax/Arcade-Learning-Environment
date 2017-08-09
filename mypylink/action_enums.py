@@ -21,6 +21,10 @@ PLAYER_A_UPLEFTFIRE     = 15
 PLAYER_A_DOWNRIGHTFIRE  = 16
 PLAYER_A_DOWNLEFTFIRE   = 17
 
+_rev_map = {val:name for (name,val) in vars().items() if isinstance(val, int)}
+
+def nameof(idx):
+    return _rev_map[idx]
 
 def action_map(k, game):
     ''' get a pygame_key and returns an ale action '''
