@@ -47,7 +47,7 @@
     # Run baseline model playing seaquest train on 36
     python runai.py ../roms/seaquest.bin BaselineModel cat\{36_RZ\}tr_\{37_RZ\}val.model.hdf5 cat\{36_RZ\}tr_\{37_RZ\}val.mean.npy
 
-    # Run pastKFrame model playing seaquest train on 36  (K=4, stride=2, before=2)
+    # Run pastKFrame model playing seaquest train on 36  (K=4, stride=2, before=0)
     python runai.py ../roms/seaquest.bin PastKFrameModel cat\{36_RZ\}tr_\{37_RZ\}val-pKf.model.hdf5 cat\{36_RZ\}tr_\{37_RZ\}val.mean.npy == 4 2 0
   ```
   Available keyboard controls: \
