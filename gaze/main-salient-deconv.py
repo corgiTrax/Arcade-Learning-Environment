@@ -32,12 +32,11 @@ LABELS_FILE_VAL =  BASE_FILE_NAME + '-val.txt'
 GAZE_POS_ASC_FILE = BASE_FILE_NAME + '.asc'
 PREDICT_FILE_TRAIN = BASE_FILE_NAME + '-train-result'
 PREDICT_FILE_VAL = BASE_FILE_NAME + '-val-result'
-SHAPE = (84,84,1) # height * width * channel This cannot read from file and needs to be provided here
 BATCH_SIZE = 50
 num_epoch = 50
 #lr = float(sys.argv[3])
 
-MODEL_DIR = 'Seaquest_lucy_36-43_37'
+MODEL_DIR = 'Seaquest_36-43_37_pastK'
 #MODEL_DIR = 'Breakout_42_44'
 #MODEL_DIR = 'Seaquest_47_48'
 #MODEL_DIR = 'Pacman_40_45'
@@ -50,6 +49,7 @@ dropout = float(sys.argv[2])
 heatmap_shape = int(sys.argv[3])
 k = int(sys.argv[4])
 stride = 1
+SHAPE = (84,84,k) # height * width * channel This cannot read from file and needs to be provided here
 
 
 if not predict_mode: # if train

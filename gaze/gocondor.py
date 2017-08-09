@@ -1,16 +1,14 @@
 #!/usr/bin/env python
 
 def multi_experiment():
-  l = [] # compose a list of arguments needed to be passed to the python script
+    l = [] # compose a list of arguments needed to be passed to the python script
 #  for dp in ["0 0.2","0 0.3","0 0.4","0 0.5"]:
 #    for lr in ["0.1","0.05","0.01","0.005","0.001"]:
 #        l.append(' '.join([dp,lr]))
-  for dp in ["0 0.0","0 0.1","0 0.2","0 0.3","0 0.4","0 0.5"]:
-    for shape in ["42"]:
-        for k in ["4","3","2"]:
-        l.append(' '.join([dp,shape,k]))
-
-  return l
+    for dp in ["0 0.2","0 0.3","0 0.4","0 0.5"]:
+        for s in ["1","2","4"]:
+            l.append(' '.join([dp,s]))
+    return l
 
 import sys, re, os, subprocess
 
