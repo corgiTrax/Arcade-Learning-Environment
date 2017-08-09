@@ -12,17 +12,17 @@
 
 2. Imitation
 - [x] Make it easier to combine trials(see dataset\_specification\_example.txt)
-- [ ] Test regularizer hypothesis (attention as) (what is this???)
+- [ ] Test regularizer hypothesis (attention as) 
 - [x] Gaze-centered images as training samples
 - [x] Make sure dropout is turned off during evaluation
-- [ ] Figure out why GaussianConv model does not work (what is this???)
 - [x] Figure out Tau (needs to find gaze & image before easier)
 - [x] CNN + past X frames model
 - [ ] CNN + positional encoding
 - [ ] RNN model
 - [x] Foveated rendering model
-- [x] Cortical expansion model
-- [x] Log-polar transfomation
+- [ ] Cortical expansion model
+- [ ] Log-polar transfomation
+- [ ] Python implementation of the above ones if necessary
 
 3. Gaze modeling
 - [ ] CNN - deconv model
