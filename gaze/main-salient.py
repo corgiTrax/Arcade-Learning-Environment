@@ -2,16 +2,30 @@ import tensorflow as tf, numpy as np, keras as K, sys
 import keras.layers as L
 from keras.models import Model, Sequential # keras/engine/training.py
 from IPython import embed
-import input_utils, misc_utils as MU
 import ipdb
 import json
 import sys
 
 print("Usage: ipython main.py [PredictMode?]")
-print("Usage Predict Mode: ipython main.py 1 parameters Model.hdf5 savingFileTag")
+print("Usage Predict Mode: ipython main.py 1 parameters Model.hdf5")
 print("Usage Training Mode: ipython main.py 0 parameters")
+#TRAIN_DATASET = ['40_RZ_4983433_May-16-20-19-52']
+#VAL_DATASET = ['45_RZ_5134712_May-18-14-14-00']
+#TRAIN_DATASET = ['42_RZ_4988291_May-16-21-33-46']
+#VAL_DATASET = ['44_RZ_5131746_May-18-13-25-32']
+TRAIN_DATASET = ['36_RZ_4882422_May-15-16-08-32','38_RZ_4886422_May-15-17-15-33','39_RZ_4981421_May-16-19-40-17','43_RZ_5129700_May-18-12-52-16']
+#TRAIN_DATASET = ['36_RZ_4882422_May-15-16-08-32']
+VAL_DATASET = ['37_RZ_4883794_May-15-16-37-01']
+#TRAIN_DATASET = ['47_KM_1535284_Jul-31-16-10-56']
+#VAL_DATASET = ['48_KM_1537673_Jul-31-16-51-20']
+
+#BASE_FILE_NAME = "/scratch/cluster/zharucs/dataset_gaze/cat{40_RZ}tr_{45_RZ}val"
+#BASE_FILE_NAME = "/scratch/cluster/zharucs/dataset_gaze/cat{42_RZ}tr_{44_RZ}val"
 #BASE_FILE_NAME = "/scratch/cluster/zharucs/dataset_gaze/cat{36_RZ}tr_{37_RZ}val"
 BASE_FILE_NAME = "/scratch/cluster/zharucs/dataset_gaze/cat{36_38_39_43_RZ}tr_{37_RZ}val"
+#BASE_FILE_NAME = "/scratch/cluster/zharucs/dataset_gaze/cat{36_37_38_39_43_RZ}tr_{47_48_KM}val"
+#BASE_FILE_NAME = "/scratch/cluster/zharucs/dataset_gaze/cat{47_KM}tr_{48_KM}val"
+
 LABELS_FILE_TRAIN = BASE_FILE_NAME + '-train.txt' 
 LABELS_FILE_VAL =  BASE_FILE_NAME + '-val.txt' 
 GAZE_POS_ASC_FILE = BASE_FILE_NAME + '.asc'
@@ -19,19 +33,28 @@ PREDICT_FILE_TRAIN = BASE_FILE_NAME + '-train-result'
 PREDICT_FILE_VAL = BASE_FILE_NAME + '-val-result'
 SHAPE = (84,84,1) # height * width * channel This cannot read from file and needs to be provided here
 BATCH_SIZE = 50
-num_epoch = 50
+heatmap_shape = 84
+#lr = float(sys.argv[3])
+num_epoch = 70
 MODEL_DIR = 'Seaquest_36&38&39&43_37'
 #MODEL_DIR = 'Breakout_42_44'
+#MODEL_DIR = 'Seaquest_47_48'
+#MODEL_DIR = 'Pacman_40_45'
 #MODEL_DIR = 'Seaquest_36_37'
 resume_model = False
 predict_mode = int(sys.argv[1]) 
 dropout = float(sys.argv[2])
-MU.save_GPU_mem_keras()
-MU.keras_model_serialization_bug_fix()
+
 
 if not predict_mode: # if train
-    expr = MU.ExprCreaterAndResumer(MODEL_DIR, postfix="salient" + str(dropout))
+    import input_utils as IU, misc_utils as MU
+    expr = MU.ExprCreaterAndResumer(MODEL_DIR, postfix="salient_dp" + str(dropout))
     expr.redirect_output_to_logfile_if_not_on("eldar-11")
+else:
+    import all_py_files_snapshot.input_utils as IU, all_py_files_snapshot.misc_utils as MU
+
+MU.save_GPU_mem_keras()
+MU.keras_model_serialization_bug_fix()
 
 if resume_model:
     model = expr.load_weight_and_training_config_and_state()
@@ -43,24 +66,30 @@ else:
 
     inputs=L.Input(shape=SHAPE)
     x=inputs # inputs is used by the line "Model(inputs, ... )" below
-    x=L.Conv2D(32, (8,8), strides=4, padding='same')(x)
+    x=L.Conv2D(20, (8,8), strides=4, padding='same')(x)
     x=L.BatchNormalization()(x)
     x=L.Activation('relu')(x)
     x=L.Dropout(dropout)(x)
     
-    x=L.Conv2D(64, (4,4), strides=2, padding='same')(x)
+    x=L.Conv2D(40, (4,4), strides=2, padding='same')(x)
     x=L.BatchNormalization()(x)
     x=L.Activation('relu')(x)
     x=L.Dropout(dropout)(x)
     
-    conv3=L.Conv2D(64, (3,3), strides=1, padding='same')
-    x = conv3(x)
-#    print conv3.output_shape
+    x=L.Conv2D(80, (3,3), strides=2, padding='same')(x)
     x=L.BatchNormalization()(x)
     x=L.Activation('relu')(x)
     x=L.Dropout(dropout)(x)
-   
+
+    #x=L.Conv2D(80, (3,3), strides=1, padding='same')(x)
+    #x=L.BatchNormalization()(x)
+    #x=L.Activation('relu')(x)
+    #x=L.Dropout(dropout)(x)
+
     x = L.Flatten()(x)
+    x = L.Dense(256, activation = "relu")(x)
+    x = L.Dropout(dropout)(x)
+
     x = L.Dense(7056, activation = "softmax")(x)
     logits =  L.Reshape((84, 84, -1), name = "logits")(x)
 
@@ -68,13 +97,14 @@ else:
     model=Model(inputs=inputs, outputs=logits)
     opt=K.optimizers.Adadelta(lr=1.0, rho=0.95, epsilon=1e-08, decay=0.0)
     # opt=K.optimizers.Adam(lr=0.001, beta_1=0.9, beta_2=0.999, epsilon=1e-08)
-    # opt=K.optimizers.SGD(lr=0.001, momentum=0.0, decay=0.0, nesterov=False)
+    # opt=K.optimizers.SGD(lr=lr, momentum=0.99, decay=1e-6, nesterov=True)
     
-    model.compile(loss='kullback_leibler_divergence', optimizer=opt, metrics=['kullback_leibler_divergence'])
+    model.compile(loss=MU.my_kld, optimizer=opt, metrics=[MU.computeNSS])
     #model.compile(loss={"logits": 'kullback_leibler_divergence', "prob":None}, optimizer=opt, metrics={"logits": 'mean_squared_error'})
     #model.compile(loss={"logits": 'mean_squared_error', "prob":None}, optimizer=opt, metrics={"logits": 'mean_squared_error'})
     #model.compile(loss='mean_squared_error', optimizer=opt, metrics=['mean_squared_error'])
-d=input_utils.DatasetWithHeatmap(LABELS_FILE_TRAIN, LABELS_FILE_VAL, SHAPE, GAZE_POS_ASC_FILE)
+
+d=IU.DatasetWithHeatmap(LABELS_FILE_TRAIN, LABELS_FILE_VAL, SHAPE, heatmap_shape, GAZE_POS_ASC_FILE)
 
 if not predict_mode: # if train
     expr.dump_src_code_and_model_def(sys.argv[0], model)
@@ -98,7 +128,6 @@ if not predict_mode: # if train
 
 elif predict_mode: # if predict
     model.load_weights(sys.argv[3])
-    modelID = sys.argv[4] # whatever ID we want to name this
 
     print "Evaluating model..."
     train_score = model.evaluate(d.train_imgs, d.train_GHmap, BATCH_SIZE, 0)
@@ -111,59 +140,7 @@ elif predict_mode: # if predict
     val_pred = model.predict(d.val_imgs, BATCH_SIZE)
     print "Predicted."
 
-#    print "Converting result format..."
-#    xy_str_train = []
-#    for i in range(d.train_size):
-#        string = '(%d,%d)' % (d.train_fid[i][0], d.train_fid[i][1])
-#        for row in range(SHAPE[0]):
-#            for col in range(SHAPE[1]):
-#                string += ' %f' % train_pred[i][row][col]
-#        xy_str_train.append(string)
-
-#    xy_str_val = []
-#    for i in range(d.val_size):
-#        string = '(%d,%d)' % (d.val_fid[i][0], d.val_fid[i][1])
-#        for row in range(SHAPE[0]):
-#            for col in range(SHAPE[1]):
-#                string += ' %f' % val_pred[i][row][col]
-#        xy_str_train.append(string)
-
-#    print "Writing predicted results into the file..."
-#    with open(PREDICT_FILE_TRAIN, 'w') as f:
-#        f.write('\n'.join(xy_str_train))
-#        f.write('\n')
-#    with open(PREDICT_FILE_VAL, 'w') as f:
-#        f.write('\n'.join(xy_str_val))
-#        f.write('\n')
-#    print "Done. Outputs are:"
-#    print " %s" % PREDICT_FILE_TRAIN
-#    print " %s" % PREDICT_FILE_VAL
-
-#    print "Converting to json format..."
-#    fid = "BEFORE-FIRST-FRAME"
-#    xy_str_train = {fid: []}
-#    for i in range(d.train_size):
-#        string = '(%d,%d)' % (d.train_fid[i][0], d.train_fid[i][1])
-#        xy_str_train[string] = train_pred[i].tolist()
-
-#    fid = "BEFORE-FIRST-FRAME"
-#    xy_str_val = {fid: []}
-#    for i in range(d.val_size):
-#        string = '(%d,%d)' % (d.val_fid[i][0], d.val_fid[i][1])
-#        xy_str_val[string] = val_pred[i].tolist()
-#    print "Converted."
-
-#    print "Writing predicted results into the file..."
-#    with open(PREDICT_FILE_TRAIN, 'w') as f:
-#        json.dump(xy_str_train, f)
-
-#    with open(PREDICT_FILE_VAL, 'w') as f:
-#        json.dump(xy_str_val, f)
-
-    print "Writing predicted results into the npz file..."
-    np.savez_compressed(PREDICT_FILE_TRAIN + modelID, fid=d.train_fid, heatmap=train_pred)
-    np.savez_compressed(PREDICT_FILE_VAL + modelID, fid=d.val_fid, heatmap=val_pred)
-
-    print "Done. Outputs are:"
-    print " %s" % PREDICT_FILE_TRAIN + '.npz'
-    print " %s" % PREDICT_FILE_VAL + '.npz'
+    print "Converting predicted results into png files and save..."
+    IU.save_heatmap_png_files(d.train_fid, train_pred, TRAIN_DATASET, 'saliency/')
+    IU.save_heatmap_png_files(d.val_fid, val_pred, VAL_DATASET, 'saliency/')
+    print "Done."

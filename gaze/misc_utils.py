@@ -77,8 +77,47 @@ def acc_(y_true, y_pred): # don't rename it to acc or accuracy (otherwise stupid
       targets=tf.squeeze(tf.cast(y_true,tf.int32)), 
       predictions=y_pred,k=1),tf.float32))
 
+def softmax(x):
+    """Softmax activation function. Normalize the whole metrics.
+    # Arguments
+        x : Tensor.
+    # Returns
+        Tensor, output of softmax transformation.
+    # Raises
+        ValueError: In case `dim(x) == 1`.
+    """
+   
+    return K.activations.softmax(x, axis=[1,2,3])
+
+def my_kld(y_true, y_pred):
+    """
+    Correct keras bug. Compute the KL-divergence between two metrics.
+    """
+    y_true = K.backend.clip(y_true, K.backend.epsilon(), 1)
+    y_pred = K.backend.clip(y_pred, K.backend.epsilon(), 1)
+    return K.backend.sum(y_true * K.backend.log(y_true / y_pred), axis = [1,2,3])
+
+def computeNSS(y_true, y_pred):
+    """
+    This function is to calculate the NSS score of the predict saliency map.
+
+    Input: y_true: ground truth saliency map
+           y_pred: predicted saliency map
+
+    Output: NSS score. float num
+    """
+    
+    stddev = tf.contrib.keras.backend.std(y_pred, axis = [1,2,3])
+    stddev = tf.expand_dims(stddev, 1)
+    stddev = tf.expand_dims(stddev, 2)
+    stddev = tf.expand_dims(stddev, 3)
+    mean = tf.reduce_mean(y_pred, axis = [1,2,3], keep_dims=True)
+    sal = (y_pred - mean) / stddev
+    score = tf.multiply(y_true, sal)
+    score = tf.contrib.keras.backend.sum(score, axis = [1,2,3])
+    
+    return score
 
 class PrintLrCallback(K.callbacks.Callback):
     def on_epoch_end(self, epoch, logs={}):
         print ("lr: %f" % K.backend.get_value(self.model.optimizer.lr))
-

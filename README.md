@@ -12,14 +12,17 @@
 
 2. Imitation
 - [x] Make it easier to combine trials(see dataset\_specification\_example.txt)
-- [ ] Test regularizer hypothesis (attention as) (what is this???)
+- [ ] Test regularizer hypothesis (attention as) 
 - [x] Gaze-centered images as training samples
 - [x] Make sure dropout is turned off during evaluation
-- [ ] Figure out why GaussianConv model does not work (what is this???)
 - [x] Figure out Tau (needs to find gaze & image before easier)
 - [x] CNN + past X frames model
 - [ ] CNN + positional encoding
 - [ ] RNN model
+- [x] Foveated rendering model
+- [ ] Cortical expansion model
+- [ ] Log-polar transfomation
+- [ ] Python implementation of the above ones if necessary
 
 3. Gaze modeling
 - [ ] CNN - deconv model
@@ -33,6 +36,24 @@
   + Make three separate components:  Model definition, Model training, ALE game control
   + Instead of letting one of these components manage the others, use a "main" file to assemble and manage them. Because we are probably going to use complex ways to train a model in the future: SL training, RL training, SL pretraining + RL training, interleaved SL + RL training, switching off training (pure game playing), etc. These 'strategies' can be put into the "main" file while keeping these three components intact.
 
+  Now completed: baseline model AI playing seaquest trained on data 36.
+  
+  To run it, you need to have a machine with tensorflow, keras, ale_python_interface installed, and **a monitor** (so eldar-11 cannot run it). And then run:
+
+  ```
+    # run this command to see help message of this file
+    python runai.py 
+
+    # Run baseline model playing seaquest train on 36
+    python runai.py ../roms/seaquest.bin BaselineModel cat\{36_RZ\}tr_\{37_RZ\}val.model.hdf5 cat\{36_RZ\}tr_\{37_RZ\}val.mean.npy
+
+    # Run pastKFrame model playing seaquest train on 36  (K=4, stride=2, before=0)
+    python runai.py ../roms/seaquest.bin PastKFrameModel cat\{36_RZ\}tr_\{37_RZ\}val-pKf.model.hdf5 cat\{36_RZ\}tr_\{37_RZ\}val.mean.npy == 4 2 0
+  ```
+  Available keyboard controls: \
+  h: **Human takes over the control of the game ** \
+  p: print action's logit output \
+  Esc: quit 
 
 5. Psychology
 - [x] Ask experts to validate experimental setups

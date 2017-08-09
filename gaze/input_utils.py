@@ -1,11 +1,15 @@
 #!/usr/bin/env python
 
-import os, re, threading, time
+import os, re, threading, time, tarfile
 import numpy as np
 from IPython import embed
 from scipy import misc
 import vip_constants as V
 from ast import literal_eval
+import matplotlib.cm as cm
+import matplotlib.pyplot as plt
+from astropy.convolution import convolve
+from astropy.convolution.kernels import Gaussian2DKernel
 
 def preprocess_gaze_heatmap(GHmap, sigmaH, sigmaW, bg_prob_density, debug_plot_result=False):
     from scipy.stats import multivariate_normal
@@ -195,6 +199,18 @@ def convert_gaze_pos_to_heap_map(gaze_pos_list, out):
             bad_count += 1
     return bad_count
 
+def transform_to_past_K_frames(original, K, stride, before):
+    newdat = []
+    for i in range(before+K*stride, len(original)):
+        # transform the shape (K, 84, 84, CH) into (84, 84, CH*K)
+        cur = original[i-before : i-before-K*stride : -stride] # using "-stride" instead of "stride" lets the indexing include i rather than exclude i
+        cur = cur.transpose([1,2,3,0])
+        cur = cur.reshape(cur.shape[0:2]+(-1,))
+        newdat.append(cur)
+        if len(newdat)>1: assert (newdat[-1].shape == newdat[-2].shape) # simple sanity check
+    newdat_np = np.array(newdat)
+    return newdat_np
+
 class Dataset(object):
   train_imgs, train_lbl, train_gaze, train_fid, train_size = None, None, None, None, None
   val_imgs, val_lbl, val_gaze, val_fid, val_size = None, None, None, None, None
@@ -228,8 +244,8 @@ class Dataset_PastKFrames(Dataset):
     self.train_imgs_bak, self.val_imgs_bak = self.train_imgs, self.val_imgs
 
     t1=time.time()
-    self.train_imgs = self.transform_to_past_K_frames(self.train_imgs, K, stride, before)
-    self.val_imgs = self.transform_to_past_K_frames(self.val_imgs, K, stride, before)
+    self.train_imgs = transform_to_past_K_frames(self.train_imgs, K, stride, before)
+    self.val_imgs = transform_to_past_K_frames(self.val_imgs, K, stride, before)
     # Trim labels. This is assuming the labels align with the training examples from the back!!
     # Could cause the model unable to train  if this assumption does not hold
     self.train_lbl = self.train_lbl[-self.train_imgs.shape[0]:]
@@ -242,18 +258,6 @@ class Dataset_PastKFrames(Dataset):
     self.val_gaze = self.val_gaze[-self.val_imgs.shape[0]:]
 
     print "Time spent to transform train/val data to past K frames: %.1fs" % (time.time()-t1)
-
-  def transform_to_past_K_frames(self, original, K, stride, before):
-    newdat = []
-    for i in range(before+K*stride, len(original)):
-        # transform the shape (K, 84, 84, CH) into (84, 84, CH*K)
-        cur = original[i-before : i-before-K*stride : -stride] # using "-stride" instead of "stride" lets the indexing include i rather than exclude i
-        cur = cur.transpose([1,2,3,0])
-        cur = cur.reshape(cur.shape[0:2]+(-1,))
-        newdat.append(cur)
-        if len(newdat)>1: assert (newdat[-1].shape == newdat[-2].shape) # simple sanity check
-    newdat_np = np.array(newdat)
-    return newdat_np
 
 class DatasetWithGaze(Dataset):
   frameid2pos, frameid2heatmap, frameid2action_notused = None, None, None
@@ -287,18 +291,18 @@ class DatasetWithGaze(Dataset):
     print "Done. convert_gaze_pos_to_heap_map() and convolution used: %.1fs" % (time.time()-t1)
 
 class DatasetWithHeatmap(Dataset):
-  frameid2pos, frameid2heatmap, frameid2action_notused = None, None, None
+  frameid2pos, frameid2action_notused = None, None
   train_GHmap, val_GHmap = None, None # GHmap means gaze heap map
   
-  def __init__(self, LABELS_FILE_TRAIN, LABELS_FILE_VAL, RESIZE_SHAPE, GAZE_POS_ASC_FILE):
+  def __init__(self, LABELS_FILE_TRAIN, LABELS_FILE_VAL, RESIZE_SHAPE, HEATMAP_SHAPE, GAZE_POS_ASC_FILE):
     super(DatasetWithHeatmap, self).__init__(LABELS_FILE_TRAIN, LABELS_FILE_VAL, RESIZE_SHAPE)
     print "Reading gaze data ASC file, and converting per-frame gaze positions to heat map..."
     self.frameid2pos, self.frameid2action_notused = read_gaze_data_asc_file(GAZE_POS_ASC_FILE)
-    self.train_GHmap = np.zeros([self.train_size, RESIZE_SHAPE[0], RESIZE_SHAPE[1], 1], dtype=np.float32)
-    self.val_GHmap = np.zeros([self.val_size, RESIZE_SHAPE[0], RESIZE_SHAPE[1], 1], dtype=np.float32)
+    self.train_GHmap = np.zeros([self.train_size, HEATMAP_SHAPE, HEATMAP_SHAPE, 1], dtype=np.float32)
+    self.val_GHmap = np.zeros([self.val_size, HEATMAP_SHAPE, HEATMAP_SHAPE, 1], dtype=np.float32)
 
     # Prepare train val gaze data
-    print "Running convert_gaze_pos_to_heap_map() and convolution..."
+    print "Running convert_gaze_pos_to_heap_map() and normalize..."
     # Assign a heap map for each frame in train and val dataset
     t1 = time.time()
     bad_count, tot_count = 0, 0
@@ -323,6 +327,60 @@ class DatasetWithHeatmap(Dataset):
             self.val_GHmap[i] /= SUM
     print "Done. convert_gaze_pos_to_heap_map() and normalize used: %.1fs" % (time.time()-t1)
 
+class DatasetWithHeatmap_PastKFrames(Dataset):
+  frameid2pos, frameid2action_notused = None, None
+  train_GHmap, val_GHmap = None, None # GHmap means gaze heap map
+
+  def __init__(self, LABELS_FILE_TRAIN, LABELS_FILE_VAL, RESIZE_SHAPE, HEATMAP_SHAPE, GAZE_POS_ASC_FILE, K, stride=1, before=0):
+    super(DatasetWithHeatmap_PastKFrames, self).__init__(LABELS_FILE_TRAIN, LABELS_FILE_VAL, RESIZE_SHAPE)
+    self.train_imgs_bak, self.val_imgs_bak = self.train_imgs, self.val_imgs
+
+    t1=time.time()
+    self.train_imgs = transform_to_past_K_frames(self.train_imgs, K, stride, before)
+    self.val_imgs = transform_to_past_K_frames(self.val_imgs, K, stride, before)
+    # Trim labels. This is assuming the labels align with the training examples from the back!!
+    # Could cause the model unable to train  if this assumption does not hold
+    self.train_lbl = self.train_lbl[-self.train_imgs.shape[0]:]
+    self.val_lbl = self.val_lbl[-self.val_imgs.shape[0]:]
+
+    self.train_size = len(self.train_lbl)
+    self.val_size = len(self.val_lbl)
+
+    self.train_gaze = self.train_gaze[-self.train_imgs.shape[0]:]
+    self.val_gaze = self.val_gaze[-self.val_imgs.shape[0]:]
+
+    print "Time spent to transform train/val data to past K frames: %.1fs" % (time.time()-t1)
+    
+    print "Reading gaze data ASC file, and converting per-frame gaze positions to heat map..."
+    self.frameid2pos, self.frameid2action_notused = read_gaze_data_asc_file(GAZE_POS_ASC_FILE)
+    self.train_GHmap = np.zeros([self.train_size, HEATMAP_SHAPE, HEATMAP_SHAPE, 1], dtype=np.float32)
+    self.val_GHmap = np.zeros([self.val_size, HEATMAP_SHAPE, HEATMAP_SHAPE, 1], dtype=np.float32)
+
+    # Prepare train val gaze data
+    print "Running convert_gaze_pos_to_heap_map() and normalize..."
+    # Assign a heap map for each frame in train and val dataset
+    t1 = time.time()
+    bad_count, tot_count = 0, 0
+    for (i,fid) in enumerate(self.train_fid):
+        tot_count += len(self.frameid2pos[fid])
+        bad_count += convert_gaze_pos_to_heap_map(self.frameid2pos[fid], out=self.train_GHmap[i])
+    for (i,fid) in enumerate(self.val_fid):
+        tot_count += len(self.frameid2pos[fid])
+        bad_count += convert_gaze_pos_to_heap_map(self.frameid2pos[fid], out=self.val_GHmap[i])
+    print "Bad gaze (x,y) sample: %d (%.2f%%, total gaze sample: %d)" % (bad_count, 100*float(bad_count)/tot_count, tot_count)    
+    print "'Bad' means the gaze position is outside the 160*210 screen"
+
+    print "Normalizing the train/val heat map..."
+    for i in range(len(self.train_GHmap)):
+        SUM = self.train_GHmap[i].sum()
+        if SUM != 0:
+            self.train_GHmap[i] /= SUM
+
+    for i in range(len(self.val_GHmap)):
+        SUM = self.val_GHmap[i].sum()
+        if SUM != 0:
+            self.val_GHmap[i] /= SUM
+    print "Done. convert_gaze_pos_to_heap_map() and normalize used: %.1fs" % (time.time()-t1)
 
 def read_np_parallel(label_file, RESIZE_SHAPE, num_thread=6):
     """
@@ -379,18 +437,70 @@ def read_result_data(result_file, RESIZE_SHAPE):
             predicts[fid] = (float(x)*V.SCR_W/RESIZE_SHAPE[1], float(y)*V.SCR_H/RESIZE_SHAPE[0])
     return predicts
 
-def read_heatmap(heatmap_path):
-    data = np.load(heatmap_path)
-    frameids = data['fid']
-    heatmaps = data['heatmap']
+def save_heatmap_png_files(frameids, heatmaps, dataset, save_dir):
+    if not os.path.exists(save_dir):
+        os.mkdir(save_dir)
 
     fid = "BEFORE-FIRST-FRAME"
     frameid2heatmap = {fid: []}
     for i in range(len(frameids)):
         # heatmaps[i] = heatmaps[i]/heatmaps[i].max() * 255.0
         frameid2heatmap[(frameids[i][0],frameids[i][1])] = heatmaps[i,:,:,0]
+    
+    hashID2name = {0: []}
+    for i in range(len(dataset)):
+        _, person, number, date = dataset[i].split('_')
+        UTID = person + '_' + number
+        save_path = save_dir + dataset[i]
+        hashID2name[hash(UTID)] = [save_path, UTID+'_']
+        if not os.path.exists(save_path):
+            os.mkdir(save_path) 
 
-    return frameid2heatmap
+    m = cm.ScalarMappable(cmap='jet')
+
+#    # no multithread version
+#    print "Convolving heatmaps and saving into png files..."
+#    t1 = time.time()
+#    for fid in frameid2heatmap:
+#        if fid == 'BEFORE-FIRST-FRAME':
+#            continue
+#
+#        pic = convolve(frameid2heatmap[fid], Gaussian2DKernel(stddev=1))
+#        pic = m.to_rgba(pic)[:,:,:3]
+#        plt.imsave(hashID2name[fid[0]][0]+'/' + hashID2name[fid[0]][1] + str(fid[1]) + '.png', pic)
+#    print "Done. Time spent to save heatmaps: %.1fs" % (time.time()-t1)
+
+    # multithread version, this is not done yet
+    print "Convolving heatmaps and saving into png files..."
+    t1 = time.time()
+    num_thread = 6
+    def read_thread(PID):
+        for fid in frameid2heatmap:
+            if fid == 'BEFORE-FIRST-FRAME':
+                continue
+            if int(fid[1]) % num_thread == PID:
+                pic = convolve(frameid2heatmap[fid], Gaussian2DKernel(stddev=1))
+                pic = m.to_rgba(pic)[:,:,:3]
+                plt.imsave(hashID2name[fid[0]][0]+'/' + hashID2name[fid[0]][1] + str(fid[1]) + '.png', pic)
+
+    o=ForkJoiner(num_thread=num_thread, target=read_thread)
+    o.join()
+    print "Done. Time spent to save heatmaps: %.1fs" % (time.time()-t1)
+
+    print "Tar the png files..."
+    t2 = time.time()
+    for hashID in hashID2name:
+        if hashID2name[hashID]:
+            make_targz_one_by_one(hashID2name[hashID][0] + '.tar.bz2', hashID2name[hashID][0])
+    print "Done. Time spent to tar files: %.1fs" % (time.time()-t2)
+
+def make_targz_one_by_one(output_filename, source_dir): 
+    tar = tarfile.open(output_filename,"w:gz")
+    for root,dir,files in os.walk(source_dir):
+        for file in files:
+            pathfile = os.path.join(root, file)
+            tar.add(pathfile)
+    tar.close()
 
 class ForkJoiner():
     def __init__(self, num_thread, target):
