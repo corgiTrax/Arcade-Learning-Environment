@@ -4,7 +4,7 @@ from keras.models import Model, Sequential # keras/engine/training.py
 from IPython import embed
 import ipdb
 import json
-import sys
+import sys, time
 
 print("Usage: ipython main.py [PredictMode?]")
 print("Usage Predict Mode: ipython main.py 1 parameters Model.hdf5")
@@ -33,22 +33,25 @@ PREDICT_FILE_TRAIN = BASE_FILE_NAME + '-train-result'
 PREDICT_FILE_VAL = BASE_FILE_NAME + '-val-result'
 SHAPE = (84,84,1) # height * width * channel This cannot read from file and needs to be provided here
 BATCH_SIZE = 50
-heatmap_shape = 84
+num_epoch = 50
 #lr = float(sys.argv[3])
-num_epoch = 70
-MODEL_DIR = 'Seaquest_36&38&39&43_37'
+
+MODEL_DIR = 'Seaquest_lucy_36-43_37'
 #MODEL_DIR = 'Breakout_42_44'
 #MODEL_DIR = 'Seaquest_47_48'
 #MODEL_DIR = 'Pacman_40_45'
+#MODEL_DIR = 'Seaquest_RZ_KM'
 #MODEL_DIR = 'Seaquest_36_37'
+
 resume_model = False
 predict_mode = int(sys.argv[1]) 
 dropout = float(sys.argv[2])
+heatmap_shape = int(sys.argv[3])
 
 
 if not predict_mode: # if train
     import input_utils as IU, misc_utils as MU
-    expr = MU.ExprCreaterAndResumer(MODEL_DIR, postfix="salient_dp" + str(dropout))
+    expr = MU.ExprCreaterAndResumer(MODEL_DIR, postfix="salient_dp" + str(dropout) + "_shape" + str(heatmap_shape))
     expr.redirect_output_to_logfile_if_not_on("eldar-11")
 else:
     import all_py_files_snapshot.input_utils as IU, all_py_files_snapshot.misc_utils as MU
@@ -66,44 +69,51 @@ else:
 
     inputs=L.Input(shape=SHAPE)
     x=inputs # inputs is used by the line "Model(inputs, ... )" below
-    x=L.Conv2D(20, (8,8), strides=4, padding='same')(x)
-    x=L.BatchNormalization()(x)
-    x=L.Activation('relu')(x)
-    x=L.Dropout(dropout)(x)
     
-    x=L.Conv2D(40, (4,4), strides=2, padding='same')(x)
-    x=L.BatchNormalization()(x)
+    conv1=L.Conv2D(32, (8,8), strides=1, padding='same')
+    x = conv1(x)
+    print conv1.output_shape
     x=L.Activation('relu')(x)
-    x=L.Dropout(dropout)(x)
-    
-    x=L.Conv2D(80, (3,3), strides=2, padding='same')(x)
-    x=L.BatchNormalization()(x)
-    x=L.Activation('relu')(x)
+    x=L.BatchNormalization()(x)   
+    x=L.MaxPooling2D(pool_size=(3, 3),strides=2,padding='same')(x)
     x=L.Dropout(dropout)(x)
 
-    #x=L.Conv2D(80, (3,3), strides=1, padding='same')(x)
-    #x=L.BatchNormalization()(x)
-    #x=L.Activation('relu')(x)
-    #x=L.Dropout(dropout)(x)
+    conv2=L.Conv2D(64, (4,4), strides=1, padding='same')
+    x = conv2(x)
+    print conv2.output_shape
+    x=L.Activation('relu')(x)
+    x=L.BatchNormalization()(x)
+    x=L.MaxPooling2D(pool_size=(3, 3),strides=2,padding='same')(x)
+    x=L.Dropout(dropout)(x)
 
-    x = L.Flatten()(x)
-    x = L.Dense(256, activation = "relu")(x)
-    x = L.Dropout(dropout)(x)
 
-    x = L.Dense(7056, activation = "softmax")(x)
-    logits =  L.Reshape((84, 84, -1), name = "logits")(x)
+    conv3=L.Conv2D(64, (3,3), strides=1, padding='same')
+    x = conv3(x)
+    print conv3.output_shape
+    x=L.Activation('relu')(x)
+    x=L.BatchNormalization()(x)
+    x=L.Dropout(dropout)(x)    
+
+    deconv4 = L.Conv2DTranspose(1, (4,4), strides=2, padding='same')
+    x = deconv4(x)
+    print deconv4.output_shape
+    # x=L.Dropout(dropout)(x)
+
+    outputs = L.Activation(MU.softmax)(x)
 
     #model=Model(inputs=inputs, outputs=[logits,prob])
-    model=Model(inputs=inputs, outputs=logits)
+    model=Model(inputs=inputs, outputs=outputs)
+
     opt=K.optimizers.Adadelta(lr=1.0, rho=0.95, epsilon=1e-08, decay=0.0)
-    # opt=K.optimizers.Adam(lr=0.001, beta_1=0.9, beta_2=0.999, epsilon=1e-08)
-    # opt=K.optimizers.SGD(lr=lr, momentum=0.99, decay=1e-6, nesterov=True)
+    #opt=K.optimizers.Adam(lr=0.001, beta_1=0.9, beta_2=0.999, epsilon=1e-08)
+    # opt=K.optimizers.SGD(lr=lr, momentum=0.0, decay=0.0, nesterov=False)
     
-    model.compile(loss=MU.my_kld, optimizer=opt, metrics=[MU.computeNSS])
+    model.compile(loss=MU.my_kld, optimizer=opt)
     #model.compile(loss={"logits": 'kullback_leibler_divergence', "prob":None}, optimizer=opt, metrics={"logits": 'mean_squared_error'})
     #model.compile(loss={"logits": 'mean_squared_error', "prob":None}, optimizer=opt, metrics={"logits": 'mean_squared_error'})
     #model.compile(loss='mean_squared_error', optimizer=opt, metrics=['mean_squared_error'])
 
+time.sleep(5)
 d=IU.DatasetWithHeatmap(LABELS_FILE_TRAIN, LABELS_FILE_VAL, SHAPE, heatmap_shape, GAZE_POS_ASC_FILE)
 
 if not predict_mode: # if train

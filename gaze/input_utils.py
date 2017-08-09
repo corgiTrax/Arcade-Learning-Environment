@@ -199,6 +199,18 @@ def convert_gaze_pos_to_heap_map(gaze_pos_list, out):
             bad_count += 1
     return bad_count
 
+def transform_to_past_K_frames(original, K, stride, before):
+    newdat = []
+    for i in range(before+K*stride, len(original)):
+        # transform the shape (K, 84, 84, CH) into (84, 84, CH*K)
+        cur = original[i-before : i-before-K*stride : -stride] # using "-stride" instead of "stride" lets the indexing include i rather than exclude i
+        cur = cur.transpose([1,2,3,0])
+        cur = cur.reshape(cur.shape[0:2]+(-1,))
+        newdat.append(cur)
+        if len(newdat)>1: assert (newdat[-1].shape == newdat[-2].shape) # simple sanity check
+    newdat_np = np.array(newdat)
+    return newdat_np
+
 class Dataset(object):
   train_imgs, train_lbl, train_gaze, train_fid, train_size = None, None, None, None, None
   val_imgs, val_lbl, val_gaze, val_fid, val_size = None, None, None, None, None
@@ -232,8 +244,8 @@ class Dataset_PastKFrames(Dataset):
     self.train_imgs_bak, self.val_imgs_bak = self.train_imgs, self.val_imgs
 
     t1=time.time()
-    self.train_imgs = self.transform_to_past_K_frames(self.train_imgs, K, stride, before)
-    self.val_imgs = self.transform_to_past_K_frames(self.val_imgs, K, stride, before)
+    self.train_imgs = transform_to_past_K_frames(self.train_imgs, K, stride, before)
+    self.val_imgs = transform_to_past_K_frames(self.val_imgs, K, stride, before)
     # Trim labels. This is assuming the labels align with the training examples from the back!!
     # Could cause the model unable to train  if this assumption does not hold
     self.train_lbl = self.train_lbl[-self.train_imgs.shape[0]:]
@@ -246,18 +258,6 @@ class Dataset_PastKFrames(Dataset):
     self.val_gaze = self.val_gaze[-self.val_imgs.shape[0]:]
 
     print "Time spent to transform train/val data to past K frames: %.1fs" % (time.time()-t1)
-
-  def transform_to_past_K_frames(self, original, K, stride, before):
-    newdat = []
-    for i in range(before+K*stride, len(original)):
-        # transform the shape (K, 84, 84, CH) into (84, 84, CH*K)
-        cur = original[i-before : i-before-K*stride : -stride] # using "-stride" instead of "stride" lets the indexing include i rather than exclude i
-        cur = cur.transpose([1,2,3,0])
-        cur = cur.reshape(cur.shape[0:2]+(-1,))
-        newdat.append(cur)
-        if len(newdat)>1: assert (newdat[-1].shape == newdat[-2].shape) # simple sanity check
-    newdat_np = np.array(newdat)
-    return newdat_np
 
 class DatasetWithGaze(Dataset):
   frameid2pos, frameid2heatmap, frameid2action_notused = None, None, None
@@ -291,18 +291,18 @@ class DatasetWithGaze(Dataset):
     print "Done. convert_gaze_pos_to_heap_map() and convolution used: %.1fs" % (time.time()-t1)
 
 class DatasetWithHeatmap(Dataset):
-  frameid2pos, frameid2heatmap, frameid2action_notused = None, None, None
+  frameid2pos, frameid2action_notused = None, None
   train_GHmap, val_GHmap = None, None # GHmap means gaze heap map
   
-  def __init__(self, LABELS_FILE_TRAIN, LABELS_FILE_VAL, RESIZE_SHAPE, GAZE_POS_ASC_FILE):
+  def __init__(self, LABELS_FILE_TRAIN, LABELS_FILE_VAL, RESIZE_SHAPE, HEATMAP_SHAPE, GAZE_POS_ASC_FILE):
     super(DatasetWithHeatmap, self).__init__(LABELS_FILE_TRAIN, LABELS_FILE_VAL, RESIZE_SHAPE)
     print "Reading gaze data ASC file, and converting per-frame gaze positions to heat map..."
     self.frameid2pos, self.frameid2action_notused = read_gaze_data_asc_file(GAZE_POS_ASC_FILE)
-    self.train_GHmap = np.zeros([self.train_size, RESIZE_SHAPE[0], RESIZE_SHAPE[1], 1], dtype=np.float32)
-    self.val_GHmap = np.zeros([self.val_size, RESIZE_SHAPE[0], RESIZE_SHAPE[1], 1], dtype=np.float32)
+    self.train_GHmap = np.zeros([self.train_size, HEATMAP_SHAPE, HEATMAP_SHAPE, 1], dtype=np.float32)
+    self.val_GHmap = np.zeros([self.val_size, HEATMAP_SHAPE, HEATMAP_SHAPE, 1], dtype=np.float32)
 
     # Prepare train val gaze data
-    print "Running convert_gaze_pos_to_heap_map() and convolution..."
+    print "Running convert_gaze_pos_to_heap_map() and normalize..."
     # Assign a heap map for each frame in train and val dataset
     t1 = time.time()
     bad_count, tot_count = 0, 0
@@ -327,6 +327,60 @@ class DatasetWithHeatmap(Dataset):
             self.val_GHmap[i] /= SUM
     print "Done. convert_gaze_pos_to_heap_map() and normalize used: %.1fs" % (time.time()-t1)
 
+class DatasetWithHeatmap_PastKFrames(Dataset):
+  frameid2pos, frameid2action_notused = None, None
+  train_GHmap, val_GHmap = None, None # GHmap means gaze heap map
+
+  def __init__(self, LABELS_FILE_TRAIN, LABELS_FILE_VAL, RESIZE_SHAPE, HEATMAP_SHAPE, GAZE_POS_ASC_FILE, K, stride=1, before=0):
+    super(DatasetWithHeatmap_PastKFrames, self).__init__(LABELS_FILE_TRAIN, LABELS_FILE_VAL, RESIZE_SHAPE)
+    self.train_imgs_bak, self.val_imgs_bak = self.train_imgs, self.val_imgs
+
+    t1=time.time()
+    self.train_imgs = transform_to_past_K_frames(self.train_imgs, K, stride, before)
+    self.val_imgs = transform_to_past_K_frames(self.val_imgs, K, stride, before)
+    # Trim labels. This is assuming the labels align with the training examples from the back!!
+    # Could cause the model unable to train  if this assumption does not hold
+    self.train_lbl = self.train_lbl[-self.train_imgs.shape[0]:]
+    self.val_lbl = self.val_lbl[-self.val_imgs.shape[0]:]
+
+    self.train_size = len(self.train_lbl)
+    self.val_size = len(self.val_lbl)
+
+    self.train_gaze = self.train_gaze[-self.train_imgs.shape[0]:]
+    self.val_gaze = self.val_gaze[-self.val_imgs.shape[0]:]
+
+    print "Time spent to transform train/val data to past K frames: %.1fs" % (time.time()-t1)
+    
+    print "Reading gaze data ASC file, and converting per-frame gaze positions to heat map..."
+    self.frameid2pos, self.frameid2action_notused = read_gaze_data_asc_file(GAZE_POS_ASC_FILE)
+    self.train_GHmap = np.zeros([self.train_size, HEATMAP_SHAPE, HEATMAP_SHAPE, 1], dtype=np.float32)
+    self.val_GHmap = np.zeros([self.val_size, HEATMAP_SHAPE, HEATMAP_SHAPE, 1], dtype=np.float32)
+
+    # Prepare train val gaze data
+    print "Running convert_gaze_pos_to_heap_map() and normalize..."
+    # Assign a heap map for each frame in train and val dataset
+    t1 = time.time()
+    bad_count, tot_count = 0, 0
+    for (i,fid) in enumerate(self.train_fid):
+        tot_count += len(self.frameid2pos[fid])
+        bad_count += convert_gaze_pos_to_heap_map(self.frameid2pos[fid], out=self.train_GHmap[i])
+    for (i,fid) in enumerate(self.val_fid):
+        tot_count += len(self.frameid2pos[fid])
+        bad_count += convert_gaze_pos_to_heap_map(self.frameid2pos[fid], out=self.val_GHmap[i])
+    print "Bad gaze (x,y) sample: %d (%.2f%%, total gaze sample: %d)" % (bad_count, 100*float(bad_count)/tot_count, tot_count)    
+    print "'Bad' means the gaze position is outside the 160*210 screen"
+
+    print "Normalizing the train/val heat map..."
+    for i in range(len(self.train_GHmap)):
+        SUM = self.train_GHmap[i].sum()
+        if SUM != 0:
+            self.train_GHmap[i] /= SUM
+
+    for i in range(len(self.val_GHmap)):
+        SUM = self.val_GHmap[i].sum()
+        if SUM != 0:
+            self.val_GHmap[i] /= SUM
+    print "Done. convert_gaze_pos_to_heap_map() and normalize used: %.1fs" % (time.time()-t1)
 
 def read_np_parallel(label_file, RESIZE_SHAPE, num_thread=6):
     """
@@ -402,7 +456,7 @@ def save_heatmap_png_files(frameids, heatmaps, dataset, save_dir):
         if not os.path.exists(save_path):
             os.mkdir(save_path) 
 
-    m = cm.ScalarMappable(cmap='hot')
+    m = cm.ScalarMappable(cmap='jet')
 
     print "Convolving heatmaps and saving into png files..."
     t1 = time.time()
