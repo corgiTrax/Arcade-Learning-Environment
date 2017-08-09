@@ -50,6 +50,10 @@
   # Run pastKFrame model playing seaquest train on 36  (K=4, stride=2, before=2)
   python runai.py ../roms/seaquest.bin PastKFrameModel cat\{36_RZ\}tr_\{37_RZ\}val-pKf.model.hdf5 cat\{36_RZ\}tr_\{37_RZ\}val.mean.npy == 4 2 0
 ```
+  Available keyboard controls:
+  h: **Human takes over the control of the game **
+  p: print action's logit output
+  Esc: quit
 
 5. Psychology
 - [x] Ask experts to validate experimental setups
