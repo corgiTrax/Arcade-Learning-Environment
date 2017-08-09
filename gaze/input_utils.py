@@ -486,15 +486,33 @@ def save_heatmap_png_files(frameids, heatmaps, dataset, save_dir):
 
     m = cm.ScalarMappable(cmap='jet')
 
+#    # no multithread version
+#    print "Convolving heatmaps and saving into png files..."
+#    t1 = time.time()
+#    for fid in frameid2heatmap:
+#        if fid == 'BEFORE-FIRST-FRAME':
+#            continue
+#
+#        pic = convolve(frameid2heatmap[fid], Gaussian2DKernel(stddev=1))
+#        pic = m.to_rgba(pic)[:,:,:3]
+#        plt.imsave(hashID2name[fid[0]][0]+'/' + hashID2name[fid[0]][1] + str(fid[1]) + '.png', pic)
+#    print "Done. Time spent to save heatmaps: %.1fs" % (time.time()-t1)
+
+    # multithread version, this is not done yet
     print "Convolving heatmaps and saving into png files..."
     t1 = time.time()
-    for fid in frameid2heatmap:
-        if fid == 'BEFORE-FIRST-FRAME':
-            continue
+    num_thread = 6
+    def read_thread(PID):
+        for fid in frameid2heatmap:
+            if fid == 'BEFORE-FIRST-FRAME':
+                continue
+            if int(fid[1]) % num_thread == PID:
+                pic = convolve(frameid2heatmap[fid], Gaussian2DKernel(stddev=1))
+                pic = m.to_rgba(pic)[:,:,:3]
+                plt.imsave(hashID2name[fid[0]][0]+'/' + hashID2name[fid[0]][1] + str(fid[1]) + '.png', pic)
 
-        pic = convolve(frameid2heatmap[fid], Gaussian2DKernel(stddev=1))
-        pic = m.to_rgba(pic)[:,:,:3]
-        plt.imsave(hashID2name[fid[0]][0]+'/' + hashID2name[fid[0]][1] + str(fid[1]) + '.png', pic)
+    o=ForkJoiner(num_thread=num_thread, target=read_thread)
+    o.join()
     print "Done. Time spent to save heatmaps: %.1fs" % (time.time()-t1)
 
     print "Tar the png files..."

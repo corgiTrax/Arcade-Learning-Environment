@@ -8,6 +8,7 @@ from ScreenRecorder import ScreenRecorder
 import vip_constants as V
 import action_enums
 
+TIME_LIMIT = 15 # minutes
 
 RIGHT_EYE = 1
 LEFT_EYE = 0
@@ -161,7 +162,7 @@ def event_handler_callback_func(key_pressed, caller):
 		alestate = caller.saveALEState(fname)
 
 	# If trial time (15 min) is up
-	if T.time() - caller.run_start_time > 60*15:
+	if T.time() - caller.run_start_time > 60 * TIME_LIMIT:
 		print "Trial time limit exceeded."
 		save_game_local_func()
 		update_leaderboard_file(caller.gamename, unique_trial_id, caller.score)
