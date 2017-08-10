@@ -53,6 +53,7 @@
   Available keyboard controls: \
   h: **Human takes over the control of the game ** \
   p: print action's logit output \
+  x: Run `embed()` for debugging
   Esc: quit 
 
 5. Psychology
