@@ -70,6 +70,7 @@
 - [ ] Practice game instructions
 - [ ] ALE + Keras game playing agent 
 - [ ] ALE save/load
+- [ ] What's the framerate's effect on gaze distribution ???
 
 ## Next
 
