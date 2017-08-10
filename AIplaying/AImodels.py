@@ -35,9 +35,8 @@ class BaselineModel(AbstractModel):
     img_np = self._preprocess_one(img_np)
     img_np = np.expand_dims(img_np, axis=0)
     logits = self.model.predict(img_np)[0] # returns a size-2 list where element [0] are the logits
-    assert len(logits.shape)==2 and (logits.dtype==np.float32 or logits.dtype==np.float64), "simple sanity check: pred should be a vector containing probabilitiesi of each action"
-    action = np.argmax(logits[0,:])
-    return {"action": action, "gaze": None, "raw_logits": logits}
+    assert len(logits.shape)==2 and (logits.dtype==np.float32 or logits.dtype==np.float64), "simple sanity check: pred should be a vector containing probabilities of each action"
+    return {"gaze": None, "raw_logits": logits}
 
 
 class PastKFrameModel(AbstractModel):
@@ -46,7 +45,9 @@ class PastKFrameModel(AbstractModel):
     self.K, self.stride, self.before = int(K), int(stride), int(before)
     self.MAX_LEN = self.K * self.stride + self.before + 5 # + 5 does not mean anything, just store more memory for safety.
     self.frame_buffer = []
-    self.DEFAULT_ACT_BEFORE_BUFFER_IS_FULL = aenum.PLAYER_A_NOOP
+    self.DEFAULT_LOGITS_BEFORE_BUFFER_IS_FULL = ( # the model cannot work before K frames are seen, but needs to output something.
+        np.array([0.0] * int(self.model.output[0].shape[1]))  # a hacky way to get number of classes of the model
+        .reshape([1,-1]))
   
   def _preprocess_one(self, img_np):
     return self._preprocess_one_default(img_np)
@@ -57,8 +58,7 @@ class PastKFrameModel(AbstractModel):
     self.frame_buffer.append(img_np)
 
     if len(self.frame_buffer) <= self.MAX_LEN: # frame_buffer is not full yet, not ready to give a valid past K frame input to the network
-        action = self.DEFAULT_ACT_BEFORE_BUFFER_IS_FULL
-        logits = None
+        logits = self.DEFAULT_LOGITS_BEFORE_BUFFER_IS_FULL
     else:
         self.frame_buffer.pop(0)
         len_ = len(self.frame_buffer)-1
@@ -67,9 +67,8 @@ class PastKFrameModel(AbstractModel):
         assert img_np.shape[-1] == self.K, "simple sanity check: the number of extracted past frames should be K"
 
         logits = self.model.predict(img_np)[0] # returns a size-2 list where element [0] are the logits
-        assert len(logits.shape)==2 and (logits.dtype==np.float32 or logits.dtype==np.float64), "simple sanity check: pred should be a vector containing probabilitiesi of each action"
-        action = np.argmax(logits[0,:])
-    return {"action": action, "gaze": None, "raw_logits": logits}
+        assert len(logits.shape)==2 and (logits.dtype==np.float32 or logits.dtype==np.float64), "simple sanity check: pred should be a vector containing probabilities of each action"
+    return {"gaze": None, "raw_logits": logits}
 
 
 # TODO (Remark) To implement other models than the baseline model, those models might require different preprocessing of input.

@@ -6,6 +6,14 @@ import AImodels, misc_utils as MU
 from pygame.constants import RESIZABLE,DOUBLEBUF,RLEACCEL
 from IPython import embed
 
+
+def sample_catagorical_distribution_with_logits(logits):
+    e_x = np.exp(logits - np.max(logits))
+    prob = e_x / e_x.sum() # compute the softmax of logits
+    picked = prob.cumsum().searchsorted(np.random.sample()) # implement weighted sampling
+    return picked
+
+
 if __name__ == "__main__":
     expected_args = [sys.argv[0], 'rom_file', 'model_name_in_AIModels.py', 'model_file', 'mean_file']
     opt_args = ['[++ resume_state_file]', '[ == args_passed_to_model_initializer]']
@@ -50,9 +58,9 @@ if __name__ == "__main__":
         img_np, r, epEnd = ale.proceed_one_step(a, refresh_screen=True, fps_limit=30)
         pred = aimodel.predict_one(img_np)
 
-        a = ale.legal_actions[pred['action']]
+        a = sample_catagorical_distribution_with_logits(pred['raw_logits'])
 
-        # BEGIN --------- keyboard event handling -------
+        # --------- BEGIN keyboard event handling ------- 
         for event in pygame.event.get():
             if event.type == pygame.KEYDOWN:
 
@@ -77,12 +85,17 @@ if __name__ == "__main__":
             string = aenum.nameof(a)
             for i in range(len(logits)):
                 cur = " %.1f" % logits[i]
-                string += MU.color(cur,'GREEN') if i == m else cur
+                if i==m:
+                    string += MU.color(cur,'RED')   # the action that has max logit
+                elif i==a:
+                    string += MU.color(cur,'GREEN') # actual action sampled
+                else:
+                    string += cur
             print string
             
         if human_take_over:
             key = pygame.key.get_pressed()
-            a = ale.legal_actions[aenum.action_map(key, ale.gamename)]
-        # END --------- keyboard event handling ------- 
+            a = aenum.action_map(key, ale.gamename)
+        # --------- END keyboard event handling ------- 
 
 
