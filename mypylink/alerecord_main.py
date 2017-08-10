@@ -157,7 +157,7 @@ def event_handler_callback_func(key_pressed, caller):
 		return True, error, bool_drawgc
 
 	def save_game_local_func():
-		fname = "saved_games/%s.npz" % (unique_trial_id)
+		fname = "saved_games/%s.npz" % (caller.gamename + unique_trial_id)
 		print "Saving the game to %s ..." % fname
 		alestate = caller.saveALEState(fname)
 
@@ -266,6 +266,7 @@ def run_trials(rom_file, screen, resume_state_file):
 
 		print "Calling command edf2asc..."
 		if subprocess.call('edf2asc %s' % (scr_recorder.dir+".edf"), shell=True) != 0:
+                        # TODO a path error that needs to be fixed
 			print "\nERROR: edf2asc returned non-zero exit status."
 
 	return 0

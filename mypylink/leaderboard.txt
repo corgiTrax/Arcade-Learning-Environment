@@ -1,5 +1,13 @@
-seaquest LS_1305729 0
-seaquest LS_1305818 0
-seaquest LS_1305959 0
-seaquest LS_1306682 0
-seaquest LS_1308293 0
+centipede RZ_2398139 41717
+ms_pacman RZ_2394668 25761
+seaquest RZ_2389912 201130
+seaquest RZ_2388995 134380
+seaquest RZ_2315865 133390
+seaquest KM_1537673 61560
+seaquest RZ_2312960 52030
+seaquest RZ_2312252 60
+seaquest RZ_2312144 20
+seaquest RZ_2311551 0
+seaquest RZ_2311619 0
+seaquest RZ_2311694 0
+

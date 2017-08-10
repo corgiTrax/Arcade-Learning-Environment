@@ -30,3 +30,16 @@ after 44 color_averaging is turned on
 ========================================
 42 RZ breakout data ok random_seed:144
 44 RZ breakout data 1.05 degree error random seed: 200
+
+========================================
+========================================
+========================================
+August 9 2017 "Final" version of data collection: leaderboard; save/load; composed action; new random seed; frame averaging; no sound;
+
+49 RZ seaquest data ok start fresh  saveto: 2312960 fps: 30 
+50 RZ seaquest data ok load 2312960 saveto: 2315865 fps: 30
+51 RZ seaquest data ok load 2315865 saveto: 2389912 fps: 20
+
+52 RZ mspacman data ok start fresh  saveto: 2394668 fps: 20
+
+53 RZ centipede data ok start fresh saveto: centipedeRZ_2398139.npz fps:20 
