@@ -25,6 +25,7 @@
 - [ ] Python implementation of the above ones if necessary
 
 3. Gaze modeling
+- [ ] CNN - dilation model
 - [ ] CNN - deconv model
 - [ ] CNN - regression model
 - [ ] Superior colliculus model
