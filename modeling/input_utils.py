@@ -51,14 +51,13 @@ def preprocess_gaze_heatmap(GHmap, sigmaH, sigmaW, bg_prob_density, debug_plot_r
     else:
         print "WARNING: Gaussian filter's sigma is 0, i.e. no blur."
     # The following normalization hurts accuracy. I don't know why. But intuitively it should increase accuracy
-    def GH_normalization(x):
-        sum_per_GH = tf.reduce_sum(x,axis=[1,2,3])
-        sum_per_GH_correct_shape = tf.reshape(sum_per_GH, [tf.shape(sum_per_GH)[0],1,1,1])
-        # normalize values to range [0,1], on a per heap-map basis
-        x = x/sum_per_GH_correct_shape
-        # add a uniform background 1.0, so that range becomes [1.0,2.0], and background is 2x smaller than max
-        return x
-    model.add(K.layers.Lambda(lambda x: GH_normalization(x)))
+    #def GH_normalization(x):
+    #    sum_per_GH = tf.reduce_sum(x,axis=[1,2,3])
+    #    sum_per_GH_correct_shape = tf.reshape(sum_per_GH, [tf.shape(sum_per_GH)[0],1,1,1])
+    #    # normalize values to range [0,1], on a per heap-map basis
+    #    x = x/sum_per_GH_correct_shape
+    #    return x
+    #model.add(K.layers.Lambda(lambda x: GH_normalization(x)))
     
     model.compile(optimizer='rmsprop', # not used
           loss='categorical_crossentropy', # not used
