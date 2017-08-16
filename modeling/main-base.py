@@ -6,21 +6,21 @@ import input_utils, misc_utils as MU
 import ipdb
 
 NUM_CLASSES=8
-BASE_FILE_NAME = "/scratch/cluster/zharucs/dataset/cat{42_RZ}tr_{44_RZ}val"
-LABELS_FILE_TRAIN = BASE_FILE_NAME + '-train.txt' 
-LABELS_FILE_VAL =  BASE_FILE_NAME + '-val.txt' 
+BASE_FILE_NAME = "/scratch/cluster/zharucs/dataset_gaze/cat{36_38_39_43_RZ}tr_{37_RZ}val"
+LABELS_FILE_TRAIN = BASE_FILE_NAME + '-train.txt'
+LABELS_FILE_VAL =  BASE_FILE_NAME + '-val.txt'
 GAZE_POS_ASC_FILE = BASE_FILE_NAME + '.asc'
 SHAPE = (84,84,1) # height * width * channel This cannot read from file and needs to be provided here
 BATCH_SIZE=100
 num_epoch = 50
-dropout = 0.25
-MODEL_DIR = 'Breakout_42_44'
+dropout = float(sys.argv[1])
+MODEL_DIR = 'Seaquest_36-43_37'
 resume_model = False
 
 MU.save_GPU_mem_keras()
 MU.keras_model_serialization_bug_fix()
 
-expr = MU.ExprCreaterAndResumer(MODEL_DIR,postfix="baseline")
+expr = MU.ExprCreaterAndResumer(MODEL_DIR,postfix="baseline_dr%s" % sys.argv[1])
 expr.redirect_output_to_logfile_if_not_on("eldar-11")
 
 if resume_model:
@@ -59,6 +59,7 @@ else:
 expr.dump_src_code_and_model_def(sys.argv[0], model)
 
 d=input_utils.Dataset(LABELS_FILE_TRAIN, LABELS_FILE_VAL, SHAPE)
+embed()
 model.fit(d.train_imgs, d.train_lbl, BATCH_SIZE, epochs=num_epoch,
     validation_data=(d.val_imgs, d.val_lbl),
     shuffle=True,verbose=2,
