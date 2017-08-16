@@ -5,9 +5,10 @@ def multi_experiment():
 #  for dp in ["0 0.2","0 0.3","0 0.4","0 0.5"]:
 #    for lr in ["0.1","0.05","0.01","0.005","0.001"]:
 #        l.append(' '.join([dp,lr]))
-    for dp in ["0 0.2","0 0.3","0 0.4","0 0.5"]:
-        for s in ["1","2","4"]:
-            l.append(' '.join([dp,s]))
+    for dp in ["0 0.3","0 0.4","0 0.5"]: 
+        for k in ["2","4","8"]:
+            for s in ["1","2"]:
+                l.append(' '.join([dp,k,s]))
     return l
 
 import sys, re, os, subprocess

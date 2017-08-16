@@ -9,7 +9,7 @@ LABELS_FILE_TRAIN = BASE_FILE_NAME + '-train.txt'
 LABELS_FILE_VAL =  BASE_FILE_NAME + '-val.txt' 
 GAZE_POS_ASC_FILE = BASE_FILE_NAME + '.asc'
 SHAPE = (84,84,1)
-heatmap_shape = 42
+heatmap_shape = 84
 sess = tf.Session()
 
 def my_kld(y_true, y_pred):
@@ -50,9 +50,9 @@ val_result = np.asarray(val_result, dtype=np.float32)
 print val_result
 print "Random saliency predict KL-divergence on val: %f" % val_result.mean()
 
-mean, var = tf.nn.moments(d.val_GHmap, [1,2,3], keep_dims=True)
+mean, var = tf.nn.moments(val_predict, [1,2,3], keep_dims=True)
 stddev = tf.sqrt(var)
-sal = (d.val_GHmap - mean) / stddev
+sal = (val_predict - mean) / stddev
 
 #val_gazepoints = tf.ceil(d.val_GHmap)
 #val_gazepoints = val_gazepoints / tf.reduce_sum(val_gazepoints, axis=[1,2,3], keep_dims=True)
