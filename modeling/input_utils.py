@@ -284,7 +284,7 @@ class DatasetWithGaze(Dataset):
   frameid2pos, frameid2heatmap, frameid2action_notused = None, None, None
   train_GHmap, val_GHmap = None, None # GHmap means gaze heap map
   
-  def __init__(self, LABELS_FILE_TRAIN, LABELS_FILE_VAL, RESIZE_SHAPE, GAZE_POS_ASC_FILE, bg_prob_density, gaussian_sigma, useSpecialSigma=False):
+  def __init__(self, LABELS_FILE_TRAIN, LABELS_FILE_VAL, RESIZE_SHAPE, GAZE_POS_ASC_FILE, bg_prob_density, gaussian_sigma):
     super(DatasetWithGaze, self).__init__(LABELS_FILE_TRAIN, LABELS_FILE_VAL, RESIZE_SHAPE)
     print "Reading gaze data ASC file, and converting per-frame gaze positions to heat map..."
     self.frameid2pos, self.frameid2action_notused = read_gaze_data_asc_file(GAZE_POS_ASC_FILE)
@@ -307,10 +307,6 @@ class DatasetWithGaze(Dataset):
 
     sigmaH = gaussian_sigma * RESIZE_SHAPE[0] / 210.0
     sigmaW = gaussian_sigma * RESIZE_SHAPE[1] / 160.0
-    if useSpecialSigma:
-      print "using my sigmaH and sigmaW"
-      sigmaH = 28.50 * RESIZE_SHAPE[0] / V.SCR_H
-      sigmaW = 44.58 * RESIZE_SHAPE[1] / V.SCR_W
 
     self.train_GHmap = preprocess_gaze_heatmap(self.train_GHmap, sigmaH, sigmaW, bg_prob_density)
     self.val_GHmap = preprocess_gaze_heatmap(self.val_GHmap, sigmaH, sigmaW, bg_prob_density)
