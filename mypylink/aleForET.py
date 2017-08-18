@@ -8,6 +8,8 @@ import action_enums as aenum
 import vip_constants as V
 
 FRAME_RATE = 20 # importnat parameters, control how fast game goes 
+print("****************************FrameRate:%s**********************" % FRAME_RATE) 
+# now using 30 for venture and 20 for others
 
 class aleForET:
     def __init__(self,rom_file, screen, rndseed, resume_state_file=None):
@@ -20,7 +22,7 @@ class aleForET:
 
         # Get & Set the desired settings
         self.ale = ALEInterface()
-        self.ale.setInt('random_seed', rndseed)
+        self.ale.setInt("random_seed", rndseed)
         self.ale.setBool('sound', False)
         self.ale.setBool('display_screen', False)
         self.ale.setBool('color_averaging', True)

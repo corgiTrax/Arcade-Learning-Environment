@@ -288,6 +288,11 @@ def set_play_beep_func(func):
 	play_beep_func=func
 
 if __name__ == "__main__":
+        if os.getuid() == 0:
+            print("Run as root.....")
+        else:
+            print("Must run in sudo mode, exit...")
+            sys.exit()
 	try:
 		eyelinktracker = EyeLink("100.1.1.1")
 	except Exception as ex:

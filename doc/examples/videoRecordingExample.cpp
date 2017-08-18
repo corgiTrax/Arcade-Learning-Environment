@@ -36,12 +36,12 @@ int main(int argc, char** argv) {
     ALEInterface ale;
 
     // Get & Set the desired settings
-    ale.setInt("random_seed", 123);
+    ale.setInt("random_seed", 100);
 
     // We enable both screen and sound, which we will need for recording. 
     ale.setBool("display_screen", true);
     // You may leave sound disabled (by setting this flag to false) if so desired. 
-    ale.setBool("sound", true);
+    ale.setBool("sound", false);
 
     std::string recordPath = "record";
     std::cout << std::endl;

@@ -1,13 +1,14 @@
 # We do not automatically build the recording agent, which requires SDL. To build it, run
 #
 # > make recordingAgent
-all: sharedLibraryAgent rlglueAgent fifoAgent
+#all: sharedLibraryAgent rlglueAgent fifoAgent
+all: sharedLibraryAgent fifoAgent
 
 sharedLibraryAgent: 
 	make -f Makefile.sharedlibrary
 
-rlglueAgent:
-	make -f Makefile.rlglue
+#rlglueAgent:
+#	make -f Makefile.rlglue
 
 fifoAgent: 
 	make -f Makefile.fifo

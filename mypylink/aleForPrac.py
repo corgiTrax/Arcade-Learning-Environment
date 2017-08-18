@@ -10,7 +10,7 @@ import action_enums as aenum
 import vip_constants as V
 from pygame.constants import *
 
-FRAME_RATE = 15
+FRAME_RATE = int(sys.argv[3])
 EPISODES = 20 # MAX episodes
 
 class aleForET:
