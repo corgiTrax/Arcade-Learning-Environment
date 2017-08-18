@@ -51,6 +51,7 @@ class ExprCreaterAndResumer:
         return K.models.load_model(fname)
 
     def dump_src_code_and_model_def(self, fname, kerasmodel):
+        fname = os.path.abspath(fname) # if already absolute path, it does nothing
         shutil.copyfile(fname, self.dir + '/' + os.path.basename(fname))
         with open(self.dir + '/model.yaml', 'w') as f:
             f.write(kerasmodel.to_yaml())

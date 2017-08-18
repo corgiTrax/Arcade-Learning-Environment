@@ -47,14 +47,14 @@ resume_model = False
 predict_mode = int(sys.argv[1]) 
 dropout = float(sys.argv[2])
 heatmap_shape = 84
-k = int(sys.argv[3])
-stride = int(sys.argv[4])
-SHAPE = (84,84,k) # height * width * channel This cannot read from file and needs to be provided here
+k = 4
+stride = int(sys.argv[3])
+SHAPE = (84,84,k,1) # height * width * channel This cannot read from file and needs to be provided here
 
 
 if not predict_mode: # if train
     import input_utils as IU, misc_utils as MU
-    expr = MU.ExprCreaterAndResumer(MODEL_DIR, postfix="pKf_dp" + str(dropout) + '_shape' + str(heatmap_shape) + '_k' + str(k)+'s'+str(stride))
+    expr = MU.ExprCreaterAndResumer(MODEL_DIR, postfix="pKf_3D_dp" + str(dropout) + '_shape' + str(heatmap_shape) + '_k' + str(k)+'s'+str(stride))
     expr.redirect_output_to_logfile_if_not_on("eldar-11")
 else:
     import all_py_files_snapshot.input_utils as IU, all_py_files_snapshot.misc_utils as MU
@@ -73,44 +73,46 @@ else:
     inputs=L.Input(shape=SHAPE)
     x=inputs # inputs is used by the line "Model(inputs, ... )" below
     
-    conv1=L.Conv2D(32, (8,8), strides=4, padding='valid')
+    conv1=L.Conv3D(32, (8,8,1), strides=(4,4,1), padding='valid')
     x = conv1(x)
     print conv1.output_shape
     x=L.Activation('relu')(x)
     x=L.BatchNormalization()(x)
     x=L.Dropout(dropout)(x)
     
-    conv2=L.Conv2D(64, (4,4), strides=2, padding='valid')
+    conv2=L.Conv3D(64, (4,4,1), strides=(2,2,2), padding='valid')
     x = conv2(x)
     print conv2.output_shape
     x=L.Activation('relu')(x)
     x=L.BatchNormalization()(x)
     x=L.Dropout(dropout)(x)
     
-    conv3=L.Conv2D(64, (3,3), strides=1, padding='valid')
+    conv3=L.Conv3D(64, (3,3,1), strides=(1,1,2), padding='valid')
     x = conv3(x)
     print conv3.output_shape
     x=L.Activation('relu')(x)
     x=L.BatchNormalization()(x)
     x=L.Dropout(dropout)(x)
     
-    deconv1 = L.Conv2DTranspose(64, (3,3), strides=1, padding='valid')
-    x = deconv1(x)
-    print deconv1.output_shape
-    x=L.Activation('relu')(x)
-    x=L.BatchNormalization()(x)
-    x=L.Dropout(dropout)(x)
+    x = L.Reshape((7, 7, 64))(x)
 
-    deconv2 = L.Conv2DTranspose(32, (4,4), strides=2, padding='valid')
+    deconv2 = L.Conv2DTranspose(64, (3,3), strides=1, padding='valid')
     x = deconv2(x)
     print deconv2.output_shape
     x=L.Activation('relu')(x)
     x=L.BatchNormalization()(x)
-    x=L.Dropout(dropout)(x)         
+    x=L.Dropout(dropout)(x)
 
-    deconv3 = L.Conv2DTranspose(1, (8,8), strides=4, padding='valid')
+    deconv3 = L.Conv2DTranspose(32, (4,4), strides=2, padding='valid')
     x = deconv3(x)
     print deconv3.output_shape
+    x=L.Activation('relu')(x)
+    x=L.BatchNormalization()(x)
+    x=L.Dropout(dropout)(x)         
+
+    deconv4 = L.Conv2DTranspose(1, (8,8), strides=4, padding='valid')
+    x = deconv4(x)
+    print deconv4.output_shape
 
     outputs = L.Activation(MU.softmax)(x)
 
@@ -151,7 +153,7 @@ if not predict_mode: # if train
     expr.printdebug("eval score:" + str(score))
 
 elif predict_mode: # if predict
-    model.load_weights(sys.argv[5])
+    model.load_weights(sys.argv[4])
 
     print "Evaluating model..."
     train_score = model.evaluate(d.train_imgs, d.train_GHmap, BATCH_SIZE, 0)

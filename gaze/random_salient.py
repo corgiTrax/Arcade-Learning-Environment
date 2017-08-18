@@ -35,10 +35,10 @@ d=input_utils.DatasetWithHeatmap(LABELS_FILE_TRAIN, LABELS_FILE_VAL, SHAPE, heat
 
 val_predict = np.zeros([d.val_size,heatmap_shape,heatmap_shape,1], dtype=np.float32)
 for i in range(d.val_size):
-	#random_predict = np.random.random_integers(low=0, high=5, size=(heatmap_shape, heatmap_shape))
-	#random_predict = random_predict*1.0 / random_predict.sum()
-        random_predict = np.ones([heatmap_shape, heatmap_shape],dtype=np.float32)
-        random_predict = random_predict / 7056
+	random_predict = np.random.random_integers(low=0, high=5, size=(heatmap_shape, heatmap_shape))
+	random_predict = random_predict*1.0 / random_predict.sum()
+        #random_predict = np.ones([heatmap_shape, heatmap_shape],dtype=np.float32)
+        #random_predict = random_predict / 7056
 	#print random_predict.sum()
 	val_predict[i,:,:,0] = random_predict
 
@@ -50,19 +50,15 @@ val_result = np.asarray(val_result, dtype=np.float32)
 print val_result
 print "Random saliency predict KL-divergence on val: %f" % val_result.mean()
 
-mean, var = tf.nn.moments(d.val_GHmap, [1,2,3], keep_dims=True)
+mean, var = tf.nn.moments(val_predict, [1,2,3], keep_dims=True)
 stddev = tf.sqrt(var)
-sal = (d.val_GHmap - mean) / stddev
+sal = (val_predict - mean) / stddev
 
-val_gazepoints = tf.ceil(d.val_GHmap)
-val_gazepoints = val_gazepoints / tf.reduce_sum(val_gazepoints, axis=[1,2,3], keep_dims=True)
+#val_gazepoints = tf.ceil(d.val_GHmap)
+#val_gazepoints = val_gazepoints / tf.reduce_sum(val_gazepoints, axis=[1,2,3], keep_dims=True)
 
 score = tf.multiply(d.val_GHmap, sal)
 #score = tf.multiply(val_gazepoints, sal)
 score = tf.contrib.keras.backend.sum(score, axis=[1,2,3])
-r = score.eval(session=sess)
-r = np.asarray(r)
-for i in range(len(r)):
-    print r[i]
 print tf.contrib.keras.backend.mean(score).eval(session=sess)
 

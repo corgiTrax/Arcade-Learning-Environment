@@ -6,6 +6,30 @@ from IPython import embed
 from scipy import misc
 import vip_constants as V
 
+
+# This method is just used for quickly exploring an new idea that
+# multiply the game frame using a predicted gaze heatmap, which
+#  is the output from another model that predicts gaze.
+#
+# WARNING: this method is very ad-hoc: it loads the predicted gaze heatmap from a file
+# So make sure you do the check for yourself and provide this method with correct data.
+def load_predicted_gaze_heatmap_into_dataset_train_GHmap_val_GHmap__temp(train_npz, val_npz, dataset_obj):
+    train_npz = np.load(train_npz)
+    val_npz = np.load(val_npz)
+
+    dataset_obj.train_GHmap = train_npz['heatmap']
+    dataset_obj.val_GHmap = val_npz['heatmap']
+    def validate_data(npz_fid, dataset_obj_fid):
+      assert len(npz_fid) == len(dataset_obj_fid)
+      for i in range(len(npz_fid)):
+        assert tuple(npz_fid[i]) == dataset_obj_fid[i], "npz: %s dataset: %s" % (str(npz_fid[i]), str(data_obj_fid[i]))
+    
+    validate_data(train_npz['fid'], dataset_obj.train_fid)
+    validate_data(val_npz['fid'], dataset_obj.val_fid)
+
+    return dataset_obj
+
+
 def preprocess_gaze_heatmap(GHmap, sigmaH, sigmaW, bg_prob_density, debug_plot_result=False):
     from scipy.stats import multivariate_normal
     import tensorflow as tf, keras as K # don't move this to the top, as people who import this file might not have keras or tf
@@ -27,15 +51,13 @@ def preprocess_gaze_heatmap(GHmap, sigmaH, sigmaW, bg_prob_density, debug_plot_r
     else:
         print "WARNING: Gaussian filter's sigma is 0, i.e. no blur."
     # The following normalization hurts accuracy. I don't know why. But intuitively it should increase accuracy
-    # def GH_normalization_and_add_background(x):
-    #     max_per_GH = tf.reduce_max(x,axis=[1,2,3])
-    #     max_per_GH_correct_shape = tf.reshape(max_per_GH, [tf.shape(max_per_GH)[0],1,1,1])
-    #     # normalize values to range [0,1], on a per heap-map basis
-    #     x = x/max_per_GH_correct_shape
-    #     # add a uniform background 1.0, so that range becomes [1.0,2.0], and background is 2x smaller than max
-    #     x = x + 1.0
-    #     return x
-    # model.add(K.layers.Lambda(lambda x: GH_normalization_and_add_background(x)))
+    #def GH_normalization(x):
+    #    sum_per_GH = tf.reduce_sum(x,axis=[1,2,3])
+    #    sum_per_GH_correct_shape = tf.reshape(sum_per_GH, [tf.shape(sum_per_GH)[0],1,1,1])
+    #    # normalize values to range [0,1], on a per heap-map basis
+    #    x = x/sum_per_GH_correct_shape
+    #    return x
+    #model.add(K.layers.Lambda(lambda x: GH_normalization(x)))
     
     model.compile(optimizer='rmsprop', # not used
           loss='categorical_crossentropy', # not used
@@ -285,6 +307,7 @@ class DatasetWithGaze(Dataset):
 
     sigmaH = gaussian_sigma * RESIZE_SHAPE[0] / 210.0
     sigmaW = gaussian_sigma * RESIZE_SHAPE[1] / 160.0
+
     self.train_GHmap = preprocess_gaze_heatmap(self.train_GHmap, sigmaH, sigmaW, bg_prob_density)
     self.val_GHmap = preprocess_gaze_heatmap(self.val_GHmap, sigmaH, sigmaW, bg_prob_density)
     print "Done. convert_gaze_pos_to_heap_map() and convolution used: %.1fs" % (time.time()-t1)
@@ -372,7 +395,8 @@ def read_np_parallel(label_file, RESIZE_SHAPE, num_thread=6):
             line=line.strip()
             if line.startswith("#") or line == "": 
                 continue # skip comments or empty lines
-            fname, lbl = line.split(' ')
+            tokens = line.split(' ')
+            fname, lbl = tokens[0], tokens[1]
             png_files.append(fname)
             labels.append(int(lbl))
             fids.append(frameid_from_filename(fname))
