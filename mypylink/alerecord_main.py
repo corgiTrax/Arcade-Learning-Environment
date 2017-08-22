@@ -267,7 +267,7 @@ def run_trials(rom_file, screen, resume_state_file):
 		print "Calling command edf2asc..."
 		if subprocess.call('edf2asc %s' % (scr_recorder.dir+".edf"), shell=True) != 0:
                         # TODO a path error that needs to be fixed
-			print "\nERROR: edf2asc returned non-zero exit status."
+			print "\nWarning: edf2asc returned non-zero exit status."
 
 	return 0
 		
