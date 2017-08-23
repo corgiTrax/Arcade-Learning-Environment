@@ -10,6 +10,7 @@ after 44 color_averaging is turned on
 31 RZ seaquest data ok random_seed:66
 33 RZ seaquest data ok random_seed:80
 35 RZ seaquest data ok random_seed:3
+
 36 RZ seaquest data ok random_seed:3
 37 RZ seaquest data ok random_seed:58
 38 RZ seaquest data ok random_seed:20
@@ -29,17 +30,103 @@ after 44 color_averaging is turned on
 
 ========================================
 42 RZ breakout data ok random_seed:144
-44 RZ breakout data 1.05 degree error random seed: 200
+44 RZ breakout data ok random seed: 200
 
 ========================================
 ========================================
 ========================================
 August 9 2017 "Final" version of data collection: leaderboard; save/load; composed action; new random seed; frame averaging; no sound;
 
+High score
 49 RZ seaquest data ok start fresh  saveto: 2312960 fps: 30 
 50 RZ seaquest data ok load 2312960 saveto: 2315865 fps: 30
 51 RZ seaquest data ok load 2315865 saveto: 2389912 fps: 20
 
-52 RZ mspacman data ok start fresh  saveto: 2394668 fps: 20
+========================================
+========================================
+15 minutes ones
+Seaquest (Done)
+54 RZ seaquest data ok start fresh saveto: seaquestRZ_2461867.npz fps: 20 
+62 RZ seaquest data ok start fresh saveto: seaquestRZ_2740959.npz fps: 20 
+67 RZ seaquest data ok start fresh saveto: seaquestRZ_2823456.npz fps: 20
+70 RZ seaquest data ok start fresh saveto: seaquestRZ_2898339.npz fps: 20 
+75 RZ seaquest data ok start fresh saveto: seaquestRZ_3006069.npz fps: 20
+83 RZ seaquest data ok start fresh saveto: seaquestRZ_3092464.npz fps: 20 
+86 RZ seaquest data ok start fresh saveto: seaquestRZ_3422765.npz fps: 20
+87 RZ seaquest data ok start fresh saveto: seaquestRZ_3435454.npz fps: 20 
 
-53 RZ centipede data ok start fresh saveto: centipedeRZ_2398139.npz fps:20 
+MsPacman
+52 RZ mspacman data ok start fresh saveto: 2394668 fps: 20
+61 RZ mspacman data ok start fresh saveto: ms_pacmanRZ_2737165.npz fps: 20
+64 RZ mspacman data ok start fresh saveto: ms_pacmanRZ_2809807.npz fps: 20
+71 RZ mspacman data ok start fresh saveto: ms_pacmanRZ_2901714.npz fps: 20  
+76 RZ mspacman data ok start fresh saveto: ms_pacmanRZ_3010789.npz fps: 20 
+89 RZ mspacman data ok start fresh saveto: ms_pacmanRZ_3438636.npz fps: 20
+-
+-
+
+Centipede
+53 RZ centipede data ok start fresh saveto: centipedeRZ_2398139.npz fps: 20 
+60 RZ centipede data ok start fresh saveto: centipedeRZ_2724114.npz fps: 20
+69 RZ centipede data ok start fresh saveto: centipedeRZ_2831643.npz fps: 20
+78 RZ centipede data ok start fresh saveto: centipedeRZ_3068875.npz fps: 20
+80 RZ centipede data ok start fresh saveto: centipedeRZ_3084132.npz fps: 20 
+88 RZ centipede data ok start fresh saveto: centipedeRZ_3437559.npz fps: 20
+-
+-
+
+Freeway (Done)
+55 RZ freeway data ok start fresh saveto: freewayRZ_2464601.npz fps: 20 
+59 RZ freeway data ok start fresh saveto: freewayRZ_2494228.npz fps: 20
+72 RZ freeway data ok start fresh saveto: freewayRZ_2903977.npz fps: 20 
+79 RZ freeway data ok start fresh saveto: freewayRZ_3074177.npz fps: 20
+
+Venture
+63 RZ venture data ok start fresh saveto: ventureRZ_2749316.npz fps: 30
+65 RZ venture data ok start fresh saveto: none fps: 30 
+-
+-
+-
+-
+-
+-
+
+Riverraid
+77 RZ riverraid data ok start fresh saveto: riverraidRZ_3012316.npz fps: 20
+81 RZ riverraid data ok start fresh saveto: riverraidRZ_3085721.npz fps: 20 
+90 RZ riverraid data ok start fresh saveto: riverraidRZ_3440381.npz fps: 20
+-
+-
+-
+-
+-
+
+Enduro
+82 RZ enduro data ok start fresh saveto: enduroRZ_3087678.npz fps: 20
+84 RZ enduro data ok start fresh saveto: enduroRZ_3095499.npz fps: 20
+85 RZ enduro data ok start fresh saveto: enduroRZ_3419688.npz fps: 20 
+-
+-
+-
+-
+-
+
+Breakout
+58 RZ breakout data ok start fresh saveto: breakoutRZ_2489381.npz fps: 20 
+73 RZ breakout data ok start fresh saveto: breakoutRZ_2923868.npz fps: 20 
+-
+-
+
+
+32/24/56
+
+
+
+74 RZ riverraid data ok start fresh saveto: riverraidRZ_3004815.npz fps: 20 questionable control actions (first time play) 
+
+68 RZ enduro data ok start fresh saveto: enduroRZ_2828245.npz fps: 20 questionable control actions (e.g., Up is no use)
+
+57 RZ space_invaders data ok start fresh saveto: space_invadersRZ_2486988.npz fps: 20
+
+========================================
+56 LX seaquest data ok start fresh saveto: seaquestLX_2471220.npz fps: 20 
