@@ -4,7 +4,6 @@ from input_utils import frameid_from_filename, ForkJoiner
 import matplotlib.pyplot as plt
 from replay import preprocess_and_sanity_check
 
-INPUT_SHAPE = (210,160) # height * width * channel This cannot read from file and needs to be provided here
 RESIZE_SHAPE = (84,84)
 
 if len(sys.argv) < 2:
@@ -35,13 +34,9 @@ def read_thread(PID):
         # ang = np.arctan2(fy, fx) + np.pi
         v = np.sqrt(fx*fx+fy*fy)
 
-        gray = np.zeros((INPUT_SHAPE[0], INPUT_SHAPE[1], 1), dtype = np.uint8)
-        gray[...,0] = cv2.normalize(v, None, 0, 255, cv2.NORM_MINMAX)
-
-        gray_out = cv2.resize(gray, (RESIZE_SHAPE[0], RESIZE_SHAPE[1]))
-        cur = cv2.resize(cur, (RESIZE_SHAPE[0], RESIZE_SHAPE[1]))
-
-        cv2.imwrite('../../dataset_gaze/optical_flow/' + png_files[i], gray_out)
+        gray = cv2.normalize(v, None, 0, 255, cv2.NORM_MINMAX)
+        gray = cv2.resize(gray, RESIZE_SHAPE)
+        cv2.imwrite('../../dataset_gaze/optical_flow/' + png_files[i], gray)
 
 print "Saving optical flow images for dataset %s" % dataset_name
 t1 = time.time()

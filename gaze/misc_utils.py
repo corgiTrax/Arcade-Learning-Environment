@@ -97,7 +97,7 @@ def my_kld(y_true, y_pred):
     y_pred = K.backend.clip(y_pred, K.backend.epsilon(), 1)
     return K.backend.sum(y_true * K.backend.log(y_true / y_pred), axis = [1,2,3])
 
-def computeNSS(y_true, y_pred):
+def NSS(y_true, y_pred):
     """
     This function is to calculate the NSS score of the predict saliency map.
 

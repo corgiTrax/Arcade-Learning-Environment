@@ -162,33 +162,33 @@ else:
     # opt=K.optimizers.Adam(lr=0.001, beta_1=0.9, beta_2=0.999, epsilon=1e-08)
     # opt=K.optimizers.SGD(lr=lr, momentum=0.0, decay=0.0, nesterov=False)
     
-    model.compile(loss=MU.my_kld, optimizer=opt, metrics=[MU.computeNSS])
+    model.compile(loss=MU.my_kld, optimizer=opt, metrics=[MU.NSS])
     
 #time.sleep(5)
-d=IU.DatasetWithHeatmap_PastKFrames_OpticalFlow(LABELS_FILE_TRAIN, LABELS_FILE_VAL, SHAPE, heatmap_shape, GAZE_POS_ASC_FILE, k, strides, 0)
-
+d=IU.DatasetWithHeatmap_PastKFrames(LABELS_FILE_TRAIN, LABELS_FILE_VAL, SHAPE, heatmap_shape, GAZE_POS_ASC_FILE, k, strides, 0)
+opf=IU.Dataset_OpticalFlow_PastKFrames(LABELS_FILE_TRAIN, LABELS_FILE_VAL, SHAPE, k, strides, 0)
 
 if not predict_mode: # if train
     expr.dump_src_code_and_model_def(sys.argv[0], model)
 
-    model.fit([d.train_imgs,d.train_flow], d.train_GHmap, BATCH_SIZE, epochs=num_epoch,
-        validation_data=([d.val_imgs,d.val_flow], d.val_GHmap),
-        shuffle=True,verbose=2,
+    model.fit([d.train_imgs, opf.train_flow], d.train_GHmap, BATCH_SIZE, epochs=num_epoch,
+        validation_data=([d.val_imgs, opf.val_flow], d.val_GHmap, d.val_weight),
+        shuffle=True, sample_weight = d.train_weight, verbose=2,
         callbacks=[K.callbacks.TensorBoard(log_dir=expr.dir),
             K.callbacks.ReduceLROnPlateau(monitor='val_loss', factor=0.5, patience=3, min_lr = 0.00001),
             MU.PrintLrCallback()])
 
     expr.save_weight_and_training_config_state(model)
 
-    score = model.evaluate([d.val_imgs,d.val_flow], d.val_GHmap, BATCH_SIZE, 0)
+    score = model.evaluate([d.val_imgs,opf.val_flow], d.val_GHmap, BATCH_SIZE, 0, sample_weight = d.val_weight)
     expr.printdebug("eval score:" + str(score))
 
 elif predict_mode: # if predict
-    model.load_weights(sys.argv[3])
+    model.load_weights(sys.argv[5])
 
     print "Evaluating model..."
-    train_score = model.evaluate(d.train_imgs, d.train_GHmap, BATCH_SIZE, 0)
-    val_score = model.evaluate(d.val_imgs, d.val_GHmap, BATCH_SIZE, 0)
+    train_score = model.evaluate([d.train_imgs,opf.train_flow], d.train_GHmap, BATCH_SIZE, 0, d.train_weight)
+    val_score = model.evaluate([d.val_imgs, opf.val_flow], d.val_GHmap, BATCH_SIZE, 0, d.val_weight)
     print "Train loss is:  " , train_score
     print "Val loss is: " , val_score
 

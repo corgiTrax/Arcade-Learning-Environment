@@ -148,7 +148,7 @@ if __name__ == "__main__":
         event_handler_func()
 
         # Load PNG file and draw the frame and the gaze-contingent window
-        img = cv2.imread("/scratch/cluster/zharucs/dataset_gaze/" + png_files[ds.cur_frame_id], cv2.IMREAD_GRAYSCALE)
+        img = cv2.imread("/scratch/cluster/zharucs/dataset_gaze/" + png_files[ds.cur_frame_id-1], cv2.IMREAD_GRAYSCALE)
         img = np.swapaxes(img, 0, 1)
         img = np.expand_dims(img, axis=2)
         img = np.repeat(img, 3, axis=2)
@@ -158,7 +158,7 @@ if __name__ == "__main__":
         pygame.Surface.convert_alpha(s)
         s.set_alpha(100)
         try:
-            heatmap = pygame.image.load(MODEL + "saliency/" + png_files[ds.cur_frame_id])
+            heatmap = pygame.image.load(MODEL + "saliency/" + png_files[ds.cur_frame_id-1])
             heatmap = pygame.transform.smoothscale(heatmap, (w,h))
         except pygame.error:
             heatmap = s
