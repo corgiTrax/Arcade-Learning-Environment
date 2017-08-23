@@ -62,7 +62,7 @@ MsPacman
 71 RZ mspacman data ok start fresh saveto: ms_pacmanRZ_2901714.npz fps: 20  
 76 RZ mspacman data ok start fresh saveto: ms_pacmanRZ_3010789.npz fps: 20 
 89 RZ mspacman data ok start fresh saveto: ms_pacmanRZ_3438636.npz fps: 20
--
+91 RZ mspacman data ok start fresh saveto: ms_pacmanRZ_3502739.npz fps: 20 
 -
 
 Centipede
@@ -72,7 +72,7 @@ Centipede
 78 RZ centipede data ok start fresh saveto: centipedeRZ_3068875.npz fps: 20
 80 RZ centipede data ok start fresh saveto: centipedeRZ_3084132.npz fps: 20 
 88 RZ centipede data ok start fresh saveto: centipedeRZ_3437559.npz fps: 20
--
+94 RZ centipede data ok start fresh saveto: centipedeRZ_3508931.npz fps: 20 
 -
 
 Freeway (Done)
@@ -84,7 +84,7 @@ Freeway (Done)
 Venture
 63 RZ venture data ok start fresh saveto: ventureRZ_2749316.npz fps: 30
 65 RZ venture data ok start fresh saveto: none fps: 30 
--
+93 RZ venture data ok start fresh saveto: ventureRZ_3507109.npz fps: 30 
 -
 -
 -
@@ -95,7 +95,7 @@ Riverraid
 77 RZ riverraid data ok start fresh saveto: riverraidRZ_3012316.npz fps: 20
 81 RZ riverraid data ok start fresh saveto: riverraidRZ_3085721.npz fps: 20 
 90 RZ riverraid data ok start fresh saveto: riverraidRZ_3440381.npz fps: 20
--
+95 RZ riverraid data ok start fresh saveto: riverraidRZ_3522292.npz fps: 20
 -
 -
 -
@@ -114,13 +114,14 @@ Enduro
 Breakout
 58 RZ breakout data ok start fresh saveto: breakoutRZ_2489381.npz fps: 20 
 73 RZ breakout data ok start fresh saveto: breakoutRZ_2923868.npz fps: 20 
+92 RZ breakout data ok start fresh saveto: breakoutRZ_3504740.npz fps: 20
 -
--
 
 
-32/24/56
+39/17/56
 
 
+96 RZ centipede data 1.27 error start fresh saveto: centipedeRZ_3528023.npz fps: 20 
 
 74 RZ riverraid data ok start fresh saveto: riverraidRZ_3004815.npz fps: 20 questionable control actions (first time play) 
 
