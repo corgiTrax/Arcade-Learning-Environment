@@ -166,8 +166,9 @@ def read_gaze_data_asc_file(fname):
         match_scr_msg = scr_msg.match(line)
         if match_scr_msg: # when a new id is encountered
             # take care of the last frame's gaze
+            # give (-1,-1) for bad gaze. in real gaze will never be minus
             if bad_gaze:
-                frameid2pos[frameid] = []
+                frameid2pos[frameid] = [(-1,-1)]
                 bad_gaze = False
 
             timestamp, frameid, UTID = match_scr_msg.group(1), match_scr_msg.group(2), match_scr_msg.group(3)
@@ -185,7 +186,8 @@ def read_gaze_data_asc_file(fname):
                 print "Warning: there are more than 1 action for frame id %s. Not supposed to happen." % str(frameid)
             continue
 
-    frameid2pos[frameid] = [] # throw out gazes after the last frame, because the game has ended but eye tracker keeps recording
+    frameid2pos[frameid] = [(-1,-1)] # throw out gazes after the last frame, because the game has ended but eye tracker keeps recording
+    frameid2action[frameid] = -1 # set the last no-action frame's action to -1
 
     if len(frameid2pos) < 1000: # simple sanity check
         print "Warning: did you provide the correct ASC file? Because the data for only %d frames is detected" % (len(frameid2pos))
@@ -194,8 +196,7 @@ def read_gaze_data_asc_file(fname):
     few_cnt = 0
     for v in frameid2pos.values():
         if len(v) < 10: few_cnt += 1
-    print "Warning:  %d frames have less than 10 gaze samples. (%.1f%%, total frame: %d)" % \
-        (few_cnt, 100.0*few_cnt/len(frameid2pos), len(frameid2pos))
+    print "Warning:  %d frames have less than 10 gaze samples. (%.1f%%, total frame: %d)" % (few_cnt, 100.0*few_cnt/len(frameid2pos), len(frameid2pos))
     return frameid2pos, frameid2action
 
 def convert_gaze_pos_to_heap_map(gaze_pos_list, out):
@@ -221,15 +222,15 @@ def transform_to_past_K_frames(original, K, stride, before):
     return newdat_np
 
 class Dataset(object):
-  train_imgs, train_lbl, train_gaze, train_fid, train_size = None, None, None, None, None
-  val_imgs, val_lbl, val_gaze, val_fid, val_size = None, None, None, None, None
+  train_imgs, train_lbl, train_gaze, train_fid, train_size, train_weight = None, None, None, None, None, None
+  val_imgs, val_lbl, val_gaze, val_fid, val_size, val_weight = None, None, None, None, None, None
   def __init__(self, LABELS_FILE_TRAIN, LABELS_FILE_VAL, RESIZE_SHAPE):
     t1=time.time()
     print "Reading all training data into memory..."
-    self.train_imgs, self.train_lbl, self.train_gaze, self.train_fid = read_np_parallel(LABELS_FILE_TRAIN, RESIZE_SHAPE)
+    self.train_imgs, self.train_lbl, self.train_gaze, self.train_fid, self.train_weight = read_np_parallel(LABELS_FILE_TRAIN, RESIZE_SHAPE)
     self.train_size = len(self.train_lbl)
     print "Reading all validation data into memory..."
-    self.val_imgs, self.val_lbl, self.val_gaze, self.val_fid = read_np_parallel(LABELS_FILE_VAL, RESIZE_SHAPE)
+    self.val_imgs, self.val_lbl, self.val_gaze, self.val_fid, self.val_weight = read_np_parallel(LABELS_FILE_VAL, RESIZE_SHAPE)
     self.val_size = len(self.val_lbl)
     print "Time spent to read train/val data: %.1fs" % (time.time()-t1)
 
@@ -268,6 +269,9 @@ class Dataset_PastKFrames(Dataset):
 
     self.train_fid = self.train_fid[-self.train_imgs.shape[0]:]
     self.val_fid = self.val_fid[-self.val_imgs.shape[0]:]
+
+    self.train_weight = self.train_weight[-self.train_imgs.shape[0]:]
+    self.val_weight = self.val_weight[-self.val_imgs.shape[0]:]
 
     print "Time spent to transform train/val data to past K frames: %.1fs" % (time.time()-t1)
 
@@ -344,55 +348,9 @@ class DatasetWithHeatmap(Dataset):
             self.val_GHmap[i] /= SUM
     print "Done. convert_gaze_pos_to_heap_map() and convolution used: %.1fs" % (time.time()-t1)
 
-class DatasetWithHeatmap_OpticalFlow(DatasetWithHeatmap):
-    train_flow, val_flow = None, None
-
-    def __init__(self, LABELS_FILE_TRAIN, LABELS_FILE_VAL, RESIZE_SHAPE, HEATMAP_SHAPE, GAZE_POS_ASC_FILE):
-        super(DatasetWithHeatmap_OpticalFlow, self).__init__(LABELS_FILE_TRAIN, LABELS_FILE_VAL, RESIZE_SHAPE, HEATMAP_SHAPE, GAZE_POS_ASC_FILE)
-        
-        t1 = time.time()
-        print "Reading train optical flow images into memory..."
-        self.train_flow = read_optical_flow(LABELS_FILE_TRAIN, RESIZE_SHAPE)
-        print "Reading val optical flow images into memory..."
-        self.val_flow = read_optical_flow(LABELS_FILE_VAL, RESIZE_SHAPE)
-        print "Time spent to read train/val optical flow data: %.1fs" % (time.time()-t1)
-
-
-def read_optical_flow(label_file, RESIZE_SHAPE, num_thread=6):
-    png_files = []
-    with open(label_file,'r') as f:
-        for line in f:
-            line=line.strip()
-            if line.startswith("#") or line == "": 
-                continue # skip comments or empty lines
-            fname, lbl, x, y = line.split(' ')
-            png_files.append(fname)
-
-    N = len(png_files)
-    imgs = np.empty((N,RESIZE_SHAPE[0],RESIZE_SHAPE[1],1), dtype=np.float32)
-
-    def read_thread(PID):
-        d = os.path.dirname(label_file)
-        for i in range(PID, N, num_thread):
-            try:
-                img = misc.imread(os.path.join(d+'/optical_flow', png_files[i]))
-            except IOError:
-                img = np.zeros((RESIZE_SHAPE[0],RESIZE_SHAPE[1]), dtype=np.float32)
-                print "Warning: %s has no optical flow image. Set to zero." % png_files[i]
-            img = np.expand_dims(img, axis=2)
-            imgs[i,:] = img
-
-    o=ForkJoiner(num_thread=num_thread, target=read_thread)
-    o.join()
-
-    return imgs
-
-class DatasetWithHeatmap_PastKFrames(Dataset):
-  frameid2pos, frameid2action_notused = None, None
-  train_GHmap, val_GHmap = None, None # GHmap means gaze heap map
-
+class DatasetWithHeatmap_PastKFrames(DatasetWithHeatmap):
   def __init__(self, LABELS_FILE_TRAIN, LABELS_FILE_VAL, RESIZE_SHAPE, HEATMAP_SHAPE, GAZE_POS_ASC_FILE, K, stride=1, before=0):
-    super(DatasetWithHeatmap_PastKFrames, self).__init__(LABELS_FILE_TRAIN, LABELS_FILE_VAL, RESIZE_SHAPE)
+    super(DatasetWithHeatmap_PastKFrames, self).__init__(LABELS_FILE_TRAIN, LABELS_FILE_VAL, RESIZE_SHAPE, HEATMAP_SHAPE, GAZE_POS_ASC_FILE)
     self.train_imgs_bak, self.val_imgs_bak = self.train_imgs, self.val_imgs
 
     t1=time.time()
@@ -416,67 +374,76 @@ class DatasetWithHeatmap_PastKFrames(Dataset):
     self.train_fid = self.train_fid[-self.train_imgs.shape[0]:]
     self.val_fid = self.val_fid[-self.val_imgs.shape[0]:]
 
+    self.train_GHmap = self.train_GHmap[-self.train_imgs.shape[0]:]
+    self.val_GHmap = self.val_GHmap[-self.val_imgs.shape[0]:]
+
+    self.train_weight = self.train_weight[-self.train_imgs.shape[0]:]
+    self.val_weight = self.val_weight[-self.val_imgs.shape[0]:]
+
     print "Time spent to transform train/val data to past K frames: %.1fs" % (time.time()-t1)
     
-    print "Reading gaze data ASC file, and converting per-frame gaze positions to heat map..."
-    self.frameid2pos, self.frameid2action_notused = read_gaze_data_asc_file(GAZE_POS_ASC_FILE)
-    self.train_GHmap = np.zeros([self.train_size, HEATMAP_SHAPE, HEATMAP_SHAPE, 1], dtype=np.float32)
-    self.val_GHmap = np.zeros([self.val_size, HEATMAP_SHAPE, HEATMAP_SHAPE, 1], dtype=np.float32)
-
-    # Prepare train val gaze data
-    print "Running convert_gaze_pos_to_heap_map() and convolution..."
-    # Assign a heap map for each frame in train and val dataset
-    t1 = time.time()
-    bad_count, tot_count = 0, 0
-    for (i,fid) in enumerate(self.train_fid):
-        tot_count += len(self.frameid2pos[fid])
-        bad_count += convert_gaze_pos_to_heap_map(self.frameid2pos[fid], out=self.train_GHmap[i])
-    for (i,fid) in enumerate(self.val_fid):
-        tot_count += len(self.frameid2pos[fid])
-        bad_count += convert_gaze_pos_to_heap_map(self.frameid2pos[fid], out=self.val_GHmap[i])
-    print "Bad gaze (x,y) sample: %d (%.2f%%, total gaze sample: %d)" % (bad_count, 100*float(bad_count)/tot_count, tot_count)    
-    print "'Bad' means the gaze position is outside the 160*210 screen"
-
-    sigmaH = 28.50 * HEATMAP_SHAPE / V.SCR_H
-    sigmaW = 44.58 * HEATMAP_SHAPE / V.SCR_W
-    self.train_GHmap = preprocess_gaze_heatmap(self.train_GHmap, sigmaH, sigmaW, 0)
-    self.val_GHmap = preprocess_gaze_heatmap(self.val_GHmap, sigmaH, sigmaW, 0)
-
-    print "Normalizing the train/val heat map..."
-    for i in range(len(self.train_GHmap)):
-        SUM = self.train_GHmap[i].sum()
-        if SUM != 0:
-            self.train_GHmap[i] /= SUM
-
-    for i in range(len(self.val_GHmap)):
-        SUM = self.val_GHmap[i].sum()
-        if SUM != 0:
-            self.val_GHmap[i] /= SUM
-    print "Done. convert_gaze_pos_to_heap_map() and convolution used: %.1fs" % (time.time()-t1)
-
-class DatasetWithHeatmap_PastKFrames_OpticalFlow(DatasetWithHeatmap_PastKFrames):
+    
+class Dataset_OpticalFlow(object):
     train_flow, val_flow = None, None
 
-    def __init__(self, LABELS_FILE_TRAIN, LABELS_FILE_VAL, RESIZE_SHAPE, HEATMAP_SHAPE, GAZE_POS_ASC_FILE, K, stride=1, before=0):
-        super(DatasetWithHeatmap_PastKFrames_OpticalFlow, self).__init__(LABELS_FILE_TRAIN, LABELS_FILE_VAL, RESIZE_SHAPE, HEATMAP_SHAPE, GAZE_POS_ASC_FILE, K, stride, before)
-        
+    def __init__(self, LABELS_FILE_TRAIN, LABELS_FILE_VAL, RESIZE_SHAPE):
         t1 = time.time()
         print "Reading train optical flow images into memory..."
         self.train_flow = read_optical_flow(LABELS_FILE_TRAIN, RESIZE_SHAPE)
         print "Reading val optical flow images into memory..."
         self.val_flow = read_optical_flow(LABELS_FILE_VAL, RESIZE_SHAPE)
         print "Time spent to read train/val optical flow data: %.1fs" % (time.time()-t1)
-    
-        # With only current optical flow image
-        #self.train_flow = self.train_flow[-self.train_imgs.shape[0]:]
-        #self.val_flow = self.val_flow[-self.val_imgs.shape[0]:]
+        
+        print "Performing standardization (x-mean)..."
+        self.standardize_opticalflow()
+        print "Done."
+
+    def standardize_opticalflow(self):
+        mean = np.mean(self.train_flow, axis=(0,1,2))
+        self.train_flow -= mean # done in-place --- "x-=mean" is faster than "x=x-mean"
+        self.val_flow -= mean
+
+
+class Dataset_OpticalFlow_PastKFrames(Dataset_OpticalFlow):
+    def __init__(self, LABELS_FILE_TRAIN, LABELS_FILE_VAL, RESIZE_SHAPE, K, stride=1, before=0):
+        super(Dataset_OpticalFlow_PastKFrames, self).__init__(LABELS_FILE_TRAIN, LABELS_FILE_VAL, RESIZE_SHAPE)
 
         # With past k optical flow images
-        t2 = time.time()
+        t1 = time.time()
         print "Transforming optical flow images to past k frames..."
         self.train_flow = transform_to_past_K_frames(self.train_flow, K, stride, before)
         self.val_flow = transform_to_past_K_frames(self.val_flow, K, stride, before)
-        print "Time spent to transform tran/val optical flow images to past k frames: %.1fs" % (time.time()-t2)
+        print "Time spent to transform tran/val optical flow images to past k frames: %.1fs" % (time.time()-t1)
+    
+class Dataset_BottomUp(object):
+    train_bottom, val_bottom = None, None
+
+    def __init__(self, LABELS_FILE_TRAIN, LABELS_FILE_VAL, RESIZE_SHAPE):
+        t1 = time.time()
+        print "Reading train bottom up images into memory..."
+        self.train_bottom = read_bottom_up(LABELS_FILE_TRAIN, RESIZE_SHAPE)
+        print "Reading val bottom up images into memory..."
+        self.val_bottom = read_bottom_up(LABELS_FILE_VAL, RESIZE_SHAPE)
+        print "Time spent to read train/val bottom up data: %.1fs" % (time.time()-t1)
+        
+        print "Performing standardization (x-mean)..."
+        self.standardize_bottomup()
+        print "Done."
+
+    def standardize_bottomup(self):
+        mean = np.mean(self.train_bottom, axis=(0,1,2))
+        self.train_bottom -= mean # done in-place --- "x-=mean" is faster than "x=x-mean"
+        self.val_bottom -= mean
+
+class Dataset_BottomUp_PastKFrames(Dataset_BottomUp):
+    def __init__(self, LABELS_FILE_TRAIN, LABELS_FILE_VAL, RESIZE_SHAPE, K, stride=1, before=0):
+        super(Dataset_BottomUp_PastKFrames, self).__init__(LABELS_FILE_TRAIN, LABELS_FILE_VAL, RESIZE_SHAPE)
+    
+        t1 = time.time()
+        print "Transforming bottom up images to past k frames..."
+        self.train_bottom = transform_to_past_K_frames(self.train_bottom, K, stride, before)
+        self.val_bottom = transform_to_past_K_frames(self.val_bottom, K, stride, before)
+        print "Time spent to transform tran/val bottom up images to past k frames: %.1fs" % (time.time()-t1)
 
 def read_np_parallel(label_file, RESIZE_SHAPE, num_thread=6):
     """
@@ -488,20 +455,23 @@ def read_np_parallel(label_file, RESIZE_SHAPE, num_thread=6):
     labels, fids = [], []
     png_files = []
     gaze = []
+    weight = []
     with open(label_file,'r') as f:
         for line in f:
             line=line.strip()
             if line.startswith("#") or line == "": 
                 continue # skip comments or empty lines
-            fname, lbl, x, y = line.split(' ')
+            fname, lbl, x, y, w = line.split(' ')
             png_files.append(fname)
             labels.append(int(lbl))
             fids.append(frameid_from_filename(fname))
             gaze.append((float(x)*RESIZE_SHAPE[1]/V.SCR_W, float(y)*RESIZE_SHAPE[0]/V.SCR_H))
+            weight.append(int(w))
     N = len(labels)
     imgs = np.empty((N,RESIZE_SHAPE[0],RESIZE_SHAPE[1],1), dtype=np.float32)
     labels = np.asarray(labels, dtype=np.int32)
     gaze = np.asarray(gaze, dtype=np.float32)
+    weight = np.asarray(weight, dtype=np.int32)
 
     def read_thread(PID):
         d = os.path.dirname(label_file)
@@ -509,12 +479,72 @@ def read_np_parallel(label_file, RESIZE_SHAPE, num_thread=6):
             img = misc.imread(os.path.join(d, png_files[i]), 'Y') # 'Y': grayscale  
             img = misc.imresize(img, [RESIZE_SHAPE[0],RESIZE_SHAPE[1]], interp='bilinear')
             img = np.expand_dims(img, axis=2)
-            img = img.astype(np.float32) / 255.0
+            img = img.astype(np.float32) / 255.0 # normalize image to [0,1]
             imgs[i,:] = img
 
     o=ForkJoiner(num_thread=num_thread, target=read_thread)
     o.join()
-    return imgs, labels, gaze, fids
+    return imgs, labels, gaze, fids, weight
+
+def read_optical_flow(label_file, RESIZE_SHAPE, num_thread=6):
+    png_files = []
+    with open(label_file,'r') as f:
+        for line in f:
+            line=line.strip()
+            if line.startswith("#") or line == "": 
+                continue # skip comments or empty lines
+            fname, lbl, x, y, _ = line.split(' ')
+            png_files.append(fname)
+
+    N = len(png_files)
+    imgs = np.empty((N,RESIZE_SHAPE[0],RESIZE_SHAPE[1],1), dtype=np.float32)
+
+    def read_thread(PID):
+        d = os.path.dirname(label_file)
+        for i in range(PID, N, num_thread):
+            try:
+                img = misc.imread(os.path.join(d+'/optical_flow', png_files[i]))
+            except IOError:
+                img = np.zeros((RESIZE_SHAPE[0],RESIZE_SHAPE[1]), dtype=np.float32)
+                print "Warning: %s has no optical flow image. Set to zero." % png_files[i]
+            img = np.expand_dims(img, axis=2)
+            img = img.astype(np.float32) / 255.0 # normalize image to [0,1]            
+            imgs[i,:] = img
+
+    o=ForkJoiner(num_thread=num_thread, target=read_thread)
+    o.join()
+
+    return imgs
+
+def read_bottom_up(label_file, RESIZE_SHAPE, num_thread=6):
+    png_files = []
+    with open(label_file,'r') as f:
+        for line in f:
+            line=line.strip()
+            if line.startswith("#") or line == "": 
+                continue # skip comments or empty lines
+            fname, lbl, x, y, _ = line.split(' ')
+            png_files.append(fname)
+
+    N = len(png_files)
+    imgs = np.empty((N,RESIZE_SHAPE[0],RESIZE_SHAPE[1],1), dtype=np.float32)
+
+    def read_thread(PID):
+        d = os.path.dirname(label_file)
+        for i in range(PID, N, num_thread):
+            try:
+                img = misc.imread(os.path.join(d+'/bottom_up', png_files[i]))
+            except IOError:
+                img = np.zeros((RESIZE_SHAPE[0],RESIZE_SHAPE[1]), dtype=np.float32)
+                print "Warning: %s has no bottom up image. Set to zero." % png_files[i]
+            img = np.expand_dims(img, axis=2)
+            img = img.astype(np.float32) / 255.0 # normalize image to [0,1]            
+            imgs[i,:] = img
+
+    o=ForkJoiner(num_thread=num_thread, target=read_thread)
+    o.join()
+
+    return imgs
 
 def read_result_data(result_file, RESIZE_SHAPE):
     """
@@ -748,86 +778,6 @@ class DatasetWithGazeWindow(Dataset):
             frameid2gazetuple[frameid] = gaze_for_cur_frame
 
         return frameid2GH, frameid2gazetuple
-
-
-def computeNSS(saliency_map, gt_interest_points):
-    if len(gt_interest_points) == 0:
-        print "Warning: No gaze data for this frame!"
-        return 2.0
-
-    stddev = np.std(saliency_map)
-    print(stddev)
-    if (stddev > 0):
-        sal = (saliency_map - np.mean(saliency_map)) / stddev
-    else:
-        sal = saliency_map
-
-    score = np.mean([ sal[y][x] for x,y in gt_interest_points ])
-    print 'NSS', score
-    return score
-
-def computeCC(saliency_map, gt_saliency_map):
-    if len(gt_saliency_map) == 0:
-        return 1.0
-    gt_sal = (gt_saliency_map - np.mean(gt_saliency_map)) / np.std(gt_saliency_map)
-    stddev = np.std(saliency_map)
-    if (stddev > 0):
-        sal = (saliency_map - np.mean(saliency_map)) / stddev
-        score = np.corrcoef(gt_sal, sal)[0][1]
-    else:
-        sal = saliency_map
-        score = np.cov(gt_sal, sal)[0][1]
-    print 'CC', score
-    return score
-
-def computeROC(saliency_map, gt_interest_points, num_thresholds = 20):
-    # https://en.wikipedia.org/wiki/Receiver_operating_characteristic
-    # https://github.com/cvzoya/saliency/blob/master/code_forMetrics/AUC_Borji.m
-    # thresholds = np.arange(0., 1., 0.05)[::-1]
-
-    if len(gt_interest_points) == 0:
-        print "Warning: No gaze data for this frame!"
-        fpr_vs_tpr = [np.zeros(num_thresholds+2)+1, np.zeros(num_thresholds+2)+1]
-        cur_auc = 1
-        return cur_auc, fpr_vs_tpr
-
-    sal_at_interest_points = saliency_map[gt_interest_points]
-    num_points = len(saliency_map)
-    num_fixations = len(sal_at_interest_points)
-    num_rand_splits = 100
-
-    r = np.random.randint(1, num_points, size=[num_fixations, num_rand_splits]);
-    randfix = saliency_map[r]; # sal map values at random locations
-
-    # calculate AUC per random split
-    fpr_vs_tpr = [np.zeros(num_thresholds+2), np.zeros(num_thresholds+2)]
-    cur_auc = 0
-
-    for s in range(num_rand_splits):
-        curfix = randfix[:, s]
-        if len(curfix)>0 and len(sal_at_interest_points)>0:
-            thresholds = np.linspace(0, max(max(curfix), max(sal_at_interest_points)), num_thresholds)
-        else:
-            thresholds = np.linspace(0, 1, num_thresholds)
-        fpr = np.zeros(len(thresholds)+2)
-        tpr = np.zeros(len(thresholds)+2)
-        fpr[0]=0
-        fpr[:-1] = 1 
-        tpr[0]=0
-        tpr[:-1] = 1
-        for i in range (len(thresholds)):
-            thresh = thresholds[i]
-            fpr[i+1] = np.count_nonzero((curfix >= thresh))*1.0/num_fixations
-            tpr[i+1] = np.count_nonzero((sal_at_interest_points >= thresh))*1.0/num_fixations
-        fpr_vs_tpr[0] += fpr
-        fpr_vs_tpr[1] += tpr
-        cur_auc += -np.trapz(tpr, fpr)
-    fpr_vs_tpr = [x/num_rand_splits for x in fpr_vs_tpr]
-    cur_auc /= num_rand_splits
-    return cur_auc, fpr_vs_tpr
-
-
-
 
 
 

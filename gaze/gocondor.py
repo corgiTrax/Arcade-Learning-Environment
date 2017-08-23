@@ -7,7 +7,7 @@ def multi_experiment():
 #        l.append(' '.join([dp,lr]))
     for dp in ["0 0.3","0 0.4","0 0.5"]: 
         for k in ["2","4","8"]:
-            for s in ["1","2"]:
+            for s in ["1"]:
                 l.append(' '.join([dp,k,s]))
     return l
 
