@@ -38,9 +38,27 @@ after 44 color_averaging is turned on
 August 9 2017 "Final" version of data collection: leaderboard; save/load; composed action; new random seed; frame averaging; no sound;
 
 High score
+Seaquest
 49 RZ seaquest data ok start fresh  saveto: 2312960 fps: 30 
 50 RZ seaquest data ok load 2312960 saveto: 2315865 fps: 30
 51 RZ seaquest data ok load 2315865 saveto: 2389912 fps: 20
+
+MsPacman
+
+
+Centipede
+
+
+Freeway
+--find one with highest score
+
+Venture
+
+Riverraid
+
+Enduro 
+
+Breakout
 
 ========================================
 ========================================
@@ -65,7 +83,7 @@ MsPacman
 91 RZ mspacman data ok start fresh saveto: ms_pacmanRZ_3502739.npz fps: 20 
 -
 
-Centipede
+Centipede (done)
 53 RZ centipede data ok start fresh saveto: centipedeRZ_2398139.npz fps: 20 
 60 RZ centipede data ok start fresh saveto: centipedeRZ_2724114.npz fps: 20
 69 RZ centipede data ok start fresh saveto: centipedeRZ_2831643.npz fps: 20
@@ -73,7 +91,7 @@ Centipede
 80 RZ centipede data ok start fresh saveto: centipedeRZ_3084132.npz fps: 20 
 88 RZ centipede data ok start fresh saveto: centipedeRZ_3437559.npz fps: 20
 94 RZ centipede data ok start fresh saveto: centipedeRZ_3508931.npz fps: 20 
--
+97 RZ centipede data ok start fresh saveto: centipedeRZ_3586578.npz fps: 20
 
 Freeway (Done)
 55 RZ freeway data ok start fresh saveto: freewayRZ_2464601.npz fps: 20 
@@ -85,7 +103,7 @@ Venture
 63 RZ venture data ok start fresh saveto: ventureRZ_2749316.npz fps: 30
 65 RZ venture data ok start fresh saveto: none fps: 30 
 93 RZ venture data ok start fresh saveto: ventureRZ_3507109.npz fps: 30 
--
+100 RZ venture data ok start fresh saveto: ventureRZ_3592991.npz fps: 30
 -
 -
 -
@@ -96,7 +114,7 @@ Riverraid
 81 RZ riverraid data ok start fresh saveto: riverraidRZ_3085721.npz fps: 20 
 90 RZ riverraid data ok start fresh saveto: riverraidRZ_3440381.npz fps: 20
 95 RZ riverraid data ok start fresh saveto: riverraidRZ_3522292.npz fps: 20
--
+99 RZ riverraid data ok start fresh saveto: riverraidRZ_3590056.npz fps: 20 
 -
 -
 -
@@ -105,7 +123,7 @@ Enduro
 82 RZ enduro data ok start fresh saveto: enduroRZ_3087678.npz fps: 20
 84 RZ enduro data ok start fresh saveto: enduroRZ_3095499.npz fps: 20
 85 RZ enduro data ok start fresh saveto: enduroRZ_3419688.npz fps: 20 
--
+98 RZ enduro data ok start fresh saveto: enduroRZ_3588030.npz fps: 20 
 -
 -
 -
@@ -118,7 +136,7 @@ Breakout
 -
 
 
-39/17/56
+41/15/56
 
 
 96 RZ centipede data 1.27 error start fresh saveto: centipedeRZ_3528023.npz fps: 20 
