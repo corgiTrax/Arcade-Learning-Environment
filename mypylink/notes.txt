@@ -62,8 +62,8 @@ Breakout
 
 ========================================
 ========================================
-15 minutes ones
-Seaquest (Done)
+15 minutes ones (52-
+Seaquest (done)
 54 RZ seaquest data ok start fresh saveto: seaquestRZ_2461867.npz fps: 20 
 62 RZ seaquest data ok start fresh saveto: seaquestRZ_2740959.npz fps: 20 
 67 RZ seaquest data ok start fresh saveto: seaquestRZ_2823456.npz fps: 20
@@ -73,7 +73,7 @@ Seaquest (Done)
 86 RZ seaquest data ok start fresh saveto: seaquestRZ_3422765.npz fps: 20
 87 RZ seaquest data ok start fresh saveto: seaquestRZ_3435454.npz fps: 20 
 
-MsPacman
+MsPacman (done)
 52 RZ mspacman data ok start fresh saveto: 2394668 fps: 20
 61 RZ mspacman data ok start fresh saveto: ms_pacmanRZ_2737165.npz fps: 20
 64 RZ mspacman data ok start fresh saveto: ms_pacmanRZ_2809807.npz fps: 20
@@ -81,7 +81,7 @@ MsPacman
 76 RZ mspacman data ok start fresh saveto: ms_pacmanRZ_3010789.npz fps: 20 
 89 RZ mspacman data ok start fresh saveto: ms_pacmanRZ_3438636.npz fps: 20
 91 RZ mspacman data ok start fresh saveto: ms_pacmanRZ_3502739.npz fps: 20 
--
+105 RZ mspacman data ok start fresh saveto: ms_pacmanRZ_3614646.npz fps: 20
 
 Centipede (done)
 53 RZ centipede data ok start fresh saveto: centipedeRZ_2398139.npz fps: 20 
@@ -93,7 +93,7 @@ Centipede (done)
 94 RZ centipede data ok start fresh saveto: centipedeRZ_3508931.npz fps: 20 
 97 RZ centipede data ok start fresh saveto: centipedeRZ_3586578.npz fps: 20
 
-Freeway (Done)
+Freeway (done)
 55 RZ freeway data ok start fresh saveto: freewayRZ_2464601.npz fps: 20 
 59 RZ freeway data ok start fresh saveto: freewayRZ_2494228.npz fps: 20
 72 RZ freeway data ok start fresh saveto: freewayRZ_2903977.npz fps: 20 
@@ -104,7 +104,7 @@ Venture
 65 RZ venture data ok start fresh saveto: none fps: 30 
 93 RZ venture data ok start fresh saveto: ventureRZ_3507109.npz fps: 30 
 100 RZ venture data ok start fresh saveto: ventureRZ_3592991.npz fps: 30
--
+101 RZ venture data ok start fresh saveto: ventureRZ_3603032.npz fps: 30
 -
 -
 -
@@ -115,8 +115,8 @@ Riverraid
 90 RZ riverraid data ok start fresh saveto: riverraidRZ_3440381.npz fps: 20
 95 RZ riverraid data ok start fresh saveto: riverraidRZ_3522292.npz fps: 20
 99 RZ riverraid data ok start fresh saveto: riverraidRZ_3590056.npz fps: 20 
--
--
+102 RZ riverraid data ok start fresh saveto: riverraidRZ_3605715.npz fps: 20 
+104 RZ riverraid data ok start fresh saveto: riverraidRZ_3610878.npz fps: 20
 -
 
 Enduro
@@ -124,7 +124,7 @@ Enduro
 84 RZ enduro data ok start fresh saveto: enduroRZ_3095499.npz fps: 20
 85 RZ enduro data ok start fresh saveto: enduroRZ_3419688.npz fps: 20 
 98 RZ enduro data ok start fresh saveto: enduroRZ_3588030.npz fps: 20 
--
+103 RZ enduro data ok start fresh saveto: enduroRZ_3608911.npz fps: 20 
 -
 -
 -
@@ -136,7 +136,7 @@ Breakout
 -
 
 
-41/15/56
+48/08/56
 
 
 96 RZ centipede data 1.27 error start fresh saveto: centipedeRZ_3528023.npz fps: 20 
