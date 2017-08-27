@@ -39,16 +39,14 @@ class ExprCreaterAndResumer:
         os.mkdir(self.dir)
         self.logfile = open(self.dir +"/log.txt", 'a', 0) # no buffer
 
-    def load_weight_and_training_config_and_state(self):
+    def load_weight_and_training_config_and_state(self, model_file_path):
         """
             Call keras.models.load_model(fname) to load the arch, weight, 
             training states and config (loss, optimizer) of the model.
             Note that model.load_weights() and keras.models.load_model() are different.
             model.load_weights() just loads weight, and is not used here.
         """
-        if self.dir_lasttime is None: raise ValueError("Directory which stores the model is not found.")
-        fname = self.dir_lasttime + '/model.hdf5'
-        return K.models.load_model(fname)
+        return K.models.load_model(model_file_path)
 
     def dump_src_code_and_model_def(self, fname, kerasmodel):
         fname = os.path.abspath(fname) # if already absolute path, it does nothing
@@ -79,12 +77,16 @@ def keras_model_serialization_bug_fix(): # stupid keras
     from keras.utils.generic_utils import get_custom_objects
     f=lambda obj_to_serialize: \
         get_custom_objects().update({obj_to_serialize.__name__: obj_to_serialize})
-    f(loss_func)
-    f(acc_)
-    f(top2acc_)
+    f(loss_func); f(acc_); f(top2acc_)
+    f(my_kld); f(computeNSS); f(softmax)
+    f(loss_func_nonsparse)
+    f(acc_nonsparse_wrong)
 
 def loss_func(target, pred): 
     return K.backend.sparse_categorical_crossentropy(output=pred, target=target, from_logits=True)
+
+def loss_func_nonsparse(target, pred): 
+    return K.backend.categorical_crossentropy(output=pred, target=target, from_logits=True)
 
 def acc_(y_true, y_pred): # don't rename it to acc or accuracy (otherwise stupid keras will replace this func with its own accuracy function when serializing )
   return tf.reduce_mean(
@@ -92,11 +94,44 @@ def acc_(y_true, y_pred): # don't rename it to acc or accuracy (otherwise stupid
       targets=tf.squeeze(tf.cast(y_true,tf.int32)), 
       predictions=y_pred,k=1),tf.float32))
 
+def acc_nonsparse_wrong(y_true, y_pred):  
+  return tf.reduce_mean(
+    tf.cast(tf.nn.in_top_k(
+      targets=tf.squeeze(tf.cast(tf.argmax(y_true, axis=1),tf.int32)), 
+      predictions=y_pred,k=1),tf.float32))
+
 def top2acc_(y_true, y_pred):
   return tf.reduce_mean(
     tf.cast(tf.nn.in_top_k(
       targets=tf.squeeze(tf.cast(y_true,tf.int32)),
       predictions=y_pred,k=2),tf.float32))
+  
+def softmax(x):
+    return K.activations.softmax(x, axis=[1,2,3])
+
+def my_kld(y_true, y_pred):
+    """
+    Fixes keras bug. It's a loss function that computes KL-divergence.
+    """
+    y_true = K.backend.clip(y_true, K.backend.epsilon(), 1)
+    y_pred = K.backend.clip(y_pred, K.backend.epsilon(), 1)
+    return K.backend.sum(y_true * K.backend.log(y_true / y_pred), axis = [1,2,3])
+
+def computeNSS(y_true, y_pred):
+    """
+    This function is a Keras metric that computes the NSS score of the predict saliency map.
+    """
+    
+    stddev = tf.contrib.keras.backend.std(y_pred, axis = [1,2,3])
+    stddev = tf.expand_dims(stddev, 1)
+    stddev = tf.expand_dims(stddev, 2)
+    stddev = tf.expand_dims(stddev, 3)
+    mean = tf.reduce_mean(y_pred, axis = [1,2,3], keep_dims=True)
+    sal = (y_pred - mean) / stddev
+    score = tf.multiply(y_true, sal)
+    score = tf.contrib.keras.backend.sum(score, axis = [1,2,3])
+    
+    return score
 
 class PrintLrCallback(K.callbacks.Callback):
     def on_epoch_end(self, epoch, logs={}):
