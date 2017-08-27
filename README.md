@@ -36,8 +36,6 @@
   Software Archetecture
   + Make three separate components:  Model definition, Model training, ALE game control
   + Instead of letting one of these components manage the others, use a "main" file to assemble and manage them. Because we are probably going to use complex ways to train a model in the future: SL training, RL training, SL pretraining + RL training, interleaved SL + RL training, switching off training (pure game playing), etc. These 'strategies' can be put into the "main" file while keeping these three components intact.
-
-  Now completed: baseline model AI playing seaquest trained on data 36.
   
   To run it, you need to have a machine with tensorflow, keras, ale_python_interface installed, and **a monitor** (so eldar-11 cannot run it). And then run:
 
@@ -45,17 +43,22 @@
     # run this command to see help message of this file
     python runai.py 
 
-    # Run baseline model playing seaquest train on 36
+    # Run baseline model playing seaquest trained on 36
     python runai.py ../roms/seaquest.bin BaselineModel cat\{36_RZ\}tr_\{37_RZ\}val.model.hdf5 cat\{36_RZ\}tr_\{37_RZ\}val.mean.npy
 
-    # Run pastKFrame model playing seaquest train on 36  (K=4, stride=2, before=0)
+    # Run pastKFrame model playing seaquest trained on 36  (K=4, stride=2, before=0)
     python runai.py ../roms/seaquest.bin PastKFrameModel cat\{36_RZ\}tr_\{37_RZ\}val-pKf.model.hdf5 cat\{36_RZ\}tr_\{37_RZ\}val.mean.npy == 4 2 0
+
+    # Run a 'PastKFrameGaze_and_CurrentFrameAction' model playing seaquest trained on 36-43  (K=8, stride=1, before=0)
+    python runai.py ../roms/seaquest.bin PastKFrameGaze_and_CurrentFrameAction 36-43_42_dqn_pKf-Gaze_cur-Act.model.hdf5 36-43_42.mean.npy == 8 1 0 gazepred_36-42_pKf_3D_dp0.5_shape84_k8s1.model.hdf5
   ```
-  Available keyboard controls: \
-  h: **Human takes over the control of the game ** \
-  p: print action's logit output \
-  x: Run `embed()` for debugging
-  Esc: quit 
+  
+  Available keyboard controls: 
+  
+  + h: **Human takes over the control of the game ** 
+  + p: print action's logit output 
+  + x: Run `embed()` for debugging 
+  + Esc: quit 
 
 5. Psychology
 - [x] Ask experts to validate experimental setups
