@@ -10,6 +10,9 @@ import action_enums as aenum
 import vip_constants as V
 from pygame.constants import *
 
+FRAME_RATE = int(sys.argv[3])
+EPISODES = 20 # MAX episodes
+
 class aleForET:
     def __init__(self,rom_file, screen):
         self.screen = screen
@@ -41,10 +44,10 @@ class aleForET:
         frame_cnt=0
         clock = pygame.time.Clock()
         # Play 10 episodes
-        for episode in xrange(10):
+        for episode in xrange(EPISODES):
             total_reward = 0
             while not self.ale.game_over():
-                clock.tick(30) # control FPS
+                clock.tick(FRAME_RATE) # control FPS
                 frame_cnt+=1
 
                 key = pygame.key.get_pressed()
@@ -113,7 +116,7 @@ class aleForET:
 
                 key, draw_next_game_frame = None, False
                 while not draw_next_game_frame:
-                    clock.tick(30) # control FPS
+                    clock.tick(FRAME_RATE) # control FPS
 
                     key = pygame.key.get_pressed()
                     if event_handler_func != None:

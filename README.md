@@ -25,6 +25,7 @@
 - [ ] Python implementation of the above ones if necessary
 
 3. Gaze modeling
+- [ ] CNN - dilation model
 - [ ] CNN - deconv model
 - [ ] CNN - regression model
 - [ ] Superior colliculus model
@@ -70,6 +71,7 @@
 - [ ] Practice game instructions
 - [ ] ALE + Keras game playing agent 
 - [ ] ALE save/load
+- [ ] What's the framerate's effect on gaze distribution ???
 
 ## Next
 

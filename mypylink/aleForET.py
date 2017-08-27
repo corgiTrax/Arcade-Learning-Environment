@@ -7,6 +7,10 @@ from IPython import embed
 import action_enums as aenum
 import vip_constants as V
 
+FRAME_RATE = 20 # importnat parameters, control how fast game goes 
+print("****************************FrameRate:%s**********************" % FRAME_RATE) 
+# now using 30 for venture and 20 for others
+
 class aleForET:
     def __init__(self,rom_file, screen, rndseed, resume_state_file=None):
 
@@ -18,7 +22,7 @@ class aleForET:
 
         # Get & Set the desired settings
         self.ale = ALEInterface()
-        self.ale.setInt('random_seed', rndseed)
+        self.ale.setInt("random_seed", rndseed)
         self.ale.setBool('sound', False)
         self.ale.setBool('display_screen', False)
         self.ale.setBool('color_averaging', True)
@@ -103,7 +107,7 @@ class aleForET:
         self.run_start_time = time.time() # used in alerecord_main.py
         while True:
             self.check_episode_end_and_if_true_reset_game()
-            self.clock.tick(30) # control FPS
+            self.clock.tick(FRAME_RATE) # control FPS
             self.frame_cnt+=1
 
             key = pygame.key.get_pressed()
@@ -164,7 +168,7 @@ class aleForET:
 
             key, draw_next_game_frame = None, False
             while not draw_next_game_frame:
-                self.clock.tick(30) # control FPS
+                self.clock.tick(FRAME_RATE) # control FPS
 
                 key = pygame.key.get_pressed()
                 if event_handler_func != None:
