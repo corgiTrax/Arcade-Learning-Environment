@@ -12,7 +12,11 @@ import vip_constants as V
 #  is the output from another model that predicts gaze.
 #
 # WARNING: this method is very ad-hoc: it loads the predicted gaze heatmap from a file
-# So make sure you do the check for yourself and provide this method with correct data.
+# and multiply it with the frame dataset. It doesn't check 
+#       + Whether the index of heatmap data and the index of frame data align
+#       + Whether the correspond to the same dataset
+#       + And it assumes a lot about the variable names in npz file
+# So make sure you do the check for yourself and provide this method correct data.
 def load_predicted_gaze_heatmap_into_dataset_train_GHmap_val_GHmap__temp(train_npz, val_npz, dataset_obj):
     train_npz = np.load(train_npz)
     val_npz = np.load(val_npz)
@@ -20,15 +24,93 @@ def load_predicted_gaze_heatmap_into_dataset_train_GHmap_val_GHmap__temp(train_n
     dataset_obj.train_GHmap = train_npz['heatmap']
     dataset_obj.val_GHmap = val_npz['heatmap']
     def validate_data(npz_fid, dataset_obj_fid):
-      assert len(npz_fid) == len(dataset_obj_fid)
-      for i in range(len(npz_fid)):
-        assert tuple(npz_fid[i]) == dataset_obj_fid[i], "npz: %s dataset: %s" % (str(npz_fid[i]), str(data_obj_fid[i]))
-    
+        notfound = False
+        set_npz_fid = set([tuple(x) for x in npz_fid])
+        for fid in dataset_obj_fid:
+            if fid not in set_npz_fid:
+                notfound = True
+                print "FATAL: cannot found gaze data for frame ID", fid
+        if notfound:
+            raise LookupError("There are certain frames whose gaze heatmap are missing.")
     validate_data(train_npz['fid'], dataset_obj.train_fid)
     validate_data(val_npz['fid'], dataset_obj.val_fid)
 
     return dataset_obj
 
+def _experimental_foveat_preprocessing(img_dataset, gaze_yx_dataset):
+    from scipy.stats import multivariate_normal
+    import tensorflow as tf, keras as K # don't move this to the top, as people who import this file might not have keras or tf
+
+    batch_size = 50
+    _mul = img_dataset.shape[0] / batch_size
+    img_dataset = img_dataset[:_mul*batch_size]
+    gaze_yx_dataset = gaze_yx_dataset[:_mul*batch_size]
+
+    img_in = K.layers.Input(shape=(img_dataset.shape[1],img_dataset.shape[2],1))
+    gaze_yx_in = K.layers.Input(shape=(2,), dtype='int32')
+
+    def gFilter_layer(img, sigmaH, sigmaW):
+        lh, lw = int(4*sigmaH), int(4*sigmaW)
+        x, y = np.mgrid[-lh:lh+1:1, -lw:lw+1:1] # so the kernel size is [lh*2+1,lw*2+1]
+        pos = np.dstack((x, y))
+        gkernel=multivariate_normal.pdf(pos,mean=[0,0],cov=[[sigmaH*sigmaH,0],[0,sigmaW*sigmaW]])
+        assert gkernel.sum() > 0.95, "Simple sanity check: prob density should add up to nearly 1.0"
+
+        img=K.layers.Lambda(lambda x: tf.pad(x,[(0,0),(lh,lh),(lw,lw),(0,0)],'REFLECT'))(img)
+        img=K.layers.Conv2D(1, kernel_size=gkernel.shape, strides=1, padding="valid", use_bias=False,
+              activation="linear", kernel_initializer=K.initializers.Constant(gkernel))(img)
+        return img
+
+    def box(gpos_yx, radius_yx, limit_yx):
+        lowy, lowx = gpos_yx[0]-radius_yx[0], gpos_yx[1]-radius_yx[1]
+        lowy = tf.clip_by_value(lowy, 0, limit_yx[0])
+        lowx = tf.clip_by_value(lowx, 0, limit_yx[1])
+        highy, highx = gpos_yx[0]+radius_yx[0], gpos_yx[1]+radius_yx[1]
+        highy = tf.clip_by_value(highy, 0, limit_yx[0])
+        highx = tf.clip_by_value(highx, 0, limit_yx[1])
+        return lowy, highy,lowx, highx
+
+    img1 = img_in
+    img2 = gFilter_layer(img1, 1.0, 1.0)
+    img3 = gFilter_layer(img1, 1.5, 1.5)
+    img4 = gFilter_layer(img1, 2.0, 2.0)
+    img5 = gFilter_layer(img1, 3.0, 3.0)
+    # img_syn = tf.Variable(tf.zeros(shape=img_dataset.shape, dtype=img_in.dtype))
+    # img_syn.assign(img5)
+    class MyLayer(K.engine.topology.Layer):
+        def build(self, input_shape):
+            self.img_syn = self.add_weight(name='img_syn', 
+                                          shape=(batch_size,img_dataset.shape[1],img_dataset.shape[2],1),
+                                          initializer='zeros',
+                                          trainable=False)
+            super(MyLayer, self).build(input_shape)  
+
+        def compute_output_shape(self, input_shape):
+            return input_shape
+
+        def call(self, img5):
+            for i in range(batch_size):
+                box_ = lambda radius: box(gaze_yx_in[i], (radius,radius), (img_dataset.shape[1],img_dataset.shape[2]))
+                img_syn = self.img_syn
+                l1 = box_(4)
+                l2 = box_(8)
+                l3 = box_(16)
+                l4 = box_(32)
+
+                img_syn.assign(img5)
+                img_syn[i,l4[0]:l4[1],l4[2]:l4[3],:].assign(img4[i,l4[0]:l4[1],l4[2]:l4[3],:])
+                img_syn[i,l3[0]:l3[1],l3[2]:l3[3],:].assign(img3[i,l3[0]:l3[1],l3[2]:l3[3],:])
+                img_syn[i,l2[0]:l2[1],l2[2]:l2[3],:].assign(img2[i,l2[0]:l2[1],l2[2]:l2[3],:])
+                img_syn[i,l1[0]:l1[1],l1[2]:l1[3],:].assign(img1[i,l1[0]:l1[1],l1[2]:l1[3],:])
+            return img_syn
+    img_syn = MyLayer()(img5)
+
+    model = K.models.Model(inputs=[img_in, gaze_yx_in], outputs=img_syn)
+    model.compile(optimizer='rmsprop', # not used
+          loss='categorical_crossentropy', # not used
+          metrics=None)
+    output=model.predict([img_dataset, np.array(gaze_yx_dataset,dtype=np.int32)], batch_size=batch_size, verbose=1)
+    return output
 
 def preprocess_gaze_heatmap(GHmap, sigmaH, sigmaW, bg_prob_density, debug_plot_result=False):
     from scipy.stats import multivariate_normal
