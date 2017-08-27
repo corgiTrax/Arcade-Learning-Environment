@@ -12,6 +12,19 @@ def sample_catagorical_distribution_with_logits(logits):
     prob = e_x / e_x.sum() # compute the softmax of logits
     picked = prob.cumsum().searchsorted(np.random.sample()) # implement weighted sampling
     return picked
+def argmax_catagorical_distribution_with_logits(logits):
+    return np.argmax(logits)
+
+def draw_GHmap_callback_func(screen, pred):
+    if pred['gaze'] is not None:
+        GHmap = pred['gaze'].squeeze().transpose([1,0])
+        GHmap = GHmap / GHmap.max() * 255.0
+        GHmap = GHmap.astype(np.int8)
+        GHmap = np.repeat(GHmap[..., np.newaxis], 3, axis=-1)
+        s = pygame.surfarray.make_surface(GHmap)
+        s.set_alpha(100)
+        s = pygame.transform.scale(s, (V.SCR_W, V.SCR_H))
+        screen.blit(s, (0,0))
 
 
 if __name__ == "__main__":
@@ -41,21 +54,24 @@ if __name__ == "__main__":
 
     # begin init
 
-    # rndseed = random.randint(0,65535)
-    rndseed = 3
+    rndseed = random.randint(0,65535)
     pygame.init()
-    pygame.display.set_mode((160*V.xSCALE, 210*V.ySCALE), RESIZABLE | DOUBLEBUF | RLEACCEL, 32)
-    surf = pygame.display.get_surface()
-    ale = aleForET(rom_file, surf, rndseed, resume_state_file)
-
+    pygame.display.set_mode((V.SCR_W, V.SCR_H), RESIZABLE | DOUBLEBUF | RLEACCEL, 32)
+    screen = pygame.display.get_surface()
+    ale = aleForET(rom_file, screen, rndseed, resume_state_file)
     aimodel = getattr(AImodels,model_name)(model_file, mean_file, *args_passed_to_model_initializer)
+
     a = aenum.PLAYER_A_NOOP
     human_take_over = False
     print_logits = True
+    draw_GHmap = True
+    pred = {'gaze': None}
 
     while True:
 
-        img_np, r, epEnd = ale.proceed_one_step(a, refresh_screen=True, fps_limit=30)
+        img_np, r, epEnd = ale.proceed_one_step(a, refresh_screen=True, fps_limit=30, 
+            gc_window_drawer_func=draw_GHmap_callback_func, model_gaze_output=pred)
+        # img_np, r, epEn = ale.proceed_one_step__fast__no_scr_support(a)
         pred = aimodel.predict_one(img_np)
 
         a = sample_catagorical_distribution_with_logits(pred['raw_logits'])
