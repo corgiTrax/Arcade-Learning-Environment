@@ -101,16 +101,10 @@ def new_ver_use_spec_file():
             fid = frameid_from_filename(png)
             if fid in frameid2action_each[i] and frameid2action_each[i][fid] != None:
                 if fid in frameid2pos_each[i] and frameid2pos_each[i][fid]:
-                    # if pos is -1, then it's bad gaze; set weight to 0
-                    if frameid2pos_each[i][fid][0][0] == -1:
-                        weight = 0
-                    else:
-                        weight = 1
-
                     l = len(frameid2pos_each[i][fid])
-                    xy_str.append('%s %d %f %f %d' % (png, frameid2action_each[i][fid], frameid2pos_each[i][fid][l-1][0], frameid2pos_each[i][fid][l-1][1], weight))
-                else:# if no gaze, set gaze to -1 and weight to 0
-                    xy_str.append('%s %d %f %f %d' % (png, frameid2action_each[i][fid], -1, -1, 0))
+                    xy_str.append('%s %d %f %f' % (png, frameid2action_each[i][fid], frameid2pos_each[i][fid][l-1][0], frameid2pos_each[i][fid][l-1][1]))
+                else:
+                    print "Warning: Cannot find the gaze positions for frame ID %s. Skipping this frame." % str(fid)
             else:
                 print "Warning: Cannot find the label for frame ID %s. Skipping this frame." % str(fid)
         
