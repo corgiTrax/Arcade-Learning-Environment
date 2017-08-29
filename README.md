@@ -26,9 +26,10 @@
 
 3. Gaze modeling
 - [ ] CNN - dilation model
-- [ ] CNN - deconv model
-- [ ] CNN - regression model
+- [x] CNN - deconv model
+- [x] CNN - regression model
 - [ ] Superior colliculus model
+- [ ] KL epsilon regularizatin
 
 4. AI playing 
 - [ ] Make it possible for model to play the game and record scores
