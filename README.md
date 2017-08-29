@@ -25,6 +25,7 @@
 - [ ] Python implementation of the above ones if necessary
 
 3. Gaze modeling
+- [ ] CNN - optical flow; CNN - IttiKoch
 - [ ] CNN - dilation model
 - [x] CNN - deconv model
 - [x] CNN - regression model
