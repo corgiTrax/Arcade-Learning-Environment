@@ -310,8 +310,8 @@ def rescale_and_clip_gaze_pos(x,y,RESIZE_H,RESIZE_W):
     return isbad, newx, newy
 
 class Dataset(object):
-  train_imgs, train_lbl, train_fid, train_size, train_weight = None, None, None, None, None, None
-  val_imgs, val_lbl, val_fid, val_size, val_weight = None, None, None, None, None, None
+  train_imgs, train_lbl, train_fid, train_size, train_weight = None, None, None, None, None
+  val_imgs, val_lbl, val_fid, val_size, val_weight = None, None, None, None, None
   def __init__(self, LABELS_FILE_TRAIN, LABELS_FILE_VAL, RESIZE_SHAPE):
     t1=time.time()
     print "Reading all training data into memory..."
@@ -499,12 +499,12 @@ def read_np_parallel(label_file, RESIZE_SHAPE, num_thread=6):
             labels.append(int(lbl))
             fids.append(frameid_from_filename(fname))
             gaze.append((float(x)*RESIZE_SHAPE[1]/V.SCR_W, float(y)*RESIZE_SHAPE[0]/V.SCR_H))
-            weight.append(int(w))
+            weight.append(float(w))
     N = len(labels)
     imgs = np.empty((N,RESIZE_SHAPE[0],RESIZE_SHAPE[1],1), dtype=np.float32)
     labels = np.asarray(labels, dtype=np.int32)
     gaze = np.asarray(gaze, dtype=np.float32)
-    weight = np.asarray(weight, dtype=np.int32)
+    weight = np.asarray(weight, dtype=np.float32)
 
     def read_thread(PID):
         d = os.path.dirname(label_file)
