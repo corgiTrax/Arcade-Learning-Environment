@@ -310,15 +310,15 @@ def rescale_and_clip_gaze_pos(x,y,RESIZE_H,RESIZE_W):
     return isbad, newx, newy
 
 class Dataset(object):
-  train_imgs, train_lbl, train_fid, train_size = None, None, None, None
-  val_imgs, val_lbl, val_fid, val_size = None, None, None, None
+  train_imgs, train_lbl, train_fid, train_size, train_weight = None, None, None, None, None, None
+  val_imgs, val_lbl, val_fid, val_size, val_weight = None, None, None, None, None, None
   def __init__(self, LABELS_FILE_TRAIN, LABELS_FILE_VAL, RESIZE_SHAPE):
     t1=time.time()
     print "Reading all training data into memory..."
-    self.train_imgs, self.train_lbl, self.train_fid = read_np_parallel(LABELS_FILE_TRAIN, RESIZE_SHAPE)
+    self.train_imgs, self.train_lbl, _, self.train_fid, self.train_weight = read_np_parallel(LABELS_FILE_TRAIN, RESIZE_SHAPE)
     self.train_size = len(self.train_lbl)
     print "Reading all validation data into memory..."
-    self.val_imgs, self.val_lbl, self.val_fid = read_np_parallel(LABELS_FILE_VAL, RESIZE_SHAPE)
+    self.val_imgs, self.val_lbl, _, self.val_fid, self.val_weight = read_np_parallel(LABELS_FILE_VAL, RESIZE_SHAPE)
     self.val_size = len(self.val_lbl)
     print "Time spent to read train/val data: %.1fs" % (time.time()-t1)
 
@@ -484,32 +484,40 @@ def read_np_parallel(label_file, RESIZE_SHAPE, num_thread=6):
     """
     labels, fids = [], []
     png_files = []
+    gaze = [] # TODO:  see TODO below
+    weight = []
     with open(label_file,'r') as f:
         for line in f:
             line=line.strip()
             if line.startswith("#") or line == "": 
                 continue # skip comments or empty lines
-            tokens = line.split(' ')
-            fname, lbl = tokens[0], tokens[1]
+            fname, lbl, x, y, w = line.split(' ') # TODO: Luxin adds the last gaze positions (x,y) into label file.
+            # TODO This is not a good practice. We should delete the code that reads them here, and delete the code 
+            # TODO that writes them in create_train_val_dataset.py. And then find the code which needs this information
+            # to get the information from "frameid2pos"(a dict returned by read_gaze_data_asc_file()) instead.
             png_files.append(fname)
             labels.append(int(lbl))
             fids.append(frameid_from_filename(fname))
+            gaze.append((float(x)*RESIZE_SHAPE[1]/V.SCR_W, float(y)*RESIZE_SHAPE[0]/V.SCR_H))
+            weight.append(int(w))
     N = len(labels)
     imgs = np.empty((N,RESIZE_SHAPE[0],RESIZE_SHAPE[1],1), dtype=np.float32)
     labels = np.asarray(labels, dtype=np.int32)
+    gaze = np.asarray(gaze, dtype=np.float32)
+    weight = np.asarray(weight, dtype=np.int32)
 
     def read_thread(PID):
         d = os.path.dirname(label_file)
         for i in range(PID, N, num_thread):
-            img = misc.imread(os.path.join(d, png_files[i]), 'Y') # 'Y': grayscale
+            img = misc.imread(os.path.join(d, png_files[i]), 'Y') # 'Y': grayscale  
             img = misc.imresize(img, [RESIZE_SHAPE[0],RESIZE_SHAPE[1]], interp='bilinear')
             img = np.expand_dims(img, axis=2)
-            img = img.astype(np.float32) / 255.0
+            img = img.astype(np.float32) / 255.0 # normalize image to [0,1]
             imgs[i,:] = img
 
     o=ForkJoiner(num_thread=num_thread, target=read_thread)
     o.join()
-    return imgs, labels, fids
+    return imgs, labels, gaze, fids, weight
 
 class ForkJoiner():
     def __init__(self, num_thread, target):
