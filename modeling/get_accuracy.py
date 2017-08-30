@@ -1,20 +1,29 @@
 #!/usr/bin/python
 
-import os
+import os, re
 import sys
+
+if len(sys.argv) == 1:
+    print "Usage: %s directory_name [regex_filter(default='.*')]" % sys.argv[0]
+    sys.exit(0)
+
+if len(sys.argv) < 3:
+    regex_filter = '.*'
+else: 
+    regex_filter = sys.argv[2]
+regex = re.compile(regex_filter)
+
+print sys.argv[1] + " <-- sys.argv[1]"
 # traverse root directory, and list directories as dirs and files as files
 for root, dirs, files in os.walk(sys.argv[1]):
-    path = root.split(os.sep)
-#    print((len(path) - 1) * '---', os.path.basename(root))
-    for file in files:
-        if file == "log.txt":
-            #print(file)
-            f = open(root +'/' + file,'r')
-            #print(root +'/' + file)
+    dirname = os.path.basename(root)
+    if not regex.search(dirname): continue
+    if "log.txt" in files:
+            f = open(root +'/log.txt' ,'r')
             for line in f:
                 if "eval" in line:
                     score = line.split()[-1][0:-1]
-                    print "%s %s" % (os.path.basename(root), score)
+                    print "%s %s" % (dirname, score)
                     break
             f.close()
       
