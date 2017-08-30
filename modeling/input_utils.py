@@ -336,6 +336,18 @@ class Dataset(object):
     self.train_imgs -= self.mean # done in-place --- "x-=mean" is faster than "x=x-mean"
     self.val_imgs -= self.mean
 
+  def convert_one_hot_label_to_prob_dist(self, moving_avarage_window_radius, NUM_CLASSES):
+    self.train_lbl = self._convert_one_hot_label_to_prob_dist(self.train_lbl, moving_avarage_window_radius, NUM_CLASSES)
+    self.val_lbl = self._convert_one_hot_label_to_prob_dist(self.val_lbl, moving_avarage_window_radius, NUM_CLASSES)
+  def _convert_one_hot_label_to_prob_dist(self, lbl, r, NUM_CLASSES):
+    result = np.zeros((len(lbl), NUM_CLASSES), dtype=np.float32)
+    for i in range(len(lbl)):
+        result[i][lbl[i]] = 1.0
+    for i in range(len(lbl)):
+        left, right = max(0, i-r), min(len(lbl), i+r+1) # +1 because python indexing like arr[A:B] excludes arr[B]
+        result[i] = np.mean(result[left:right], axis=0)
+    return result
+
 class Dataset_PastKFrames(Dataset):
   def __init__(self, LABELS_FILE_TRAIN, LABELS_FILE_VAL, RESIZE_SHAPE, K, stride=1, before=0):
     super(Dataset_PastKFrames, self).__init__(LABELS_FILE_TRAIN, LABELS_FILE_VAL, RESIZE_SHAPE)
