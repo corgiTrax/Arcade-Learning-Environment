@@ -1,8 +1,21 @@
 #!/usr/bin/env python
 def multi_experiment():
   l = [] # compose a list of arguments needed to be passed to the python script
-  for gauss in ["0","15","25","35"]:
-    l.append(' '.join([gauss]))
+  EXPRIMENTS=[
+      ("breakout_{92}val","breakout_AAAI"),
+      ("centipede_{78_80}val","centipede_AAAI"),
+      ("enduro_{98_103}val","enduro_AAAI"),
+      ("freeway_{72}val","freeway_AAAI"),
+      ("mspacman_{71_76}val","mspacman_AAAI"),
+      ("riverraid_{95_99}val","riverraid_AAAI"),
+      ("seaquest_{70_75}val","seaquest_AAAI"),
+      ("venture_{100_101}val","venture_AAAI")
+  ]
+
+  for (BASE_FILE_NAME, MODEL_DIR) in EXPRIMENTS:
+      for dropout in ['0','0.1', '0.2', '0.3', '0.4', '0.5']:
+          ABS_BASE_FILE_NAME = "/scratch/cluster/zharucs/dataset_gaze/" + BASE_FILE_NAME
+          l.append(' '.join([ABS_BASE_FILE_NAME, MODEL_DIR, dropout]))
 
   return l
 
@@ -10,8 +23,7 @@ import sys, re, os, subprocess
 
 basestr="""
 # doc at : http://research.cs.wisc.edu/htcondor/manual/current/condor_submit.html
-arguments = /scratch/cluster/zharucs/ale/modeling/{0}
-remote_initialdir = /scratch/cluster/zharucs/ale/modeling/
+arguments = /scratch/cluster/zhuode93/ale/modeling/{0}
 +Group ="GRAD"
 +Project ="AI_ROBOTICS"
 +ProjectDescription="ale"
@@ -21,7 +33,7 @@ Universe = vanilla
 # UTCS has 18 such machine, to take a look, run 'condor_status  -constraint 'GTX1080==true' 
 Requirements=(TARGET.GTX1080== true)
 
-executable = /u/zharucs/anaconda2/bin/ipython 
+executable = /u/zhuode93/anaconda2/bin/ipython 
 getenv = true
 output = CondorOutput/$(Cluster).out
 error = CondorOutput/$(Cluster).err
@@ -39,6 +51,9 @@ print "Job output will be directed to folder ./CondorOutput"
 target_py_file = sys.argv[1]
 
 arg_str_list = multi_experiment()
+
+print '\n'.join(arg_str_list)
+raw_input('Confirm? Ctrl-C to quit.')
 
 for arg_str in arg_str_list:
   submission = basestr.format(target_py_file + ' ' + arg_str)

@@ -85,6 +85,8 @@ def keras_model_serialization_bug_fix(): # stupid keras
 def loss_func(target, pred): 
     return K.backend.sparse_categorical_crossentropy(output=pred, target=target, from_logits=True)
 
+# This is function is used in ale/modeling/pyModel/main-SmoothLabel.py, because in that case
+# the target label is a prob distribution rather than a number
 def loss_func_nonsparse(target, pred): 
     return K.backend.categorical_crossentropy(output=pred, target=target, from_logits=True)
 
@@ -94,6 +96,10 @@ def acc_(y_true, y_pred): # don't rename it to acc or accuracy (otherwise stupid
       targets=tf.squeeze(tf.cast(y_true,tf.int32)), 
       predictions=y_pred,k=1),tf.float32))
 
+# This is function is used in ale/modeling/pyModel/main-SmoothLabel.py, because in that case
+# the target label is a prob distribution rather than a number, so there is no "accuracy" defined.
+# and I just want to implement a wrong but approx accuracy here, by pretending the argmax() of y_true
+# is the true label. 
 def acc_nonsparse_wrong(y_true, y_pred):  
   return tf.reduce_mean(
     tf.cast(tf.nn.in_top_k(
