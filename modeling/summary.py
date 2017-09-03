@@ -11,7 +11,7 @@ class Dataset:
         self.model = defaultdict(lambda: defaultdict(list))
 
 dataset_regex = re.compile('(\w+)_AAAI')
-acc_regex = re.compile('^(\d+)_(\w+)_(dr0\.\d+)_?([^ ]+)? (0\.\d+)')
+acc_regex = re.compile('^(\d+)_(.*?)_?(dr0\.\d+)_?([^ ]+)? (0\.\d+)')
 
 # If no argument is provided, read from stdin. This is useful in piping commands
 f_ = sys.stdin if len(sys.argv) == 1 else open(sys.argv[1], 'r')
