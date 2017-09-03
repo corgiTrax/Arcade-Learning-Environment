@@ -32,9 +32,8 @@ class ExprCreaterAndResumer:
         expr_num = [int(x.group(1)) for x in re_matches if x is not None]
         highest_idx = np.argmax(expr_num) if len(expr_num)>0 else -1
 
-        self.dir_lasttime = "%s/%s" % (rootdir, expr_dirs[highest_idx]) if highest_idx != -1 else None
         # dir name is like "5_Mar-09-12-27-59"
-        self.dir = rootdir + '/' +  str(expr_num[highest_idx]+1 if highest_idx != -1 else 0) + \
+        self.dir = rootdir + '/' +  '%02d' % (expr_num[highest_idx]+1 if highest_idx != -1 else 0) + \
             '_' + (postfix if postfix else time.strftime("%b-%d-%H-%M-%S") )
         os.mkdir(self.dir)
         self.logfile = open(self.dir +"/log.txt", 'a', 0) # no buffer
@@ -65,8 +64,8 @@ class ExprCreaterAndResumer:
         model.save(self.dir + '/model.hdf5')
 
     def redirect_output_to_logfile_if_not_on(self, hostname):
-        print 'redirect_output_to_logfile_if_not_on() is deprecated. Please delete the line that calls it'
-        print 'this func still exists because old code might use it'
+        print 'redirect_output_to_logfile_if_not_on() is deprecated. Please delete the line that calls it.'
+        print 'This func still exists because old code might use it.'
 
     def redirect_output_to_logfile_as_well(self):
         class Logger(object): 
