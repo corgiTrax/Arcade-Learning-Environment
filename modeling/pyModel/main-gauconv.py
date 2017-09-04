@@ -34,7 +34,6 @@ else:
     g=L.Conv2D(1, (81,81), strides=1, padding='same')(g)
     g=L.BatchNormalization()(g)
     g=L.Activation('relu')(g)
-    x=L.Dropout(dropout)(x)
 
     imgs=L.Input(shape=SHAPE)
     x=imgs
