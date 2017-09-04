@@ -7,35 +7,31 @@ from scipy import misc
 import vip_constants as V
 
 
-# This method is just used for quickly exploring an new idea that
-# multiply the game frame using a predicted gaze heatmap, which
-#  is the output from another model that predicts gaze.
-#
-# WARNING: this method is very ad-hoc: it loads the predicted gaze heatmap from a file
-# and multiply it with the frame dataset. It doesn't check 
-#       + Whether the index of heatmap data and the index of frame data align
-#       + Whether the correspond to the same dataset
-#       + And it assumes a lot about the variable names in npz file
+# This method is for the expr that  multiply the game frame using a predicted gaze heatmap, which is the output from another model that predicts gaze.
 # So make sure you do the check for yourself and provide this method correct data.
-def load_predicted_gaze_heatmap_into_dataset_train_GHmap_val_GHmap__temp(train_npz, val_npz, dataset_obj):
+def load_predicted_gaze_heatmap_into_dataset_train_GHmap_val_GHmap(train_npz, val_npz, d, pastK):
     train_npz = np.load(train_npz)
     val_npz = np.load(val_npz)
+    d.train_GHmap = train_npz['heatmap']
+    d.val_GHmap = val_npz['heatmap']
+    # npz file from pastK models has pastK-fewer data, so we need to know use value of pastK
+    d.train_imgs = d.train_imgs[pastK:]
+    d.val_imgs = d.val_imgs[pastK:]
+    d.train_fid = d.train_fid[pastK:]
+    d.val_fid = d.val_fid[pastK:]
+    d.train_weight = d.train_weight[pastK:]
+    d.val_weight = d.val_weight[pastK:]
+    d.train_lbl = d.train_lbl[pastK:]
+    d.val_lbl = d.val_lbl[pastK:]
 
-    dataset_obj.train_GHmap = train_npz['heatmap']
-    dataset_obj.val_GHmap = val_npz['heatmap']
-    def validate_data(npz_fid, dataset_obj_fid):
-        notfound = False
-        set_npz_fid = set([tuple(x) for x in npz_fid])
-        for fid in dataset_obj_fid:
-            if fid not in set_npz_fid:
-                notfound = True
-                print "FATAL: cannot found gaze data for frame ID", fid
-        if notfound:
-            raise LookupError("There are certain frames whose gaze heatmap are missing.")
-    validate_data(train_npz['fid'], dataset_obj.train_fid)
-    validate_data(val_npz['fid'], dataset_obj.val_fid)
-
-    return dataset_obj
+    def validate_data(npz_fid, dataset_fid, imgs, GHmap):
+        assert imgs.shape[0] == GHmap.shape[0], \
+            "the number of image data does not match the number of gaze heat map data: %d vs %d" % (imgs.shape[0], GHmap.shape[0])
+        for i in range(len(npz_fid)):
+            assert tuple(npz_fid[i]) == tuple(dataset_fid[i]), \
+                "fid in dataset and fid in npz file does not match: npz_fid[%d]=%s, dataset_fid[%d]=%s" % (i,str(npz_fid[i]),i,str(dataset_fid[i]))
+    validate_data(train_npz['fid'], d.train_fid, d.train_imgs, d.train_GHmap)
+    validate_data(val_npz['fid'], d.val_fid, d.val_imgs, d.val_GHmap)
 
 def _experimental_foveat_preprocessing(img_dataset, gaze_yx_dataset):
     from scipy.stats import multivariate_normal
