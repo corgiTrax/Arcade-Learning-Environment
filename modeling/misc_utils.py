@@ -32,7 +32,7 @@ class ExprCreaterAndResumer:
         expr_num = [int(x.group(1)) for x in re_matches if x is not None]
         highest_idx = np.argmax(expr_num) if len(expr_num)>0 else -1
 
-        # dir name is like "5_Mar-09-12-27-59"
+        # dir name is like "5_Mar-09-12-27-59" or "5_<postfix>"
         self.dir = rootdir + '/' +  '%02d' % (expr_num[highest_idx]+1 if highest_idx != -1 else 0) + \
             '_' + (postfix if postfix else time.strftime("%b-%d-%H-%M-%S") )
         os.mkdir(self.dir)
@@ -130,19 +130,14 @@ def top2acc_(y_true, y_pred):
 def my_softmax(x):
     return K.activations.softmax(x, axis=[1,2,3])
 
+# Fixes keras bug. It's a loss function that computes KL-divergence.
 def my_kld(y_true, y_pred):
-    """
-    Fixes keras bug. It's a loss function that computes KL-divergence.
-    """
     y_true = K.backend.clip(y_true, K.backend.epsilon(), 1)
     y_pred = K.backend.clip(y_pred, K.backend.epsilon(), 1)
     return K.backend.sum(y_true * K.backend.log(y_true / y_pred), axis = [1,2,3])
 
+# This function is a Keras metric that computes the NSS score of the predict saliency map.
 def computeNSS(y_true, y_pred):
-    """
-    This function is a Keras metric that computes the NSS score of the predict saliency map.
-    """
-    
     stddev = tf.contrib.keras.backend.std(y_pred, axis = [1,2,3])
     stddev = tf.expand_dims(stddev, 1)
     stddev = tf.expand_dims(stddev, 2)
@@ -151,7 +146,6 @@ def computeNSS(y_true, y_pred):
     sal = (y_pred - mean) / stddev
     score = tf.multiply(y_true, sal)
     score = tf.contrib.keras.backend.sum(score, axis = [1,2,3])
-    
     return score
 
 class PrintLrCallback(K.callbacks.Callback):
