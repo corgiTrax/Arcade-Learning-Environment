@@ -1,12 +1,12 @@
 import numpy as np
 import input_utils
 import keras as K
-import tensorflow as tf
 import copy as cp
 from misc_utils import my_kld
 import time, sys
+import tensorflow as tf
 
-#BASE_FILE_NAME = "/scratch/cluster/zharucs/dataset_gaze/cat{36_RZ}tr_{37_RZ}val"
+
 BASE_FILE_NAME = sys.argv[1]
 LABELS_FILE_TRAIN = BASE_FILE_NAME + '-train.txt' 
 LABELS_FILE_VAL =  BASE_FILE_NAME + '-val.txt' 
@@ -40,4 +40,3 @@ val_result = my_kld(d.val_GHmap, val_predict).eval(session = sess)
 
 val_result = np.asarray(val_result, dtype=np.float32)
 print "Random saliency predict KL-divergence on val: %f" % val_result.mean()
-
