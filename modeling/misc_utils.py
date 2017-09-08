@@ -93,7 +93,7 @@ def keras_model_serialization_bug_fix(): # stupid keras
     f=lambda obj_to_serialize: \
         get_custom_objects().update({obj_to_serialize.__name__: obj_to_serialize})
     f(loss_func); f(acc_); f(top2acc_)
-    f(my_kld); f(computeNSS); f(my_softmax)
+    f(my_kld); f(computeNSS); f(NSS); f(my_softmax)
     f(loss_func_nonsparse)
     f(acc_nonsparse_wrong)
 
@@ -147,6 +147,8 @@ def computeNSS(y_true, y_pred):
     score = tf.multiply(y_true, sal)
     score = tf.contrib.keras.backend.sum(score, axis = [1,2,3])
     return score
+def NSS(y_true, y_pred):
+    return computeNSS(y_true, y_pred)
 
 class PrintLrCallback(K.callbacks.Callback):
     def on_epoch_end(self, epoch, logs={}):
