@@ -33,9 +33,9 @@ if __name__ == "__main__":
     _d = sys.argv.index('==') if '==' in sys.argv else -1
     args_passed_to_model_initializer = sys.argv[(_d+1):] if _d != -1 else []
 
-    MODEL_DIR = 'Expr'
+    MODEL_DIR = 'Expr/'+os.path.splitext(os.path.basename(rom_file))[0]
     expr = MU.ExprCreaterAndResumer(MODEL_DIR, 
-        postfix="{%s}.{%s}" % (os.path.basename(rom_file), model_name))
+        postfix="%s" % (model_name))
 
     print "\nReceived Command Line Arguments:"
     print "rom_file, model_name, model_file, mean_file = ", rom_file, model_name, model_file, mean_file
@@ -44,7 +44,7 @@ if __name__ == "__main__":
     print "\n"
 
     # begin init
-
+    MU.save_GPU_mem_keras()
     rndseed = random.randint(0,65535)
     ale = aleForET(rom_file, None, rndseed, resume_state_file)
     aimodel = getattr(AImodels,model_name)(model_file, mean_file, *args_passed_to_model_initializer)
@@ -54,13 +54,15 @@ if __name__ == "__main__":
     ep_reward = 0
 
     while True:
-        diff_time = time.time()-ale._last_time
-        if diff_time > 600:
-            timestr = time.strftime("%Y-%m-%d %H:%M:%S", time.gmtime())
-            print timestr, "Current Episode Score: %d" % (ale.score)
-            ale._last_time=time.time()  
         img_np, r, epEnd = ale.proceed_one_step__fast__no_scr_support(a)
         pred = aimodel.predict_one(img_np)
 
         a = sample_catagorical_distribution_with_logits(pred['raw_logits'])
 
+        diff_time = time.time()-ale._last_time
+        if diff_time > 600:
+            timestr = time.strftime("%Y-%m-%d %H:%M:%S", time.gmtime())
+            print timestr, "Current Episode Score: %d" % (ale.score)
+            ale._last_time=time.time()  
+            if os.path.exists('STOP_ALL_EXPERIMENTS'):
+                sys.exit(0)
