@@ -1,5 +1,5 @@
 #!/usr/bin/env python
-import sys, random, numpy as np, os
+import sys, random, numpy as np, os, time
 import action_enums as aenum
 import vip_constants as V
 from aleForET import aleForET
@@ -33,14 +33,15 @@ if __name__ == "__main__":
     _d = sys.argv.index('==') if '==' in sys.argv else -1
     args_passed_to_model_initializer = sys.argv[(_d+1):] if _d != -1 else []
 
-    print "Received Command Line Arguments:"
-    print "rom_file, model_name, model_file, mean_file = ", rom_file, model_name, model_file, mean_file
-    print "resume_state_file = ", resume_state_file
-    print "args_passed_to_model_initializer = ", args_passed_to_model_initializer
-
     MODEL_DIR = 'Expr'
     expr = MU.ExprCreaterAndResumer(MODEL_DIR, 
         postfix="{%s}.{%s}" % (os.path.basename(rom_file), model_name))
+
+    print "\nReceived Command Line Arguments:"
+    print "rom_file, model_name, model_file, mean_file = ", rom_file, model_name, model_file, mean_file
+    print "resume_state_file = ", resume_state_file
+    print "args_passed_to_model_initializer = ", args_passed_to_model_initializer
+    print "\n"
 
     # begin init
 
@@ -53,17 +54,13 @@ if __name__ == "__main__":
     ep_reward = 0
 
     while True:
+        diff_time = time.time()-ale._last_time
+        if diff_time > 600:
+            timestr = time.strftime("%Y-%m-%d %H:%M:%S", time.gmtime())
+            print timestr, "Current Episode Score: %d" % (ale.score)
+            ale._last_time=time.time()  
         img_np, r, epEnd = ale.proceed_one_step__fast__no_scr_support(a)
         pred = aimodel.predict_one(img_np)
 
         a = sample_catagorical_distribution_with_logits(pred['raw_logits'])
-
-        # bookkeeping
-        ep_reward += r
-        if epEnd:
-            print ("Episode ended. Reward: %d" % ep_reward)
-            ep_reward = 0
-
-
-
 
