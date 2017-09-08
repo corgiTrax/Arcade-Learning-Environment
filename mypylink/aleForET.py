@@ -95,6 +95,7 @@ class aleForET:
         self.frame_cnt += 1
         cur_frame_np = self.ale.getScreenRGB()
         reward = self.ale.act(action)
+        self.score += reward
         return cur_frame_np, reward, self.check_episode_end_and_if_true_reset_game()
 
     def check_episode_end_and_if_true_reset_game(self):
