@@ -35,7 +35,7 @@ class ExprCreaterAndResumer:
         # dir name is like "5_Mar-09-12-27-59" or "5_<postfix>"
         self.dir = rootdir + '/' +  '%02d' % (expr_num[highest_idx]+1 if highest_idx != -1 else 0) + \
             '_' + (postfix if postfix else time.strftime("%b-%d-%H-%M-%S") )
-        os.mkdir(self.dir)
+        os.makedirs(self.dir)
         self.logfile = open(self.dir +"/log.txt", 'a', 0) # no buffer
         self.redirect_output_to_logfile_as_well()
 
