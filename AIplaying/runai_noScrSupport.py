@@ -64,5 +64,6 @@ if __name__ == "__main__":
             timestr = time.strftime("%Y-%m-%d %H:%M:%S", time.gmtime())
             print timestr, "Current Episode Score: %d" % (ale.score)
             ale._last_time=time.time()  
-            if os.path.exists('STOP_ALL_EXPERIMENTS'):
+            if os.path.exists(expr.dir + '/STOP_ALL_EXPERIMENTS'):
+                print "file STOP_ALL_EXPERIMENTS detected"
                 sys.exit(0)
