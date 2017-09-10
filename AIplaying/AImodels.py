@@ -73,16 +73,10 @@ class PastKFrameModel(AbstractModel):
     return {"gaze": None, "raw_logits": logits}
 
 # This model first predicts gaze using past K frames and then multiply the gaze heap map with the current frame
-class PastKFrameGaze_and_CurrentFrameAction(AbstractModel):  # TODO: inherit from PastKFrameModel and clean code
+class PastKFrameGaze_and_CurrentFrameAction(PastKFrameModel): 
   def __init__(self, modelfile, meanfile, k, stride, before, gaze_pred_modelfile):
-    super(PastKFrameGaze_and_CurrentFrameAction, self).__init__(modelfile, meanfile)
+    super(PastKFrameGaze_and_CurrentFrameAction, self).__init__(modelfile, meanfile, k, stride, before)
     self.gaze_pred_model = K.models.load_model(gaze_pred_modelfile)
-    self.k, self.stride, self.before = int(k), int(stride), int(before)
-    self.MAX_LEN = self.k * self.stride + self.before + 5 # + 5 does not mean anything, just store more memory for safety.
-    self.frame_buffer = []
-    self.DEFAULT_LOGITS_BEFORE_BUFFER_IS_FULL = ( # the model cannot work before K frames are seen, but needs to output something.
-        np.array([0.0] * int(self.model.output[0].shape[1]))  # a hacky way to get number of classes of the model
-        .reshape([1,-1]))
   
   def _preprocess_one(self, img_np):
     return self._preprocess_one_default(img_np)
@@ -95,13 +89,8 @@ class PastKFrameGaze_and_CurrentFrameAction(AbstractModel):  # TODO: inherit fro
         logits = self.DEFAULT_LOGITS_BEFORE_BUFFER_IS_FULL
         GHmap = None
     else:
-        self.frame_buffer.pop(0)
-        len_ = len(self.frame_buffer)-1
-        pastKframes = self.frame_buffer[len_-self.before : len_-self.before-self.k*self.stride : -self.stride]
-        img_np = np.concatenate(pastKframes,axis=-1)
-        assert img_np.shape[-1] == self.k, "simple sanity check: the number of extracted past frames should be K"
-
-        GHmap = self.gaze_pred_model.predict(img_np[..., np.newaxis])
+        img_np = self.extract_and_pop_buffer(self.frame_buffer)
+        GHmap = self.gaze_pred_model.predict(img_np)
         logits = self.model.predict([img_np[...,-2:-1], GHmap])[0] # returns a size-2 list where element [0] are the logits
         assert len(logits.shape)==2 and (logits.dtype==np.float32 or logits.dtype==np.float64), "simple sanity check: pred should be a vector containing probabilities of each action"
     return {"gaze": GHmap, "raw_logits": logits}
