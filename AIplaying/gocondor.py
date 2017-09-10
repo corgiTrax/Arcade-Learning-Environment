@@ -8,7 +8,7 @@ def create_bgrun_sh_content_imgOf_model(GAME_NAME):
     model_name = "PastKFrameOpticalFlowGaze_and_CurrentFrameAction"
     model_file = "PreMul-2ch_actionModels/%s.gazeIsFrom.Img+OF.hdf5" % GAME_NAME
     mean_file = "Img+OF_gazeModels/%s.mean.npy" % GAME_NAME
-    gaze_model_file = "Img+OF_gazemodels/%s.hdf5" % GAME_NAME 
+    gaze_model_file = "Img+OF_gazeModels/%s.hdf5" % GAME_NAME 
     optical_flow_mean_file = "Img+OF_gazeModels/%s.of.mean.npy" % GAME_NAME
     sh_file_content += ' '.join(['ipython', 'runai_noScrSupport.py', '--',
       rom_file, model_name, model_file, mean_file,
