@@ -1,0 +1,112 @@
+import tensorflow as tf, numpy as np, keras as K, sys
+import keras.layers as L
+from keras.models import Model, Sequential # keras/engine/training.py
+from IPython import embed
+import input_utils, misc_utils as MU
+import ipdb
+
+
+NUM_CLASSES=18
+BASE_FILE_NAME = "/scratch/cluster/zharucs/dataset_gaze/" + sys.argv[2]
+LABELS_FILE_TRAIN = BASE_FILE_NAME + '-train.txt'
+LABELS_FILE_VAL =  BASE_FILE_NAME + '-val.txt'
+pastK=4
+pKf_or_cur = '-image+opf_past4.npz' if pastK>1 else '-current_frame.npz'
+PRED_GAZE_FILE_TRAIN = BASE_FILE_NAME + '-train' + pKf_or_cur
+PRED_GAZE_FILE_VAL = BASE_FILE_NAME + '-val' + pKf_or_cur
+GAZE_POS_ASC_FILE = BASE_FILE_NAME + '.asc'
+SHAPE = (84,84,1) # height * width * channel This cannot read from file and needs to be provided here
+BATCH_SIZE=100
+num_epoch = 50
+dropout = float(sys.argv[1])
+MODEL_DIR = sys.argv[3]
+resume_model = False
+run_number = sys.argv[4]
+save_model = True if '--save' in sys.argv else False
+
+MU.keras_model_serialization_bug_fix()
+expr = MU.ExprCreaterAndResumer(MODEL_DIR,postfix="PreMul_2ch_run%s_dr%s_bestArch_img+opf" % (run_number, str(dropout)))
+print sys.argv
+
+if True: # I just want to indent
+    gaze_heatmaps = L.Input(shape=(SHAPE[0],SHAPE[1],1))
+    g=gaze_heatmaps
+    g=L.BatchNormalization()(g)
+
+    imgs=L.Input(shape=SHAPE)
+    x=imgs
+    x=L.Multiply()([x,g])
+    x_intermediate=x
+    x=L.Conv2D(32, (8,8), strides=4, padding='same')(x)
+    x=L.BatchNormalization()(x)
+    x=L.Activation('relu')(x)
+    x=L.Dropout(dropout)(x)
+
+    x=L.Conv2D(64, (4,4), strides=2, padding='same')(x)
+    x=L.BatchNormalization()(x)
+    x=L.Activation('relu')(x)
+    x=L.Dropout(dropout)(x)
+
+    x=L.Conv2D(64, (3,3), strides=1, padding='same')(x)
+    x=L.BatchNormalization()(x)
+    x=L.Activation('relu')(x)
+# ============================ channel 2 ============================
+    orig_x=imgs
+    orig_x=L.Conv2D(32, (8,8), strides=4, padding='same')(orig_x)
+    orig_x=L.BatchNormalization()(orig_x)
+    orig_x=L.Activation('relu')(orig_x)
+    orig_x=L.Dropout(dropout)(orig_x)
+
+    orig_x=L.Conv2D(64, (4,4), strides=2, padding='same')(orig_x)
+    orig_x=L.BatchNormalization()(orig_x)
+    orig_x=L.Activation('relu')(orig_x)
+    orig_x=L.Dropout(dropout)(orig_x)
+
+    orig_x=L.Conv2D(64, (3,3), strides=1, padding='same')(orig_x)
+    orig_x=L.BatchNormalization()(orig_x)
+    orig_x=L.Activation('relu')(orig_x)
+
+    x=L.Average()([x,orig_x])
+    x=L.Dropout(dropout)(x)
+    x=L.Flatten()(x)
+    x=L.Dense(512, activation='relu')(x)
+    x=L.Dropout(dropout)(x)
+    logits=L.Dense(NUM_CLASSES, name="logits")(x)
+    prob=L.Activation('softmax', name="prob")(logits)
+
+    model=Model(inputs=[imgs, gaze_heatmaps], outputs=[logits, prob, g, x_intermediate])
+    opt=K.optimizers.Adadelta(lr=1.0, rho=0.95, epsilon=1e-08, decay=0.0)
+    model.compile(loss={"prob":None, "logits": MU.loss_func},
+                optimizer=opt,metrics={"logits": MU.acc_})
+
+expr.dump_src_code_and_model_def(sys.argv[0], model)
+
+d=input_utils.Dataset(LABELS_FILE_TRAIN, LABELS_FILE_VAL, SHAPE)
+input_utils.load_predicted_gaze_heatmap_into_dataset_train_GHmap_val_GHmap(
+    PRED_GAZE_FILE_TRAIN, PRED_GAZE_FILE_VAL, d, pastK)
+
+model.fit([d.train_imgs, d.train_GHmap], d.train_lbl, BATCH_SIZE, epochs=num_epoch,
+    validation_data=([d.val_imgs, d.val_GHmap], d.val_lbl),
+    shuffle=True,verbose=2,
+    callbacks=[K.callbacks.TensorBoard(log_dir=expr.dir),
+        K.callbacks.ReduceLROnPlateau(monitor='val_loss', factor=0.5,patience=3, min_lr=0.001),
+        MU.PrintLrCallback()])
+
+score = model.evaluate([d.val_imgs, d.val_GHmap], d.val_lbl, BATCH_SIZE, 0)
+expr.printdebug("eval score:" + str(score))
+
+if save_model:
+  expr.save_weight_and_training_config_state(model) # uncomment this line if you want to save model
+
+# add 'embed()' between "d=input_utils.Dataset..." and "model.fit()", then copy & paste the following to visualize 2 intermediate layers
+# res=model.predict([d.val_imgs, d.val_GHmap])
+# # Depending on the specfic model definition, you might need to change 'model.layers[0]', model.layers[3]' to something else
+# # In general, look at https://keras.io/getting-started/faq/#how-can-i-obtain-the-output-of-an-intermediate-layer
+# g2convout=K.backend.function([model.layers[0].input,K.backend.learning_phase()],[model.layers[3].output]) 
+# idx=1200
+# f,axarr=plt.subplots(1,5)
+# axarr[0].imshow(d.val_imgs[idx,...,0])
+# axarr[1].imshow(d.val_GHmap[idx,...,0])
+# axarr[2].imshow(g2convout([d.val_GHmap[idx].reshape(1,84,84,1),1])[0].reshape(84,84))
+# axarr[3].imshow(res[2][idx,...,0])
+# axarr[4].imshow(res[3][idx,...,0])
