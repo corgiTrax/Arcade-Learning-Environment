@@ -5,6 +5,8 @@ import sys
 
 if len(sys.argv) == 1:
     print "Usage: %s directory_name [regex_filter(default='.*')]" % sys.argv[0]
+    print "This is a tool to extract the final accuracy line in the output of a training process,"
+    print "<directory_name> should be the 'model log output', which is MODEL_DIR in main-*.py"
     sys.exit(0)
 
 if len(sys.argv) < 3:
