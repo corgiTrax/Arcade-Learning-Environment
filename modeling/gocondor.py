@@ -1,4 +1,11 @@
 #!/usr/bin/env python
+"""
+This is an independent script that can be used to submit jobs to condor,
+and run the same xxx.py file with different hyper-parameters.
+The primary place you might want to change is multi_experiment().
+For more detailed behaviors, please take a look at the code.
+"""
+
 def multi_experiment():
   l = [] # compose a list of arguments needed to be passed to the python script
   EXPRIMENTS=[
