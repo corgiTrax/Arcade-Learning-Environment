@@ -4,10 +4,15 @@ import time
 def multi_experiment():
     l = [] # compose a list of arguments needed to be passed to the python script
 
-    for name in ["seaquest","mspacman","centipede","freeway","venture","riverraid","enduro","breakout"]: 
-    #for name in ["venture"]:
-        for dp in ["0 0.0","0 0.1","0 0.2","0 0.3","0 0.4","0 0.5"]: 
+#    for name in ["seaquest","mspacman","centipede","freeway","venture","riverraid","enduro","breakout"]: 
+#    #for name in ["venture"]:
+#        for dp in ["0 0.0","0 0.1","0 0.2","0 0.3","0 0.4","0 0.5"]: 
+#            l.append(' '.join([name,dp]))
+
+    for name in ["seaquest"]: 
+        for dp in ["0 0.0"]: 
             l.append(' '.join([name,dp]))
+
     return l
 
 import sys, re, os, subprocess

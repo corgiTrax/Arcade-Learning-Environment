@@ -2,7 +2,12 @@
 # Author: Zhuode Liu
 
 # Replay the game using saved frames and gaze positions recorded in a ASC file 
+# Meanwhile overlay the predicted heatmaps on the frames
 # (ASC files are converted from EDF files, which are produced by EyeLink eyetracker)
+# This file takes two arguments:
+#   the path and name of the dataset that you want to replay
+#   the path of the directory where you save the predicted heatmaps (the directory named 'saliency')
+#example: ./replay_heatmap.py ../../dataset_gaze/54_RZ_2461867_Aug-11-09-35-18 Image+OpticalFlow/Seaquest/45_pKf_dp0.4_k4s1/
 
 import sys, pygame, time, os, re, tarfile, cStringIO as StringIO, numpy as np
 from pygame.constants import *
@@ -105,6 +110,7 @@ if __name__ == "__main__":
 
     tar = tarfile.open(DATASET_NAME + '.tar.bz2', 'r')
     asc_path = DATASET_NAME + '.asc'
+    dataset_dir = os.path.dirname(asc_path) + '/'
 #    result_path = '../../dataset_gaze/' + RESULT_FILE_NAME + '.txt'
     
     png_files = tar.getnames()
@@ -124,8 +130,6 @@ if __name__ == "__main__":
     frameid2pos, _ = read_gaze_data_asc_file(asc_path)
     # print "Reading predict gaze positions into memory..."
     # predicts = read_result_data(result_path, RESIZE_SHAPE)
-    # print "Reading predict heatmap into memory..."
-    # heatmaps = read_heatmap(heatmap_path) # heatmaps = {fid: [heatmap]}
     dw = drawgc_wrapper('original')
     # dw_pred = drawgc_wrapper('predict')
 
@@ -135,7 +139,6 @@ if __name__ == "__main__":
     last_time = time.time()
     clock = pygame.time.Clock()
     while ds.cur_frame_id < ds.total_frame:
-        #print(ds.cur_frame_id)
         clock.tick(ds.target_fps)  # control FPS 
 
         # Display FPS
@@ -148,17 +151,16 @@ if __name__ == "__main__":
         event_handler_func()
 
         # Load PNG file and draw the frame and the gaze-contingent window
-        img = cv2.imread("/scratch/cluster/zharucs/dataset_gaze/" + png_files[ds.cur_frame_id-1], cv2.IMREAD_GRAYSCALE)
+        img = cv2.imread(dataset_dir + png_files[ds.cur_frame_id-1], cv2.IMREAD_GRAYSCALE)
         img = np.swapaxes(img, 0, 1)
         img = np.expand_dims(img, axis=2)
         img = np.repeat(img, 3, axis=2)
-        #s = pygame.image.load("/scratch/cluster/zharucs/dataset_gaze/" + png_files[ds.cur_frame_id])
         s = pygame.surfarray.make_surface(img)
         s = pygame.transform.scale(s, (w,h))
         pygame.Surface.convert_alpha(s)
         s.set_alpha(100)
         try:
-            heatmap = pygame.image.load(MODEL + "saliency/" + png_files[ds.cur_frame_id-1])
+            heatmap = pygame.image.load(MODEL + "/saliency/" + png_files[ds.cur_frame_id-1])
             heatmap = pygame.transform.smoothscale(heatmap, (w,h))
         except pygame.error:
             heatmap = s
@@ -201,5 +203,3 @@ if __name__ == "__main__":
 
     print "Replay ended."
 
-
-''

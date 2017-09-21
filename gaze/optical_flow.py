@@ -7,14 +7,15 @@ from replay import preprocess_and_sanity_check
 RESIZE_SHAPE = (84,84)
 INPUT_SHAPE = (210,160)
 
-if len(sys.argv) < 2:
-   print "Usage: %s saved_frames_png_tar" % (sys.argv[0])
+if len(sys.argv) < 3:
+   print "Usage: %s saved_frames_png_tar save_path" % (sys.argv[0])
    sys.exit(0)
 
 dataset = sys.argv[1]
 dataset_name = dataset.split('.')[-3].split('/')[-1] # eg: 42_RZ_4988291_May-16-21-33-46
-if not os.path.exists('../../dataset_gaze/optical_flow/' + dataset_name):
-    os.mkdir('../../dataset_gaze/optical_flow/' + dataset_name)
+save_path = sys.argv[2]
+if not os.path.exists(save_path + dataset_name):
+    os.mkdir(save_path + dataset_name)
 
 tar = tarfile.open(dataset, 'r')
 png_files = tar.getnames()
@@ -39,7 +40,7 @@ def read_thread(PID):
         
         gray = cv2.normalize(v, None, 0, 255, cv2.NORM_MINMAX)
         gray = cv2.resize(gray, RESIZE_SHAPE)
-        cv2.imwrite('../../dataset_gaze/optical_flow/' + png_files[i], gray)
+        cv2.imwrite(save_path + png_files[i], gray)
 
         # print the processing bar
         print "\r%d/%d" % (i,l),

@@ -248,9 +248,9 @@ class Dataset(object):
     print "Done."
 
   def standardize(self):
-    mean = np.mean(self.train_imgs, axis=(0,1,2))
-    self.train_imgs -= mean # done in-place --- "x-=mean" is faster than "x=x-mean"
-    self.val_imgs -= mean
+    self.mean = np.mean(self.train_imgs, axis=(0,1,2))
+    self.train_imgs -= self.mean # done in-place --- "x-=mean" is faster than "x=x-mean"
+    self.val_imgs -= self.mean
 
 class Dataset_PastKFrames(Dataset):
   def __init__(self, LABELS_FILE_TRAIN, LABELS_FILE_VAL, RESIZE_SHAPE, K, stride=1, before=0):
@@ -405,9 +405,9 @@ class Dataset_OpticalFlow(object):
         print "Done."
 
     def standardize_opticalflow(self):
-        mean = np.mean(self.train_flow, axis=(0,1,2))
-        self.train_flow -= mean # done in-place --- "x-=mean" is faster than "x=x-mean"
-        self.val_flow -= mean
+        self.mean = np.mean(self.train_flow, axis=(0,1,2))
+        self.train_flow -= self.mean # done in-place --- "x-=mean" is faster than "x=x-mean"
+        self.val_flow -= self.mean
 
 
 class Dataset_OpticalFlow_PastKFrames(Dataset_OpticalFlow):
