@@ -44,21 +44,26 @@ Seaquest
 51 RZ seaquest data ok load 2315865 saveto: 2389912 fps: 20
 
 MsPacman
-
+117 mspacman data ok load ms_pacmanRZ_3438636 saveto: none fps: 20 (died)
+118 mspacman data ok load ms_pacmanRZ_3438636 saveto: ms_pacmanRZ_4303947.npz fps: 20
+119 mspacman data ok load ms_pacmanRZ_4303947 saveto: none fps: 20 (died)
 
 Centipede
-
+115 centipede data ok load centipedeRZ_3528023.npz saveto: centipedeRZ_4218030.npz fps: 20
+116 centipede data ok load centipedeRZ_4218030.npz saveto: centipedeRZ_4219621.npz fps: 20
 
 Freeway
---find one with highest score
+- done
 
 Venture
+- done
 
 Riverraid
 
 Enduro 
 
 Breakout
+120 breakout data ok load breakoutRZ_2923868.nps saveto: none fps: 20 
 
 ========================================
 ========================================

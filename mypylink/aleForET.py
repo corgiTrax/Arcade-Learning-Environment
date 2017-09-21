@@ -13,10 +13,13 @@ print("****************************FrameRate:%s**********************" % FRAME_R
 
 class aleForET:
     def __init__(self,rom_file, screen, rndseed, resume_state_file=None):
-
-        # Setting up the pygame screen Surface
-        pygame.init()
-        self.screen = screen
+    # When you might pass None to screen:
+    # You are not interested in running any functions that displays graphics
+    # For example, you should only run proceed_one_step__fast__no_scr_support()
+    # Otherwise, those functions uses self.screen and you will get a RuntimeError
+        if screen != None:
+            pygame.init()
+            self.screen = screen
         GAME_W, GAME_H = 160, 210
         self.size = GAME_W * V.xSCALE, GAME_H * V.ySCALE
 
@@ -92,6 +95,7 @@ class aleForET:
         self.frame_cnt += 1
         cur_frame_np = self.ale.getScreenRGB()
         reward = self.ale.act(action)
+        self.score += reward
         return cur_frame_np, reward, self.check_episode_end_and_if_true_reset_game()
 
     def check_episode_end_and_if_true_reset_game(self):
