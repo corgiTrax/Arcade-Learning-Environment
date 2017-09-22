@@ -1,13 +1,14 @@
 #!/usr/bin/env python
-
 import os, re, threading, time
 import numpy as np
 from IPython import embed
 from scipy import misc
 import vip_constants as V
+# Don't import tensorflow or keras here, as people who import this file might not have keras or tf
 
 
-# This method is for the expr that  multiply the game frame using a predicted gaze heatmap, which is the output from another model that predicts gaze.
+# This method is for the expr that multiply the game frame using a predicted gaze heatmap, 
+# which is the output from another model that predicts gaze.
 # So make sure you do the check for yourself and provide this method correct data.
 def load_predicted_gaze_heatmap_into_dataset_train_GHmap_val_GHmap(train_npz, val_npz, d, pastK):
     train_npz = np.load(train_npz)
@@ -33,81 +34,7 @@ def load_predicted_gaze_heatmap_into_dataset_train_GHmap_val_GHmap(train_npz, va
     validate_data(train_npz['fid'], d.train_fid, d.train_imgs, d.train_GHmap)
     validate_data(val_npz['fid'], d.val_fid, d.val_imgs, d.val_GHmap)
 
-def _experimental_foveat_preprocessing(img_dataset, gaze_yx_dataset):
-    from scipy.stats import multivariate_normal
-    import tensorflow as tf, keras as K # don't move this to the top, as people who import this file might not have keras or tf
-
-    batch_size = 50
-    _mul = img_dataset.shape[0] / batch_size
-    img_dataset = img_dataset[:_mul*batch_size]
-    gaze_yx_dataset = gaze_yx_dataset[:_mul*batch_size]
-
-    img_in = K.layers.Input(shape=(img_dataset.shape[1],img_dataset.shape[2],1))
-    gaze_yx_in = K.layers.Input(shape=(2,), dtype='int32')
-
-    def gFilter_layer(img, sigmaH, sigmaW):
-        lh, lw = int(4*sigmaH), int(4*sigmaW)
-        x, y = np.mgrid[-lh:lh+1:1, -lw:lw+1:1] # so the kernel size is [lh*2+1,lw*2+1]
-        pos = np.dstack((x, y))
-        gkernel=multivariate_normal.pdf(pos,mean=[0,0],cov=[[sigmaH*sigmaH,0],[0,sigmaW*sigmaW]])
-        assert gkernel.sum() > 0.95, "Simple sanity check: prob density should add up to nearly 1.0"
-
-        img=K.layers.Lambda(lambda x: tf.pad(x,[(0,0),(lh,lh),(lw,lw),(0,0)],'REFLECT'))(img)
-        img=K.layers.Conv2D(1, kernel_size=gkernel.shape, strides=1, padding="valid", use_bias=False,
-              activation="linear", kernel_initializer=K.initializers.Constant(gkernel))(img)
-        return img
-
-    def box(gpos_yx, radius_yx, limit_yx):
-        lowy, lowx = gpos_yx[0]-radius_yx[0], gpos_yx[1]-radius_yx[1]
-        lowy = tf.clip_by_value(lowy, 0, limit_yx[0])
-        lowx = tf.clip_by_value(lowx, 0, limit_yx[1])
-        highy, highx = gpos_yx[0]+radius_yx[0], gpos_yx[1]+radius_yx[1]
-        highy = tf.clip_by_value(highy, 0, limit_yx[0])
-        highx = tf.clip_by_value(highx, 0, limit_yx[1])
-        return lowy, highy,lowx, highx
-
-    img1 = img_in
-    img2 = gFilter_layer(img1, 1.0, 1.0)
-    img3 = gFilter_layer(img1, 1.5, 1.5)
-    img4 = gFilter_layer(img1, 2.0, 2.0)
-    img5 = gFilter_layer(img1, 3.0, 3.0)
-    # img_syn = tf.Variable(tf.zeros(shape=img_dataset.shape, dtype=img_in.dtype))
-    # img_syn.assign(img5)
-    class MyLayer(K.engine.topology.Layer):
-        def build(self, input_shape):
-            self.img_syn = self.add_weight(name='img_syn', 
-                                          shape=(batch_size,img_dataset.shape[1],img_dataset.shape[2],1),
-                                          initializer='zeros',
-                                          trainable=False)
-            super(MyLayer, self).build(input_shape)  
-
-        def compute_output_shape(self, input_shape):
-            return input_shape
-
-        def call(self, img5):
-            for i in range(batch_size):
-                box_ = lambda radius: box(gaze_yx_in[i], (radius,radius), (img_dataset.shape[1],img_dataset.shape[2]))
-                img_syn = self.img_syn
-                l1 = box_(4)
-                l2 = box_(8)
-                l3 = box_(16)
-                l4 = box_(32)
-
-                img_syn.assign(img5)
-                img_syn[i,l4[0]:l4[1],l4[2]:l4[3],:].assign(img4[i,l4[0]:l4[1],l4[2]:l4[3],:])
-                img_syn[i,l3[0]:l3[1],l3[2]:l3[3],:].assign(img3[i,l3[0]:l3[1],l3[2]:l3[3],:])
-                img_syn[i,l2[0]:l2[1],l2[2]:l2[3],:].assign(img2[i,l2[0]:l2[1],l2[2]:l2[3],:])
-                img_syn[i,l1[0]:l1[1],l1[2]:l1[3],:].assign(img1[i,l1[0]:l1[1],l1[2]:l1[3],:])
-            return img_syn
-    img_syn = MyLayer()(img5)
-
-    model = K.models.Model(inputs=[img_in, gaze_yx_in], outputs=img_syn)
-    model.compile(optimizer='rmsprop', # not used
-          loss='categorical_crossentropy', # not used
-          metrics=None)
-    output=model.predict([img_dataset, np.array(gaze_yx_dataset,dtype=np.int32)], batch_size=batch_size, verbose=1)
-    return output
-
+# bg_prob_density seems to hurt accuracy. Better set it to 0
 def preprocess_gaze_heatmap(GHmap, sigmaH, sigmaW, bg_prob_density, debug_plot_result=False):
     from scipy.stats import multivariate_normal
     import tensorflow as tf, keras as K # don't move this to the top, as people who import this file might not have keras or tf
@@ -370,6 +297,8 @@ def transform_to_past_K_frames(original, K, stride, before):
     newdat_np = np.array(newdat)
     return newdat_np
 
+# Note(Zhuode Liu): In this dataset, all gaze positions belonging to the current frame is converted
+# into a gaze heat map and is applied preprocess_gaze_heatmap() which, at the time of writing, does gaussian blur.
 class DatasetWithGaze(Dataset):
   frameid2pos, frameid2heatmap, frameid2action_notused = None, None, None
   train_GHmap, val_GHmap = None, None # GHmap means gaze heap map
@@ -402,74 +331,6 @@ class DatasetWithGaze(Dataset):
     self.val_GHmap = preprocess_gaze_heatmap(self.val_GHmap, sigmaH, sigmaW, bg_prob_density)
     print "Done. convert_gaze_pos_to_heap_map() and convolution used: %.1fs" % (time.time()-t1)
 
-class DatasetCenteredAtLastGaze(Dataset):
-    frameid2pos, frameid2action_notused = None, None
-
-    def __init__(self, LABELS_FILE_TRAIN, LABELS_FILE_VAL, RESIZE_SHAPE, GAZE_POS_ASC_FILE, K=1, stride=1, before=0):
-        super(DatasetCenteredAtLastGaze, self).__init__(LABELS_FILE_TRAIN, LABELS_FILE_VAL, RESIZE_SHAPE)
-        self.RESIZE_SHAPE = RESIZE_SHAPE
-        print "Reading gaze data ASC file..."
-        self.frameid2pos, self.frameid2action_notused = read_gaze_data_asc_file(GAZE_POS_ASC_FILE)
-        print "Running rescale_and_clip_gaze_pos_on_frameid2pos()..."
-        self.rescale_and_clip_gaze_pos_on_frameid2pos(self.frameid2pos)
-
-        print  "Running center_img_at_gaze() on train/val data..."
-        rev = lambda (x,y): (y,x)
-        last_gaze_of = lambda gaze_pos_list: rev(gaze_pos_list[-1]) if gaze_pos_list else (RESIZE_SHAPE[0]/2, RESIZE_SHAPE[1]/2)
-        self.train_gaze_y_x = np.asarray([last_gaze_of(self.frameid2pos[fid]) for fid in self.train_fid])
-        self.train_imgs = self.center_img_at_gaze(self.train_imgs, self.train_gaze_y_x)
-        self.val_gaze_y_x = np.asarray([last_gaze_of(self.frameid2pos[fid]) for fid in self.val_fid])
-        self.val_imgs = self.center_img_at_gaze(self.val_imgs, self.val_gaze_y_x)    
-
-        print  "Making past-K-frame train/val data..."
-        t1=time.time()
-        self.train_imgs = transform_to_past_K_frames(self.train_imgs, K, stride, before)
-        self.val_imgs = transform_to_past_K_frames(self.val_imgs, K, stride, before)
-        # Trim labels. This is assuming the labels align with the training examples from the back!!
-        # Could cause the model unable to train  if this assumption does not hold
-        self.train_lbl = self.train_lbl[-self.train_imgs.shape[0]:]
-        self.val_lbl = self.val_lbl[-self.val_imgs.shape[0]:]
-        print "Time spent to transform train/val data to pask K frames: %.1fs" % (time.time()-t1)
-  
-    def rescale_and_clip_gaze_pos_on_frameid2pos(self, frameid2pos):
-        bad_count, tot_count = 0, 0
-        for fid in frameid2pos:
-            gaze_pos_list = frameid2pos[fid]
-            tot_count += len(gaze_pos_list)
-            for (i, (x, y)) in enumerate(gaze_pos_list):
-                isbad, newx, newy = rescale_and_clip_gaze_pos(x,y,self.RESIZE_SHAPE[0],self.RESIZE_SHAPE[1])
-                bad_count += isbad
-                gaze_pos_list[i] = (newx, newy)  
-        print "Bad gaze (x,y) sample: %d (%.2f%%, total gaze sample: %d)" % (bad_count, 100*float(bad_count)/tot_count, tot_count)    
-        print "'Bad' means the gaze position is outside the 160*210 screen"
-
-    def center_img_at_gaze(self, frame_dataset, gaze_y_x_dataset, debug_plot_result=False):
-        import tensorflow as tf, keras as K # don't move this to the top, as people who import this file might not have keras or tf
-        import keras.layers as L
-        gaze_y_x = L.Input(shape=(2,))
-        imgs = L.Input(shape=(frame_dataset.shape[1:]))
-        h, w = frame_dataset.shape[1:3]
-        c_img = L.ZeroPadding2D(padding=(h,w))(imgs)
-        c_img = L.Lambda(lambda x: tf.image.extract_glimpse(x, size=(2*h,2*w), offsets=(gaze_y_x+(h,w)), centered=False, normalized=False))(c_img)
-        # c_img = L.Lambda(lambda x: tf.image.resize_images(x, size=(h,w)))(c_img)
-
-        model=K.models.Model(inputs=[imgs, gaze_y_x], outputs=[c_img])
-        model.compile(optimizer='rmsprop', # not used
-          loss='categorical_crossentropy', # not used
-          metrics=None)
-        output=model.predict([frame_dataset, gaze_y_x_dataset], batch_size=500)
-        if debug_plot_result:
-            print r"""debug_plot_result is True. Entering IPython console. You can run:
-            %matplotlib
-            import matplotlib.pyplot as plt
-            plt.style.use('grayscale')
-            f, axarr = plt.subplots(1,2)
-            rnd=np.random.randint(output.shape[0]); print "rand idx:", rnd
-            axarr[0].imshow(frame_dataset[rnd,...,0])
-            axarr[1].imshow(output[rnd,...,0])"""
-            embed()
-
-        return output
 
 def read_np_parallel(label_file, RESIZE_SHAPE, num_thread=6):
     """
@@ -524,6 +385,11 @@ class ForkJoiner():
     def join(self):
         for t in self.threads: t.join()
 
+
+# Note(Zhuode Liu): This class represents a historical model that doesn't perform well.
+# It generates past K frames like class Dataset_PastKFrames does, but what's different is that
+# it first search for the frame that is at least `ms_before` (the input argument). Starting from
+# there, it extracts past K frame. So if ms_before==0, it behaves the same as Dataset_PastKFrames.
 class Dataset_PastKFramesByTime(Dataset):
   def __init__(self, LABELS_FILE_TRAIN, LABELS_FILE_VAL, RESIZE_SHAPE, GAZE_POS_ASC_FILE, K, stride=1, ms_before=0):
     super(Dataset_PastKFramesByTime, self).__init__(LABELS_FILE_TRAIN, LABELS_FILE_VAL, RESIZE_SHAPE)
@@ -579,6 +445,11 @@ def transform_to_past_K_frames_ByTime(frame_dataset, frame_fid_list, all_frame, 
     newlbl_np = np.array(newlbl, dtype=np.int32)
     return newdat_np, newlbl_np
 
+# Note(Zhuode Liu): This class represents a historical model that doesn't perform well.
+# It generates the gaze heat map using gazes within a given *time window* instead of past K frames.
+# Later on we thought about why it performs badly: the gaze in (say) 100ms ago is for the object 100ms ago,
+# but that object could be moving to a different location in current frame. So the gaze heat map doesn't overlap
+# with current frame. However, this method still has research value though. So we leave it here for future modification.
 class DatasetWithGazeWindow(Dataset):
     def __init__(self, LABELS_FILE_TRAIN, LABELS_FILE_VAL, RESIZE_SHAPE, GAZE_POS_ASC_FILE, bg_prob_density, gaussian_sigma,
         window_left_bound_ms=1000, window_right_bound_ms=0):
