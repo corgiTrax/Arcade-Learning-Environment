@@ -1,14 +1,18 @@
 #!/usr/bin/env python
+import time
 
 def multi_experiment():
     l = [] # compose a list of arguments needed to be passed to the python script
-#  for dp in ["0 0.2","0 0.3","0 0.4","0 0.5"]:
-#    for lr in ["0.1","0.05","0.01","0.005","0.001"]:
-#        l.append(' '.join([dp,lr]))
-    for dp in ["0 0.3","0 0.4","0 0.5"]: 
-        for k in ["2","4","8"]:
-            for s in ["1"]:
-                l.append(' '.join([dp,k,s]))
+
+#    for name in ["seaquest","mspacman","centipede","freeway","venture","riverraid","enduro","breakout"]: 
+#    #for name in ["venture"]:
+#        for dp in ["0 0.0","0 0.1","0 0.2","0 0.3","0 0.4","0 0.5"]: 
+#            l.append(' '.join([name,dp]))
+
+    for name in ["seaquest"]: 
+        for dp in ["0 0.0"]: 
+            l.append(' '.join([name,dp]))
+
     return l
 
 import sys, re, os, subprocess
@@ -52,4 +56,5 @@ for arg_str in arg_str_list:
     f.write(submission)
 
   subprocess.call(['condor_submit', 'submit.condor'])
+  #time.sleep(60)
 

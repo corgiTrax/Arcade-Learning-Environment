@@ -67,6 +67,9 @@ def keras_model_serialization_bug_fix(): # stupid keras
         get_custom_objects().update({obj_to_serialize.__name__: obj_to_serialize})
     f(loss_func)
     f(acc_)
+    f(my_softmax)
+    f(my_kld)
+    f(NSS)
 
 def loss_func(target, pred): 
     return K.backend.sparse_categorical_crossentropy(output=pred, target=target, from_logits=True)
@@ -93,9 +96,11 @@ def my_kld(y_true, y_pred):
     """
     Correct keras bug. Compute the KL-divergence between two metrics.
     """
-    y_true = K.backend.clip(y_true, K.backend.epsilon(), 1)
-    y_pred = K.backend.clip(y_pred, K.backend.epsilon(), 1)
+    epsilon = 1e-10 # introduce epsilon to avoid log and division by zero error
+    y_true = K.backend.clip(y_true, epsilon, 1)
+    y_pred = K.backend.clip(y_pred, epsilon, 1)
     return K.backend.sum(y_true * K.backend.log(y_true / y_pred), axis = [1,2,3])
+        
 
 def NSS(y_true, y_pred):
     """

@@ -94,11 +94,13 @@ if __name__ == "__main__":
     if len(sys.argv) < 4:
         print "Usage: %s saved_frames_png_tar asc_file result_file_txt" % (sys.argv[0])
         sys.exit(0)
-
-    tar = tarfile.open(sys.argv[1], 'r')
+    
+    png_tar = sys.argv[1]
+    tar = tarfile.open(png_tar, 'r')
     #asc_path = sys.argv[1].split(".")[0] + ".asc"
     asc_path = sys.argv[2]
     result_path = sys.argv[3]
+    dataset_dir = os.path.dirname(png_tar)+'/'
 
     png_files = tar.getnames()
     png_files = preprocess_and_sanity_check(png_files)
@@ -122,7 +124,7 @@ if __name__ == "__main__":
 
     ds.target_fps = 60
     ds.total_frame = len(png_files)
-
+i
     last_time = time.time()
     clock = pygame.time.Clock()
     while ds.cur_frame_id < ds.total_frame:
@@ -139,7 +141,7 @@ if __name__ == "__main__":
         event_handler_func()
 
         # Load PNG file and draw the frame and the gaze-contingent window
-        s = pygame.image.load("/scratch/cluster/zharucs/dataset_gaze/" + png_files[ds.cur_frame_id])
+        s = pygame.image.load(dataset_dir + png_files[ds.cur_frame_id-1])
         s = pygame.transform.scale(s, (w,h))
         screen.blit(s, (0,0))
         UFID=(UTIDhash, ds.cur_frame_id) # Unique frame ID in 'frameid2pos' is defined as a tuple: (UTID's hash value, frame number)

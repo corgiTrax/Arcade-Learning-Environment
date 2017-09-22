@@ -2,6 +2,7 @@
 
 import os, re, threading, time, tarfile
 import numpy as np
+import ipdb
 from IPython import embed
 from scipy import misc
 import vip_constants as V
@@ -149,28 +150,18 @@ def read_gaze_data_asc_file(fname):
     freg = "[-+]?[0-9]*\.?[0-9]+" # regex for floating point numbers
     gaze_msg = re.compile("(\d+)\s+(%s)\s+(%s)" % (freg, freg))
     act_msg = re.compile("MSG\s+(\d+)\s+key_pressed atari_action (\d+)")
-    bad_gaze = False
 
     for (i,line) in enumerate(lines):
 
         match_sample = gaze_msg.match(line)
-        if match_sample and not bad_gaze:
+        if match_sample:
             timestamp, xpos, ypos = match_sample.group(1), match_sample.group(2), match_sample.group(3)
             xpos, ypos = float(xpos), float(ypos)
-            if xpos >= V.SCR_W or ypos >= V.SCR_H:
-                bad_gaze = True
-            else:
-                frameid2pos[frameid].append((xpos,ypos))
+            frameid2pos[frameid].append((xpos,ypos))
             continue
 
         match_scr_msg = scr_msg.match(line)
         if match_scr_msg: # when a new id is encountered
-            # take care of the last frame's gaze
-            # give (-1,-1) for bad gaze. in real gaze will never be minus
-            if bad_gaze:
-                frameid2pos[frameid] = [(-1,-1)]
-                bad_gaze = False
-
             timestamp, frameid, UTID = match_scr_msg.group(1), match_scr_msg.group(2), match_scr_msg.group(3)
             frameid = make_unique_frame_id(UTID, frameid)
             frameid2pos[frameid] = []
@@ -186,8 +177,7 @@ def read_gaze_data_asc_file(fname):
                 print "Warning: there are more than 1 action for frame id %s. Not supposed to happen." % str(frameid)
             continue
 
-    frameid2pos[frameid] = [(-1,-1)] # throw out gazes after the last frame, because the game has ended but eye tracker keeps recording
-    frameid2action[frameid] = -1 # set the last no-action frame's action to -1
+    frameid2pos[frameid] = [] # throw out gazes after the last frame, because the game has ended but eye tracker keeps recording
 
     if len(frameid2pos) < 1000: # simple sanity check
         print "Warning: did you provide the correct ASC file? Because the data for only %d frames is detected" % (len(frameid2pos))
@@ -196,7 +186,8 @@ def read_gaze_data_asc_file(fname):
     few_cnt = 0
     for v in frameid2pos.values():
         if len(v) < 10: few_cnt += 1
-    print "Warning:  %d frames have less than 10 gaze samples. (%.1f%%, total frame: %d)" % (few_cnt, 100.0*few_cnt/len(frameid2pos), len(frameid2pos))
+    print "Warning:  %d frames have less than 10 gaze samples. (%.1f%%, total frame: %d)" % \
+        (few_cnt, 100.0*few_cnt/len(frameid2pos), len(frameid2pos))
     return frameid2pos, frameid2action
 
 def convert_gaze_pos_to_heap_map(gaze_pos_list, out):
@@ -221,6 +212,17 @@ def transform_to_past_K_frames(original, K, stride, before):
     newdat_np = np.array(newdat)
     return newdat_np
 
+def rescale_and_clip_gaze_pos(x,y,RESIZE_H,RESIZE_W):
+    isbad=0
+    newy, newx = int(y/V.SCR_H*RESIZE_H), int(x/V.SCR_W*RESIZE_W)
+    if newx >= RESIZE_W or newx<0:
+        isbad = 1
+        newx = np.clip(newx, 0, RESIZE_W-1)
+    if newy >= RESIZE_H or newy<0:
+        isbad = 1
+        newy = np.clip(newy, 0, RESIZE_H-1)
+    return isbad, newx, newy
+
 class Dataset(object):
   train_imgs, train_lbl, train_gaze, train_fid, train_size, train_weight = None, None, None, None, None, None
   val_imgs, val_lbl, val_gaze, val_fid, val_size, val_weight = None, None, None, None, None, None
@@ -229,9 +231,11 @@ class Dataset(object):
     print "Reading all training data into memory..."
     self.train_imgs, self.train_lbl, self.train_gaze, self.train_fid, self.train_weight = read_np_parallel(LABELS_FILE_TRAIN, RESIZE_SHAPE)
     self.train_size = len(self.train_lbl)
+    print "Train size is: %d" % self.train_size
     print "Reading all validation data into memory..."
     self.val_imgs, self.val_lbl, self.val_gaze, self.val_fid, self.val_weight = read_np_parallel(LABELS_FILE_VAL, RESIZE_SHAPE)
     self.val_size = len(self.val_lbl)
+    print "Val size is: %d" % self.val_size
     print "Time spent to read train/val data: %.1fs" % (time.time()-t1)
 
     from collections import defaultdict
@@ -244,9 +248,9 @@ class Dataset(object):
     print "Done."
 
   def standardize(self):
-    mean = np.mean(self.train_imgs, axis=(0,1,2))
-    self.train_imgs -= mean # done in-place --- "x-=mean" is faster than "x=x-mean"
-    self.val_imgs -= mean
+    self.mean = np.mean(self.train_imgs, axis=(0,1,2))
+    self.train_imgs -= self.mean # done in-place --- "x-=mean" is faster than "x=x-mean"
+    self.val_imgs -= self.mean
 
 class Dataset_PastKFrames(Dataset):
   def __init__(self, LABELS_FILE_TRAIN, LABELS_FILE_VAL, RESIZE_SHAPE, K, stride=1, before=0):
@@ -283,8 +287,8 @@ class DatasetWithGaze(Dataset):
     super(DatasetWithGaze, self).__init__(LABELS_FILE_TRAIN, LABELS_FILE_VAL, RESIZE_SHAPE)
     print "Reading gaze data ASC file, and converting per-frame gaze positions to heat map..."
     self.frameid2pos, self.frameid2action_notused = read_gaze_data_asc_file(GAZE_POS_ASC_FILE)
-    self.train_GHmap = np.zeros([self.train_size, RESIZE_SHAPE[0], RESIZE_SHAPE[1], 1], dtype=np.float32)
-    self.val_GHmap = np.zeros([self.val_size, RESIZE_SHAPE[0], RESIZE_SHAPE[1], 1], dtype=np.float32)
+    self.train_GHmap = np.zeros([self.train_size, RESIZE_SHAPE[0], RESIZE_SHAPE[1], 1], dtype=np.float16)
+    self.val_GHmap = np.zeros([self.val_size, RESIZE_SHAPE[0], RESIZE_SHAPE[1], 1], dtype=np.float16)
 
     # Prepare train val gaze data
     print "Running convert_gaze_pos_to_heap_map() and convolution..."
@@ -314,8 +318,8 @@ class DatasetWithHeatmap(Dataset):
     super(DatasetWithHeatmap, self).__init__(LABELS_FILE_TRAIN, LABELS_FILE_VAL, RESIZE_SHAPE)
     print "Reading gaze data ASC file, and converting per-frame gaze positions to heat map..."
     self.frameid2pos, self.frameid2action_notused = read_gaze_data_asc_file(GAZE_POS_ASC_FILE)
-    self.train_GHmap = np.zeros([self.train_size, HEATMAP_SHAPE, HEATMAP_SHAPE, 1], dtype=np.float32)
-    self.val_GHmap = np.zeros([self.val_size, HEATMAP_SHAPE, HEATMAP_SHAPE, 1], dtype=np.float32)
+    self.train_GHmap = np.zeros([self.train_size, HEATMAP_SHAPE, HEATMAP_SHAPE, 1], dtype=np.float16)
+    self.val_GHmap = np.zeros([self.val_size, HEATMAP_SHAPE, HEATMAP_SHAPE, 1], dtype=np.float16)
 
     # Prepare train val gaze data
     print "Running convert_gaze_pos_to_heap_map() and convolution..."
@@ -328,6 +332,7 @@ class DatasetWithHeatmap(Dataset):
     for (i,fid) in enumerate(self.val_fid):
         tot_count += len(self.frameid2pos[fid])
         bad_count += convert_gaze_pos_to_heap_map(self.frameid2pos[fid], out=self.val_GHmap[i])
+
     print "Bad gaze (x,y) sample: %d (%.2f%%, total gaze sample: %d)" % (bad_count, 100*float(bad_count)/tot_count, tot_count)    
     print "'Bad' means the gaze position is outside the 160*210 screen"
 
@@ -351,7 +356,8 @@ class DatasetWithHeatmap(Dataset):
 class DatasetWithHeatmap_PastKFrames(DatasetWithHeatmap):
   def __init__(self, LABELS_FILE_TRAIN, LABELS_FILE_VAL, RESIZE_SHAPE, HEATMAP_SHAPE, GAZE_POS_ASC_FILE, K, stride=1, before=0):
     super(DatasetWithHeatmap_PastKFrames, self).__init__(LABELS_FILE_TRAIN, LABELS_FILE_VAL, RESIZE_SHAPE, HEATMAP_SHAPE, GAZE_POS_ASC_FILE)
-    self.train_imgs_bak, self.val_imgs_bak = self.train_imgs, self.val_imgs
+    # delete the following line when merge with lzd's input_util.py in the future, to save memory
+    # self.train_imgs_bak, self.val_imgs_bak = self.train_imgs, self.val_imgs
 
     t1=time.time()
     self.train_imgs = transform_to_past_K_frames(self.train_imgs, K, stride, before)
@@ -399,9 +405,9 @@ class Dataset_OpticalFlow(object):
         print "Done."
 
     def standardize_opticalflow(self):
-        mean = np.mean(self.train_flow, axis=(0,1,2))
-        self.train_flow -= mean # done in-place --- "x-=mean" is faster than "x=x-mean"
-        self.val_flow -= mean
+        self.mean = np.mean(self.train_flow, axis=(0,1,2))
+        self.train_flow -= self.mean # done in-place --- "x-=mean" is faster than "x=x-mean"
+        self.val_flow -= self.mean
 
 
 class Dataset_OpticalFlow_PastKFrames(Dataset_OpticalFlow):
@@ -466,12 +472,12 @@ def read_np_parallel(label_file, RESIZE_SHAPE, num_thread=6):
             labels.append(int(lbl))
             fids.append(frameid_from_filename(fname))
             gaze.append((float(x)*RESIZE_SHAPE[1]/V.SCR_W, float(y)*RESIZE_SHAPE[0]/V.SCR_H))
-            weight.append(int(w))
+            weight.append(float(w))
     N = len(labels)
-    imgs = np.empty((N,RESIZE_SHAPE[0],RESIZE_SHAPE[1],1), dtype=np.float32)
-    labels = np.asarray(labels, dtype=np.int32)
-    gaze = np.asarray(gaze, dtype=np.float32)
-    weight = np.asarray(weight, dtype=np.int32)
+    imgs = np.empty((N,RESIZE_SHAPE[0],RESIZE_SHAPE[1],1), dtype=np.float16)
+    labels = np.asarray(labels, dtype=np.int8)
+    gaze = np.asarray(gaze, dtype=np.float16)
+    weight = np.asarray(weight, dtype=np.float16)
 
     def read_thread(PID):
         d = os.path.dirname(label_file)
@@ -479,7 +485,7 @@ def read_np_parallel(label_file, RESIZE_SHAPE, num_thread=6):
             img = misc.imread(os.path.join(d, png_files[i]), 'Y') # 'Y': grayscale  
             img = misc.imresize(img, [RESIZE_SHAPE[0],RESIZE_SHAPE[1]], interp='bilinear')
             img = np.expand_dims(img, axis=2)
-            img = img.astype(np.float32) / 255.0 # normalize image to [0,1]
+            img = img.astype(np.float16) / 255.0 # normalize image to [0,1]
             imgs[i,:] = img
 
     o=ForkJoiner(num_thread=num_thread, target=read_thread)
@@ -497,7 +503,7 @@ def read_optical_flow(label_file, RESIZE_SHAPE, num_thread=6):
             png_files.append(fname)
 
     N = len(png_files)
-    imgs = np.empty((N,RESIZE_SHAPE[0],RESIZE_SHAPE[1],1), dtype=np.float32)
+    imgs = np.empty((N,RESIZE_SHAPE[0],RESIZE_SHAPE[1],1), dtype=np.float16)
 
     def read_thread(PID):
         d = os.path.dirname(label_file)
@@ -505,10 +511,10 @@ def read_optical_flow(label_file, RESIZE_SHAPE, num_thread=6):
             try:
                 img = misc.imread(os.path.join(d+'/optical_flow', png_files[i]))
             except IOError:
-                img = np.zeros((RESIZE_SHAPE[0],RESIZE_SHAPE[1]), dtype=np.float32)
+                img = np.zeros((RESIZE_SHAPE[0],RESIZE_SHAPE[1]), dtype=np.float16)
                 print "Warning: %s has no optical flow image. Set to zero." % png_files[i]
             img = np.expand_dims(img, axis=2)
-            img = img.astype(np.float32) / 255.0 # normalize image to [0,1]            
+            img = img.astype(np.float16) / 255.0 # normalize image to [0,1]            
             imgs[i,:] = img
 
     o=ForkJoiner(num_thread=num_thread, target=read_thread)
@@ -527,7 +533,7 @@ def read_bottom_up(label_file, RESIZE_SHAPE, num_thread=6):
             png_files.append(fname)
 
     N = len(png_files)
-    imgs = np.empty((N,RESIZE_SHAPE[0],RESIZE_SHAPE[1],1), dtype=np.float32)
+    imgs = np.empty((N,RESIZE_SHAPE[0],RESIZE_SHAPE[1],1), dtype=np.float16)
 
     def read_thread(PID):
         d = os.path.dirname(label_file)
@@ -535,10 +541,10 @@ def read_bottom_up(label_file, RESIZE_SHAPE, num_thread=6):
             try:
                 img = misc.imread(os.path.join(d+'/bottom_up', png_files[i]))
             except IOError:
-                img = np.zeros((RESIZE_SHAPE[0],RESIZE_SHAPE[1]), dtype=np.float32)
+                img = np.zeros((RESIZE_SHAPE[0],RESIZE_SHAPE[1]), dtype=np.float16)
                 print "Warning: %s has no bottom up image. Set to zero." % png_files[i]
             img = np.expand_dims(img, axis=2)
-            img = img.astype(np.float32) / 255.0 # normalize image to [0,1]            
+            img = img.astype(np.float16) / 255.0 # normalize image to [0,1]            
             imgs[i,:] = img
 
     o=ForkJoiner(num_thread=num_thread, target=read_thread)
@@ -704,8 +710,8 @@ class DatasetWithGazeWindow(Dataset):
       all_gaze, all_frame, _ = read_gaze_data_asc_file_2(GAZE_POS_ASC_FILE)
       print "Running rescale_and_clip_gaze_pos()..."
       self.rescale_and_clip_gaze_pos(all_gaze)
-      self.train_GHmap = np.empty([self.train_size, RESIZE_SHAPE[0], RESIZE_SHAPE[1], 1], dtype=np.float32)
-      self.val_GHmap = np.empty([self.val_size, RESIZE_SHAPE[0], RESIZE_SHAPE[1], 1], dtype=np.float32)
+      self.train_GHmap = np.empty([self.train_size, RESIZE_SHAPE[0], RESIZE_SHAPE[1], 1], dtype=np.float16)
+      self.val_GHmap = np.empty([self.val_size, RESIZE_SHAPE[0], RESIZE_SHAPE[1], 1], dtype=np.float16)
       print "Running convert_gaze_data_to_map()..."
       t1=time.time()
       self.frameid2GH, self.frameid2gazetuple = self.convert_gaze_data_to_heat_map_proprietary(all_gaze, all_frame)
@@ -741,7 +747,7 @@ class DatasetWithGazeWindow(Dataset):
         print "'Bad' means the gaze position is outside the 160*210 screen"
 
     def convert_gaze_data_to_heat_map_proprietary(self, all_gaze, all_frame):
-        GH = np.zeros([self.RESIZE_SHAPE[0], self.RESIZE_SHAPE[1], 1], dtype=np.float32)
+        GH = np.zeros([self.RESIZE_SHAPE[0], self.RESIZE_SHAPE[1], 1], dtype=np.float16)
         left, right = 0,0
         frameid2GH = {}
         frameid2gazetuple={}
