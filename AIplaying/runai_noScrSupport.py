@@ -46,6 +46,7 @@ if __name__ == "__main__":
     # begin init
     MU.save_GPU_mem_keras()
     rndseed = random.randint(0,65535)
+    print "Random Seed: %d" % (rndseed)
     ale = aleForET(rom_file, None, rndseed, resume_state_file)
     aimodel = getattr(AImodels,model_name)(model_file, mean_file, *args_passed_to_model_initializer)
 
