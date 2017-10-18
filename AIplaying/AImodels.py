@@ -17,7 +17,7 @@ class AbstractModel(object):
         raise NotImplementedError("Override this method in derived classes.")
 
     def _preprocess_one_default(self, img_np): 
-        img_np = np.dot(img_np, [0.299, 0.587, 0.114]) # convert to grey scale
+        img_np = np.dot(img_np, [0.299, 0.587, 0.114]) # convert to grayscale
         img_np = misc.imresize(img_np, [84, 84], interp='bilinear')
         img_np = np.expand_dims(img_np, axis=2)
         img_np = img_np.astype(np.float32) / 255.0
@@ -96,7 +96,8 @@ class PastKFrameGaze_and_CurrentFrameAction(PastKFrameModel):
     return {"gaze": GHmap, "raw_logits": logits}
 
 
-# This model first predicts gaze using past K frames and then multiply the gaze heap map with the current frame
+# This model first predicts gaze using past K frames and optical flow 
+# past 2 frame and then multiply the gaze heap map with the current frame
 class PastKFrameOpticalFlowGaze_and_CurrentFrameAction(PastKFrameModel):  
   def __init__(self, modelfile, meanfile, k, stride, before,
                      gaze_pred_modelfile, optical_flow_meanfile):
@@ -114,7 +115,7 @@ class PastKFrameOpticalFlowGaze_and_CurrentFrameAction(PastKFrameModel):
     return self._preprocess_one_default(img_np)
 
   def predict_one(self, img_np):
-    self.length2_buffer_for_computing_optical_flow.append(np.dot(img_np, [0.299, 0.587, 0.114]))
+    self.length2_buffer_for_computing_optical_flow.append(np.dot(img_np, [0.299, 0.587, 0.114])) # to grayscale
     img_np = self._preprocess_one(img_np)
     self.frame_buffer.append(img_np)
 
@@ -123,8 +124,10 @@ class PastKFrameOpticalFlowGaze_and_CurrentFrameAction(PastKFrameModel):
         prev = self.length2_buffer_for_computing_optical_flow[0]
         cur = self.length2_buffer_for_computing_optical_flow[-1]
         flow_ = cv2.calcOpticalFlowFarneback(prev, cur,
-                    None, 0.5, 3, 15, 3, 5, 1.1, cv2.OPTFLOW_FARNEBACK_GAUSSIAN or
-                    cv2.OPTFLOW_USE_INITIAL_FLOW)
+                # These parameters are copied from the file that trains the model in the optical-flow part of the AAAI paper
+                # so as to have identical preprocessing. However, they might be different from the model you are trying
+                # to use now. Be sure to change these values so as to have identical preprocessing.
+                    None, 0.5, 3, 15, 3, 5, 1.1, cv2.OPTFLOW_FARNEBACK_GAUSSIAN)
         # compute magnitude
         fx, fy = flow_[:,:,0], flow_[:,:,1]
         flow = np.sqrt(fx*fx+fy*fy)
@@ -149,5 +152,5 @@ class PastKFrameOpticalFlowGaze_and_CurrentFrameAction(PastKFrameModel):
     return {"gaze": GHmap, "raw_logits": logits}
 
 
-# TODO (Remark) To implement other models than the baseline model, those models might require different preprocessing of input.
-# TODO So we need to create a different class for each different model.
+# (Remark) To implement other models than the baseline model, those models might require different preprocessing of input.
+# So we need to create a different class for each different model.

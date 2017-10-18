@@ -1,28 +1,19 @@
 #!/usr/bin/env python
 """
-This is an independent script that can be used to submit jobs to condor,
+this is an independent script that can be used to submit jobs to condor,
 and run the same xxx.py file with different hyper-parameters.
-The primary place you might want to change is multi_experiment().
-For more detailed behaviors, please take a look at the code.
+the primary place you might want to change is multi_experiment().
+for more detailed behaviors, please take a look at the code.
 """
-
 def multi_experiment():
   l = [] # compose a list of arguments needed to be passed to the python script
   EXPRIMENTS=[
-      ("breakout_{92}val","breakout_AAAI"),
-      ("centipede_{78_80}val","centipede_AAAI"),
-      ("enduro_{98_103}val","enduro_AAAI"),
-      ("freeway_{72}val","freeway_AAAI"),
-      ("mspacman_{71_76}val","mspacman_AAAI"),
-      ("riverraid_{95_99}val","riverraid_AAAI"),
       ("seaquest_{70_75}val","seaquest_AAAI"),
-      ("venture_{100_101}val","venture_AAAI")
   ]
 
   for (BASE_FILE_NAME, MODEL_DIR) in EXPRIMENTS:
       for dropout in ['0','0.1', '0.2', '0.3', '0.4', '0.5']:
-          ABS_BASE_FILE_NAME = "/scratch/cluster/zharucs/dataset_gaze/" + BASE_FILE_NAME
-          l.append(' '.join([ABS_BASE_FILE_NAME, MODEL_DIR, dropout]))
+          l.append(' '.join([BASE_FILE_NAME, MODEL_DIR, dropout]))
 
   return l
 
@@ -60,7 +51,7 @@ target_py_file = sys.argv[1]
 arg_str_list = multi_experiment()
 
 print '\n'.join(arg_str_list)
-raw_input('Confirm? Ctrl-C to quit.')
+raw_input('The above arguments will be used to call %s. Confirm? Ctrl-C to quit.' % (target_py_file))
 
 for arg_str in arg_str_list:
   submission = basestr.format(target_py_file + ' ' + arg_str)
