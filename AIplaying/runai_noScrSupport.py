@@ -34,7 +34,7 @@ if __name__ == "__main__":
     args_passed_to_model_initializer = sys.argv[(_d+1):] if _d != -1 else []
 
     MODEL_DIR = 'Expr/'+os.path.splitext(os.path.basename(rom_file))[0]
-    expr = MU.ExprCreaterAndResumer(MODEL_DIR, 
+    expr = MU.BMU.ExprCreaterAndResumer(MODEL_DIR, 
         postfix="%s" % (model_name))
 
     print "\nReceived Command Line Arguments:"
@@ -44,7 +44,7 @@ if __name__ == "__main__":
     print "\n"
 
     # begin init
-    MU.save_GPU_mem_keras()
+    MU.BMU.save_GPU_mem_keras()
     def make_ale_with_random_seed_noScreen(rom_file, resume_state_file):
         rndseed = rndseed = random.randint(0, 1<<30)
         print MU.color("Using random seed %d for a new episode." % (rndseed), 'CYAN')

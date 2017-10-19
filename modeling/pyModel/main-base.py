@@ -17,10 +17,10 @@ dropout = 0.25
 MODEL_DIR = 'Breakout_42_44'
 resume_model = False
 
-MU.save_GPU_mem_keras()
+MU.BMU.save_GPU_mem_keras()
 MU.keras_model_serialization_bug_fix()
 
-expr = MU.ExprCreaterAndResumer(MODEL_DIR,postfix="baseline")
+expr = MU.BMU.ExprCreaterAndResumer(MODEL_DIR,postfix="baseline")
 expr.redirect_output_to_logfile_if_not_on("eldar-11")
 
 inputs=L.Input(shape=SHAPE)
@@ -60,7 +60,7 @@ model.fit(d.train_imgs, d.train_lbl, BATCH_SIZE, epochs=num_epoch,
     shuffle=True,verbose=2,
     callbacks=[K.callbacks.TensorBoard(log_dir=expr.dir),
         K.callbacks.ReduceLROnPlateau(monitor='val_loss', factor=0.5,patience=3, min_lr=0.001),
-        MU.PrintLrCallback()])
+        MU.BMU.PrintLrCallback()])
 
 expr.save_weight_and_training_config_state(model)
 

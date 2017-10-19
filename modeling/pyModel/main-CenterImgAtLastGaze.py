@@ -21,10 +21,10 @@ num_epoch = 25
 dropout = 0.25
 MODEL_DIR = 'GazeExpr{36}tr_{37}val'
 
-MU.save_GPU_mem_keras()
+MU.BMU.save_GPU_mem_keras()
 MU.keras_model_serialization_bug_fix()
 
-expr = MU.ExprCreaterAndResumer(MODEL_DIR,postfix="fov_CenterGaze_2x_k%ds%d" % (k, stride))
+expr = MU.BMU.ExprCreaterAndResumer(MODEL_DIR,postfix="fov_CenterGaze_2x_k%ds%d" % (k, stride))
 expr.redirect_output_to_logfile_if_not_on("eldar-11")
 
 SHAPE_AFTER_CENTER_AT_GAZE_POS_PREPROCESSING = (SHAPE[0]*2,SHAPE[1]*2,SHAPE[2])
@@ -65,7 +65,7 @@ model.fit(d.train_imgs, d.train_lbl, BATCH_SIZE, epochs=num_epoch,
     shuffle=True,verbose=2,
     callbacks=[K.callbacks.TensorBoard(log_dir=expr.dir),
         K.callbacks.ReduceLROnPlateau(monitor='val_loss', factor=0.5,patience=3, min_lr=0.001),
-        MU.PrintLrCallback()])
+        MU.BMU.PrintLrCallback()])
 
 # expr.save_weight_and_training_config_state(model) # uncomment this line if you want to save model
 

@@ -25,7 +25,7 @@ run_number = sys.argv[4]
 save_model = True if '--save' in sys.argv else False
 
 MU.keras_model_serialization_bug_fix()
-expr = MU.ExprCreaterAndResumer(MODEL_DIR,postfix="PreMul_2ch_run%s_dr%s_bestArch_img+opf" % (run_number, str(dropout)))
+expr = MU.BMU.ExprCreaterAndResumer(MODEL_DIR,postfix="PreMul_2ch_run%s_dr%s_bestArch_img+opf" % (run_number, str(dropout)))
 print sys.argv
 
 if True: # I just want to indent
@@ -90,7 +90,7 @@ model.fit([d.train_imgs, d.train_GHmap], d.train_lbl, BATCH_SIZE, epochs=num_epo
     shuffle=True,verbose=2,
     callbacks=[K.callbacks.TensorBoard(log_dir=expr.dir),
         K.callbacks.ReduceLROnPlateau(monitor='val_loss', factor=0.5,patience=3, min_lr=0.001),
-        MU.PrintLrCallback()])
+        MU.BMU.PrintLrCallback()])
 
 score = model.evaluate([d.val_imgs, d.val_GHmap], d.val_lbl, BATCH_SIZE, 0)
 expr.printdebug("eval score:" + str(score))
