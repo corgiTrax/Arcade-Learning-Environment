@@ -1,6 +1,7 @@
 import cv2, tarfile, time, sys, os
 import numpy as np
-from input_utils import frameid_from_filename, ForkJoiner
+sys.path.insert(0, '../shared') # After research, this is the best way to import a file in another dir
+from base_input_utils import frameid_from_filename, ForkJoiner
 import matplotlib.pyplot as plt
 from replay import preprocess_and_sanity_check
 

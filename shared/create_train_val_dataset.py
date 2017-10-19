@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 
 import sys, re, tarfile, os, shutil, subprocess, threading
-from input_utils import read_gaze_data_asc_file, frameid_from_filename, rescale_and_clip_gaze_pos
+from base_input_utils import read_gaze_data_asc_file, frameid_from_filename
 from IPython import embed
 
 def untar(tar_path, output_path):
@@ -70,7 +70,7 @@ def use_spec_file():
                     weight = 1
                     # loop to find if there is bad gaze; if there is, then set weight to 0
                     for j in range(len(frameid2pos_each[i][fid])):
-                        isbad, _, _ = rescale_and_clip_gaze_pos(frameid2pos_each[i][fid][j][0], frameid2pos_each[i][fid][j][1], RESIZE_SHAPE[0], RESIZE_SHAPE[1])
+                        isbad, _, _ = BIU.rescale_and_clip_gaze_pos(frameid2pos_each[i][fid][j][0], frameid2pos_each[i][fid][j][1], RESIZE_SHAPE[0], RESIZE_SHAPE[1])
                         if isbad:
                             frameid2pos_each[i][fid] = [BAD_GAZE]
                             weight = 0

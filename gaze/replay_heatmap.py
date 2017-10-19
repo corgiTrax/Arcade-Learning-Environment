@@ -14,7 +14,9 @@ from pygame.constants import *
 from scipy import misc
 import cv2
 import vip_constants as V
-from input_utils import frameid_from_filename, read_gaze_data_asc_file, read_result_data
+import input_utils as read_result_data
+sys.path.insert(0, '../shared') # After research, this is the best way to import a file in another dir
+from base_input_utils import frameid_from_filename, read_gaze_data_asc_file
 RESIZE_SHAPE = (84,84)
 
 def preprocess_and_sanity_check(png_files):

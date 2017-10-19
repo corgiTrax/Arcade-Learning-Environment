@@ -1,0 +1,14 @@
+
+If you changes the code here, it's going to change the behaviour of things that uses the code here.
+
+Before doing a "git add" / "git commit" to this directory, do both of the following:
+
++ ASK project participants about the potential impact
+
++ FIND all the usages of the function/class that you changed, so as to know what code will be affected.
+
+
+TODO:
+
++ move aleForET.py here, and change the import of its dependent files
++ move vip_contants.py here, and change the import of its dependent files

@@ -13,7 +13,8 @@ import cv2
 import os, sys, tarfile, time
 from bottom_up.pySaliencyMap import pySaliencyMap
 from scipy import misc
-from input_utils import frameid_from_filename, ForkJoiner
+sys.path.insert(0, '../shared') # After research, this is the best way to import a file in another dir
+from base_input_utils import frameid_from_filename, ForkJoiner
 from replay import preprocess_and_sanity_check
 
 if len(sys.argv) < 2:

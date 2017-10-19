@@ -75,8 +75,8 @@ if True: # I just want to indent
 
 expr.dump_src_code_and_model_def(sys.argv[0], model)
 
-d=input_utils.Dataset(LABELS_FILE_TRAIN, LABELS_FILE_VAL, SHAPE)
-dfv=input_utils.Dataset(fv_LABELS_FILE_TRAIN, fv_LABELS_FILE_VAL, SHAPE)
+d=input_utils.BIU.Dataset(LABELS_FILE_TRAIN, LABELS_FILE_VAL, SHAPE)
+dfv=input_utils.BIU.Dataset(fv_LABELS_FILE_TRAIN, fv_LABELS_FILE_VAL, SHAPE)
 
 model.fit([d.train_imgs,dfv.train_imgs], d.train_lbl, BATCH_SIZE, epochs=num_epoch,
     validation_data=([d.val_imgs,dfv.val_imgs], d.val_lbl, d.val_weight),
