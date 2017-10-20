@@ -73,12 +73,12 @@ def transform_to_past_K_frames(original, K, stride, before):
     return newdat_np
 
 def frameid_from_filename(fname): 
-    """ Extract 'exprname_randnum_23' from '0_blahblah/exprname_randnum_23.png' """
+    """ Extract 'exprname','randnum','23' from '0_blahblah/exprname_randnum_23.png' """
 
     a, b = os.path.splitext(os.path.basename(fname))
     try:
         exprname, randnum, frameid = a.split('_')
-        UTID = exprname + '_' + randnum
+        UTID = exprname + '_' + randnum   # This the definition of an "unique trail id"
     except ValueError as ex:
         raise ValueError("cannot convert filename '%s' to frame ID" % fname)
     return make_unique_frame_id(UTID, frameid)
