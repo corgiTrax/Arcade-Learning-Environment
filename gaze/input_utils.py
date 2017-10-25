@@ -5,16 +5,17 @@ import numpy as np
 import ipdb
 from IPython import embed
 from scipy import misc
-import vip_constants as V
 from ast import literal_eval
 import matplotlib.cm as cm
 import matplotlib.pyplot as plt
 from astropy.convolution import convolve
 from astropy.convolution.kernels import Gaussian2DKernel
+import sys
 sys.path.insert(0, '../shared') # After research, this is the best way to import a file in another dir
 import base_input_utils as BIU
+import vip_constants as V
 
-class DatasetWithHeatmap(Dataset):
+class DatasetWithHeatmap(BIU.Dataset):
   frameid2pos, frameid2action_notused = None, None
   train_GHmap, val_GHmap = None, None # GHmap means gaze heap map
   

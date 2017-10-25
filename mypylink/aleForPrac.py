@@ -6,6 +6,7 @@ from ale_python_interface import ALEInterface
 import pygame
 import numpy as np
 from IPython import embed
+sys.path.insert(0, '../shared') # After research, this is the best way to import a file in another dir
 import action_enums as aenum
 import vip_constants as V
 from pygame.constants import *

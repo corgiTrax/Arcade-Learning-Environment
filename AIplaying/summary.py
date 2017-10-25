@@ -3,12 +3,13 @@ import re, sys, os
 from IPython import embed
 from collections import defaultdict
 
-BASE_DIR = 'Expr/'
+
 dataset = defaultdict(lambda: defaultdict(list))
 
-print "Usage: %s [max_data_point_count]" % sys.argv[0]
+print "Usage: %s [DIR_name] [max_data_point_count] " % sys.argv[0]
+BASE_DIR = sys.argv[1]
 
-max_data_point_count = int(sys.argv[1]) if len(sys.argv) == 2 else None
+max_data_point_count = int(sys.argv[2]) if len(sys.argv) == 3 else None
 regex_episode = re.compile('Episode \d+ ended with score:')
 regex_modelname = re.compile("\d+_(.*)") # match "02_BaselineModel"
 

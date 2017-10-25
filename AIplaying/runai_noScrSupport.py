@@ -1,10 +1,11 @@
 #!/usr/bin/env python
 import sys, random, numpy as np, os, time
+import AImodels, misc_utils as MU
+from IPython import embed
+sys.path.insert(0, '../shared') # After research, this is the best way to import a file in another dir
 import action_enums as aenum
 import vip_constants as V
 from aleForET import aleForET
-import AImodels, misc_utils as MU
-from IPython import embed
 
 def sample_catagorical_distribution_with_logits(logits):
     e_x = np.exp(logits - np.max(logits))

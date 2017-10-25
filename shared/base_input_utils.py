@@ -13,10 +13,10 @@ class Dataset(object):
   def __init__(self, LABELS_FILE_TRAIN, LABELS_FILE_VAL, RESIZE_SHAPE):
     t1=time.time()
     print "Reading all training data into memory..."
-    self.train_imgs, self.train_lbl, _, self.train_fid, self.train_weight = read_np_parallel(LABELS_FILE_TRAIN, RESIZE_SHAPE)
+    self.train_imgs, self.train_lbl, self.train_gaze, self.train_fid, self.train_weight = read_np_parallel(LABELS_FILE_TRAIN, RESIZE_SHAPE)
     self.train_size = len(self.train_lbl)
     print "Reading all validation data into memory..."
-    self.val_imgs, self.val_lbl, _, self.val_fid, self.val_weight = read_np_parallel(LABELS_FILE_VAL, RESIZE_SHAPE)
+    self.val_imgs, self.val_lbl, self.val_gaze, self.val_fid, self.val_weight = read_np_parallel(LABELS_FILE_VAL, RESIZE_SHAPE)
     self.val_size = len(self.val_lbl)
     print "Time spent to read train/val data: %.1fs" % (time.time()-t1)
 

@@ -2,6 +2,7 @@ import tensorflow as tf, numpy as np, keras as K, cv2, sys
 from IPython import embed
 from scipy import misc
 import misc_utils as MU
+sys.path.insert(0, '../shared') # After research, this is the best way to import a file in another dir
 import action_enums as aenum
 
 class AbstractModel(object):

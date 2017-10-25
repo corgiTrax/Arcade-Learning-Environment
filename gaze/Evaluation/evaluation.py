@@ -4,10 +4,11 @@ import numpy as np
 from input_utils import read_gaze_data_asc_file, ForkJoiner, convert_gaze_pos_to_heap_map, preprocess_gaze_heatmap, rescale_and_clip_gaze_pos
 import tarfile, sys, os, time, math
 from scipy import misc
-from scipy.stats import entropy
-import vip_constants as V
 from sklearn import metrics
 import copy as cp
+sys.path.insert(0, '../../shared') # After research, this is the best way to import a file in another dir
+from scipy.stats import entropy
+import vip_constants as V
 
 def computeNSS(saliency_map, gt_interest_points):
     if len(gt_interest_points) == 0:
