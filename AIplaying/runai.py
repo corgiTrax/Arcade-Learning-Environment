@@ -109,9 +109,9 @@ if __name__ == "__main__":
             for i in range(len(logits)):
                 cur = " %.1f" % logits[i]
                 if i==m:
-                    string += MU.color(cur,'RED')   # the action that has max logit
+                    string += MU.BMU.color(cur,'RED')   # the action that has max logit
                 elif i==a:
-                    string += MU.color(cur,'GREEN') # actual action sampled
+                    string += MU.BMU.color(cur,'GREEN') # actual action sampled
                 else:
                     string += cur
             print string
