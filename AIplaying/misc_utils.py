@@ -10,7 +10,7 @@ def keras_model_serialization_bug_fix(): # stupid keras
     from keras.utils.generic_utils import get_custom_objects
     f=lambda obj_to_serialize: \
         get_custom_objects().update({obj_to_serialize.__name__: obj_to_serialize})
-    f(loss_func); f(acc_); f(top2acc_)
+    f(loss_func); f(acc_);
     f(loss_func_nonsparse)
     f(acc_nonsparse_wrong)
     f(my_softmax)

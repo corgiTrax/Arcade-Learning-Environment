@@ -63,8 +63,8 @@ class ExprCreaterAndResumer:
         model.save(self.dir + '/model.hdf5')
 
     def redirect_output_to_logfile_if_not_on(self, hostname):
-        print 'redirect_output_to_logfile_if_not_on() is deprecated. Please delete the line that calls it.'
-        print 'This func still exists because old code might use it.'
+        print ('redirect_output_to_logfile_if_not_on() is deprecated. Please delete the line that calls it.')
+        print ('This func still exists because old code might use it.')
 
     def redirect_output_to_logfile_as_well(self):
         class Logger(object): 
