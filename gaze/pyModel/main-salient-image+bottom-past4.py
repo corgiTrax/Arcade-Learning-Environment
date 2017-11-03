@@ -47,6 +47,7 @@ elif GAME_NAME == 'breakout':
 
 LABELS_FILE_TRAIN = BASE_FILE_NAME + '-train.txt' 
 LABELS_FILE_VAL =  BASE_FILE_NAME + '-val.txt' 
+B
 GAZE_POS_ASC_FILE = BASE_FILE_NAME + '.asc'
 PREDICT_FILE_VAL = BASE_FILE_NAME.split('/')[-1] + '-image+bottom_past4'
 BATCH_SIZE = 50

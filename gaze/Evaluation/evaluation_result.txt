@@ -1,241 +1,96 @@
+OpticalFlow/Breakout/4_pKf_dp0.30_k4s1/breakout_{92}val-flow_past4.npz
+NSS: 6.008842
+AUC: 0.967744
+KL: 1.356956
+CC: 0.567153
 
-Current_frame/Breakout_current/11_current_dp0.5/breakout_{92}val-current_frame.npz
-NSS: 4.388665
-AUC: 0.942681
-KL: 1.997119
-CC: 0.419225
+BottomUp/Breakout/3_pKf_dp0.30_k4s1/breakout_{92}val-bottom_past4.npz
+NSS: 5.825403
+AUC: 0.963818
+KL: 1.466485
+CC: 0.542819
 
-Deconv/Breakout_deconv/3_pKf_dp0.30_k4s1/breakout_{92}val-deconv.npz
-NSS: 6.327279
-AUC: 0.970331
-KL: 1.302855
-CC: 0.582005
+OpticalFlow/Freeway/4_pKf_dp0.40_k4s1/freeway_{72}val-flow_past4.npz
+NSS: 6.697541
+AUC: 0.972316
+KL: 1.287066
+CC: 0.582241
 
-Deconv/Breakout_deconv/9_pKf_dp0.30_k4s1/breakout_{92}val-deconv.npz
-NSS: 6.344959
-AUC: 0.969959
-KL: 1.298996
-CC: 0.583861
+BottomUp/Freeway/3_pKf_dp0.30_k4s1/freeway_{72}val-bottom_past4.npz
+NSS: 6.771965
+AUC: 0.972293
+KL: 1.281587
+CC: 0.584530
 
-../../dataset_gaze/breakout_{92}val-3channel_past4.npz
-NSS: 6.429027
-AUC: 0.969341
-KL: 1.296856
-CC: 0.583510
+OpticalFlow/Enduro/3_pKf_dp0.30_k4s1/enduro_{98_103}val-flow_past4.npz
+NSS: 8.462716
+AUC: 0.987477
+KL: 0.844398
+CC: 0.703612
 
-Current_frame/Freeway_current/1_current_dp0.4/freeway_{72}val-current_frame.npz
-NSS: 6.734573
-AUC: 0.972585
-KL: 1.265875
-CC: 0.586922
+BottomUp/Enduro/3_pKf_dp0.30_k4s1/enduro_{98_103}val-bottom_past4.npz
+NSS: 8.079250
+AUC: 0.987108
+KL: 0.900174
+CC: 0.680175
 
-Deconv/Freeway_deconv/2_pKf_dp0.40_k4s1/freeway_{72}val-deconv.npz
-NSS: 6.772980
-AUC: 0.972972
-KL: 1.252172
-CC: 0.589321
+OpticalFlow/Riverraid/3_pKf_dp0.30_k4s1/riverraid_{95_99}val-flow_past4.npz
+NSS: 5.031692
+AUC: 0.951408
+KL: 1.828676
+CC: 0.450044
 
-Deconv/Freeway_deconv/3_pKf_dp0.40_k4s1/freeway_{72}val-deconv.npz
-NSS: 6.750979
-AUC: 0.972400
-KL: 1.266404
-CC: 0.586008
+BottomUp/Riverraid/3_pKf_dp0.30_k4s1/riverraid_{95_99}val-bottom_past4.npz
+NSS: 4.864848
+AUC: 0.953189
+KL: 1.865603
+CC: 0.436968
 
-../../dataset_gaze/freeway_{72}val-3channel_past4.npz
-NSS: 6.851947
-AUC: 0.972613
-KL: 1.257694
-CC: 0.588961
+OpticalFlow/Seaquest/3_pKf_dp0.30_k4s1/seaquest_{70_75}val-flow_past4.npz
+NSS: 6.049950
+AUC: 0.959194
+KL: 1.539701
+CC: 0.536829
 
-Current_frame/Enduro_current/9_current_dp0.3/enduro_{98_103}val-current_frame.npz
-NSS: 8.231144
-AUC: 0.987762
-KL: 0.860511
-CC: 0.694032
+BottomUp/Seaquest/3_pKf_dp0.30_k4s1/seaquest_{70_75}val-bottom_past4.npz
+NSS: 6.038481
+AUC: 0.959948
+KL: 1.543746
+CC: 0.535114
 
-Deconv/Enduro_deconv/3_pKf_dp0.30_k4s1/enduro_{98_103}val-deconv.npz
-NSS: 8.476460
-AUC: 0.988163
-KL: 0.830771
-CC: 0.704497
+OpticalFlow/Mspacman/4_pKf_dp0.40_k4s1/mspacman_{71_76}val-flow_past4.npz
+NSS: 3.751599
+AUC: 0.919191
+KL: 2.217219
+CC: 0.378382
 
-Deconv/Enduro_deconv/9_pKf_dp0.30_k4s1/enduro_{98_103}val-deconv.npz
-NSS: 8.433412
-AUC: 0.988297
-KL: 0.827053
-CC: 0.705618
+BottomUp/Mspacman/4_pKf_dp0.40_k4s1/mspacman_{71_76}val-bottom_past4.npz
+NSS: 3.117572
+AUC: 0.903050
+KL: 2.475393
+CC: 0.318072
 
-../../dataset_gaze/enduro_{98_103}val-3channel_past4.npz
-NSS: 8.434660
-AUC: 0.988015
-KL: 0.830563
-CC: 0.703760
+OpticalFlow/Centipede/4_pKf_dp0.40_k4s1/centipede_{78_80}val-flow_past4.npz
+NSS: 5.201763
+AUC: 0.957940
+KL: 1.686043
+CC: 0.485083
 
-Current_frame/Riverraid_current/12_current_dp0.4/riverraid_{95_99}val-current_frame.npz
-NSS: 5.505214
-AUC: 0.960080
-KL: 1.660896
-CC: 0.491383
+BottomUp/Centipede/5_pKf_dp0.50_k4s1/centipede_{78_80}val-bottom_past4.npz
+NSS: 4.771902
+AUC: 0.951866
+KL: 1.830763
+CC: 0.450770
 
-Deconv/Riverraid_deconv/1_pKf_dp0.30_k4s1/riverraid_{95_99}val-deconv.npz
-NSS: 5.785290
-AUC: 0.962070
-KL: 1.601475
-CC: 0.505597
+OpticalFlow/Venture/3_pKf_dp0.30_k4s1/venture_{100_101}val-flow_past4.npz
+NSS: 5.591310
+AUC: 0.955976
+KL: 1.648023
+CC: 0.503974
 
-Deconv/Riverraid_deconv/4_pKf_dp0.30_k4s1/riverraid_{95_99}val-deconv.npz
-NSS: 5.766960
-AUC: 0.961376
-KL: 1.609383
-CC: 0.504831
-
-../../dataset_gaze/riverraid_{95_99}val-3channel_past4.npz
-NSS: 5.872730
-AUC: 0.962417
-KL: 1.589287
-CC: 0.510649
-
-Current_frame/Seaquest_current/2_current_dp0.3/seaquest_{70_75}val-current_frame.npz
-NSS: 5.972453
-AUC: 0.958335
-KL: 1.586997
-CC: 0.526482
-
-Deconv/Seaquest_deconv/0_pKf_dp0.30_k4s1/seaquest_{70_75}val-deconv.npz
-NSS: 6.409998
-AUC: 0.963168
-KL: 1.459822
-CC: 0.558376
-
-Deconv/Seaquest_deconv/2_pKf_dp0.30_k4s1/seaquest_{70_75}val-deconv.npz
-NSS: 6.424251
-AUC: 0.962635
-KL: 1.467972
-CC: 0.558227
-
-../../dataset_gaze/seaquest_{70_75}val-3channel_past4.npz
-NSS: 6.510204
-AUC: 0.964218
-KL: 1.436933
-CC: 0.561912
-
-Current_frame/Mspacman_current/0_current_dp0.4/mspacman_{71_76}val-current_frame.npz
-NSS: 4.142462
-AUC: 0.927899
-KL: 2.109105
-CC: 0.408331
-
-Deconv/Mspacman_deconv/2_pKf_dp0.40_k4s1/mspacman_{71_76}val-deconv.npz
-NSS: 4.524245
-AUC: 0.932512
-KL: 1.982419
-CC: 0.439132
-
-Deconv/Mspacman_deconv/3_pKf_dp0.40_k4s1/mspacman_{71_76}val-deconv.npz
-NSS: 4.520127
-AUC: 0.931936
-KL: 1.988238
-CC: 0.439281
-
-../../dataset_gaze/mspacman_{71_76}val-3channel_past4.npz
-NSS: 4.570970
-AUC: 0.935592
-KL: 1.961671
-CC: 0.439902
-
-Current_frame/Centipede_current/0_current_dp0.5/centipede_{78_80}val-current_frame.npz
-NSS: 4.530278
-AUC: 0.943597
-KL: 1.931816
-CC: 0.432916
-
-Deconv/Centipede_deconv/2_pKf_dp0.50_k4s1/centipede_{78_80}val-deconv.npz
-NSS: 5.133126
-AUC: 0.955200
-KL: 1.715431
-CC: 0.480685
-
-Deconv/Centipede_deconv/4_pKf_dp0.50_k4s1/centipede_{78_80}val-deconv.npz
-NSS: 5.160432
-AUC: 0.955900
-KL: 1.710223
-CC: 0.480447
-
-../../dataset_gaze/centipede_{78_80}val-3channel_past4.npz
-NSS: 5.368641
-AUC: 0.960390
-KL: 1.647753
-CC: 0.492415
-
-Current_frame/Venture_current/15_current_dp0.3/venture_{100_101}val-current_frame.npz
-NSS: 5.351602
-AUC: 0.956387
-KL: 1.760038
-CC: 0.477760
-
-Deconv/Venture_deconv/1_pKf_dp0.30_k4s1/venture_{100_101}val-deconv.npz
-NSS: 5.423997
-AUC: 0.956691
-KL: 1.742505
-CC: 0.481501
-
-Deconv/Venture_deconv/4_pKf_dp0.30_k4s1/venture_{100_101}val-deconv.npz
-NSS: 5.434671
-AUC: 0.957496
-KL: 1.733357
-CC: 0.484216
-
-../../dataset_gaze/venture_{100_101}val-3channel_past4.npz
-NSS: 6.125212
-AUC: 0.964429
-KL: 1.493203
-CC: 0.540840
-
-../../dataset_gaze/breakout_{92}val-val-image+opf_past4.npz
-NSS: 6.431975
-AUC: 0.969544
-KL: 1.291762
-CC: 0.584228
-
-../../dataset_gaze/freeway_{72}val-val-image+opf_past4.npz
-NSS: 6.873723
-AUC: 0.972362
-KL: 1.254693
-CC: 0.591269
-
-../../dataset_gaze/enduro_{98_103}val-val-image+opf_past4.npz
-NSS: 8.481240
-AUC: 0.988157
-KL: 0.827676
-CC: 0.705747
-
-../../dataset_gaze/riverraid_{95_99}val-val-image+opf_past4.npz
-NSS: 5.833518
-AUC: 0.962450
-KL: 1.590108
-CC: 0.508568
-
-../../dataset_gaze/seaquest_{70_75}val-val-image+opf_past4.npz
-NSS: 6.484673
-AUC: 0.963852
-KL: 1.437873
-CC: 0.563507
-
-../../dataset_gaze/mspacman_{71_76}val-val-image+opf_past4.npz
-NSS: 4.599614
-AUC: 0.935120
-KL: 1.960065
-CC: 0.440881
-
-../../dataset_gaze/centipede_{78_80}val-val-image+opf_past4.npz
-NSS: 5.445374
-AUC: 0.961272
-KL: 1.624429
-CC: 0.498626
-
-../../dataset_gaze/venture_{100_101}val-val-image+opf_past4.npz
-NSS: 6.221778
-AUC: 0.963855
-KL: 1.495679
-CC: 0.542651
+BottomUp/Venture/3_pKf_dp0.30_k4s1/venture_{100_101}val-bottom_past4.npz
+NSS: 4.976660
+AUC: 0.946422
+KL: 1.910442
+CC: 0.447099
 

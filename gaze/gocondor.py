@@ -8,14 +8,13 @@ for more detailed behaviors, please take a look at the code.
 def multi_experiment():
     l = [] # compose a list of arguments needed to be passed to the python script
 
-#    for name in ["seaquest","mspacman","centipede","freeway","venture","riverraid","enduro","breakout"]: 
-#    #for name in ["venture"]:
-#        for dp in ["0 0.0","0 0.1","0 0.2","0 0.3","0 0.4","0 0.5"]: 
-#            l.append(' '.join([name,dp]))
-
-    for name in ["seaquest"]: 
-        for dp in ["0 0.0"]: 
-            l.append(' '.join([name,dp]))
+    for param in ["seaquest 0 0.4",
+                  "mspacman 0 0.4",
+                  "centipede 0 0.5",
+                  "venture 0 0.4",
+                  "riverraid 0 0.4",
+                  "enduro 0 0.4"]: 
+        l.append(' '.join([param]))
 
     return l
 
@@ -32,7 +31,7 @@ remote_initialdir = /scratch/cluster/zharucs/ale/gaze/
 Universe = vanilla
 
 # UTCS has 18 such machine, to take a look, run 'condor_status  -constraint 'GTX1080==true' 
-Requirements=(TARGET.GTX1080== true)
+Requirements=(TARGET.MACHINE=="eldar-22.cs.utexas.edu"||TARGET.MACHINE=="eldar-23.cs.utexas.edu"||TARGET.MACHINE=="eldar-24.cs.utexas.edu"||TARGET.MACHINE=="eldar-25.cs.utexas.edu"||TARGET.MACHINE=="eldar-26.cs.utexas.edu"||TARGET.MACHINE=="eldar-27.cs.utexas.edu"||TARGET.MACHINE=="eldar-28.cs.utexas.edu"||TARGET.MACHINE=="eldar-29.cs.utexas.edu"||TARGET.MACHINE=="eldar-30.cs.utexas.edu")
 
 executable = /u/zharucs/anaconda2/bin/ipython 
 getenv = true
@@ -41,6 +40,8 @@ error = CondorOutput/$(Cluster).err
 log = CondorOutput/log.txt
 Queue
 """
+
+#Requirements=(TARGET.GTX1080== true)
 
 if len(sys.argv) < 2:
   print "Usage: %s target_py_file" % __file__ 
