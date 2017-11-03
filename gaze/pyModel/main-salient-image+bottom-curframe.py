@@ -61,12 +61,12 @@ SHAPE = (84,84,1) # height * width * channel This cannot read from file and need
 
 if not predict_mode: # if train
     import input_utils as IU, misc_utils as MU
-    expr = MU.ExprCreaterAndResumer(MODEL_DIR, postfix="current_dp" + str(dropout))
+    expr = MU.BMU.ExprCreaterAndResumer(MODEL_DIR, postfix="current_dp" + str(dropout))
     expr.redirect_output_to_logfile_if_not_on("eldar-11")
 else:
     import all_py_files_snapshot.input_utils as IU, all_py_files_snapshot.misc_utils as MU
 
-MU.save_GPU_mem_keras()
+MU.BMU.save_GPU_mem_keras()
 MU.keras_model_serialization_bug_fix()
 
 if resume_model:
@@ -181,7 +181,7 @@ if not predict_mode: # if train
         shuffle=True, sample_weight=d.train_weight, verbose=2,
         callbacks=[K.callbacks.TensorBoard(log_dir=expr.dir),
             K.callbacks.ReduceLROnPlateau(monitor='val_loss', factor=0.5, patience=3, min_lr = 0.00001),
-            MU.PrintLrCallback()])
+            MU.BMU.PrintLrCallback()])
 
     expr.save_weight_and_training_config_state(model)
 

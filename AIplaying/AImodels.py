@@ -2,6 +2,7 @@ import tensorflow as tf, numpy as np, keras as K, cv2, sys
 from IPython import embed
 from scipy import misc
 import misc_utils as MU
+sys.path.insert(0, '../shared') # After research, this is the best way to import a file in another dir
 import action_enums as aenum
 
 class AbstractModel(object):
@@ -67,8 +68,8 @@ class PastKFrameModel(AbstractModel):
     if len(self.frame_buffer) <= self.MAX_LEN: # frame_buffer is not full yet, not ready to give a valid past K frame input to the network
         logits = self.DEFAULT_LOGITS_BEFORE_BUFFER_IS_FULL
     else:
-        img_np = self.extract_and_pop_buffer(self.frame_buffer)
-        logits = self.model.predict(img_np)[0] # returns a size-2 list where element [0] are the logits
+        img_np_pKf = self.extract_and_pop_buffer(self.frame_buffer)
+        logits = self.model.predict(img_np_pKf)[0] # returns a size-2 list where element [0] are the logits
         assert len(logits.shape)==2 and (logits.dtype==np.float32 or logits.dtype==np.float64), "simple sanity check: pred should be a vector containing probabilities of each action"
     return {"gaze": None, "raw_logits": logits}
 
@@ -89,9 +90,10 @@ class PastKFrameGaze_and_CurrentFrameAction(PastKFrameModel):
         logits = self.DEFAULT_LOGITS_BEFORE_BUFFER_IS_FULL
         GHmap = None
     else:
-        img_np = self.extract_and_pop_buffer(self.frame_buffer)
-        GHmap = self.gaze_pred_model.predict(img_np)
-        logits = self.model.predict([img_np[...,-2:-1], GHmap])[0] # returns a size-2 list where element [0] are the logits
+        img_np_cur = self.frame_buffer[-1]
+        img_np_pKf = self.extract_and_pop_buffer(self.frame_buffer)
+        GHmap = self.gaze_pred_model.predict(img_np_pKf)
+        logits = self.model.predict([img_np_cur, GHmap])[0] # returns a size-2 list where element [0] are the logits
         assert len(logits.shape)==2 and (logits.dtype==np.float32 or logits.dtype==np.float64), "simple sanity check: pred should be a vector containing probabilities of each action"
     return {"gaze": GHmap, "raw_logits": logits}
 
@@ -142,10 +144,11 @@ class PastKFrameOpticalFlowGaze_and_CurrentFrameAction(PastKFrameModel):
         logits = self.DEFAULT_LOGITS_BEFORE_BUFFER_IS_FULL
         GHmap = None
     else:
-        img_np = self.extract_and_pop_buffer(self.frame_buffer)
-        flow_np = self.extract_and_pop_buffer(self.opticalf_buffer)
-        GHmap = self.gaze_pred_model.predict([img_np, flow_np])
-        logits = self.model.predict([img_np[...,-2:-1], GHmap])[0] # returns a size-2 list where element [0] are the logits
+        img_np_cur = self.frame_buffer[-1]
+        img_np_pKf = self.extract_and_pop_buffer(self.frame_buffer)
+        flow_np_pKf = self.extract_and_pop_buffer(self.opticalf_buffer)
+        GHmap = self.gaze_pred_model.predict([img_np_pKf, flow_np_pKf])
+        logits = self.model.predict([img_np_cur, GHmap])[0] # returns a size-2 list where element [0] are the logits
         assert len(logits.shape)==2 and (logits.dtype==np.float32 or logits.dtype==np.float64), "simple sanity check: pred should be a vector containing probabilities of each action"
 
     self.predicted_count += 1

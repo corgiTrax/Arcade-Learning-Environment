@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 
 import sys, re, tarfile, os, shutil, subprocess, threading
-from input_utils import read_gaze_data_asc_file, frameid_from_filename, rescale_and_clip_gaze_pos
+from base_input_utils import read_gaze_data_asc_file, frameid_from_filename
 from IPython import embed
 
 def untar(tar_path, output_path):
@@ -63,14 +63,14 @@ def use_spec_file():
                 # TODO(zhuode): Here, Luxin saves weight in label file, and outputs the last gaze/bad_gaze in label file, but it is not the best
                 # place to store such infomation, because the label file should not be designed to meet the need of training a specific model.
                 # the label file is used by all models, so we should guarantee it only stores info needed by all models.
-                # If a model needs such information, it should computed them in input_utils or store them in another file.
-                # An bad scenerio is that we have models that doesn't the last gaze or the weight in label file, then such info in label file
+                # If a model needs such information, it should compute them in input_utils or store them in another file.
+                # An bad scenerio is when we have models that doesn't use the last gaze or the weight in label file, then such info in label file
                 # can only adds confusion. 
                 if fid in frameid2pos_each[i] and frameid2pos_each[i][fid]:
                     weight = 1
                     # loop to find if there is bad gaze; if there is, then set weight to 0
                     for j in range(len(frameid2pos_each[i][fid])):
-                        isbad, _, _ = rescale_and_clip_gaze_pos(frameid2pos_each[i][fid][j][0], frameid2pos_each[i][fid][j][1], RESIZE_SHAPE[0], RESIZE_SHAPE[1])
+                        isbad, _, _ = BIU.rescale_and_clip_gaze_pos(frameid2pos_each[i][fid][j][0], frameid2pos_each[i][fid][j][1], RESIZE_SHAPE[0], RESIZE_SHAPE[1])
                         if isbad:
                             frameid2pos_each[i][fid] = [BAD_GAZE]
                             weight = 0

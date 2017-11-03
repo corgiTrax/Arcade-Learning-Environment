@@ -1,10 +1,11 @@
 #!/usr/bin/env python
 import sys, random, numpy as np, os, time
+import AImodels, misc_utils as MU
+from IPython import embed
+sys.path.insert(0, '../shared') # After research, this is the best way to import a file in another dir
 import action_enums as aenum
 import vip_constants as V
 from aleForET import aleForET
-import AImodels, misc_utils as MU
-from IPython import embed
 
 def sample_catagorical_distribution_with_logits(logits):
     e_x = np.exp(logits - np.max(logits))
@@ -34,7 +35,7 @@ if __name__ == "__main__":
     args_passed_to_model_initializer = sys.argv[(_d+1):] if _d != -1 else []
 
     MODEL_DIR = 'Expr/'+os.path.splitext(os.path.basename(rom_file))[0]
-    expr = MU.ExprCreaterAndResumer(MODEL_DIR, 
+    expr = MU.BMU.ExprCreaterAndResumer(MODEL_DIR, 
         postfix="%s" % (model_name))
 
     print "\nReceived Command Line Arguments:"
@@ -44,9 +45,12 @@ if __name__ == "__main__":
     print "\n"
 
     # begin init
-    MU.save_GPU_mem_keras()
-    rndseed = random.randint(0,65535)
-    ale = aleForET(rom_file, None, rndseed, resume_state_file)
+    MU.BMU.save_GPU_mem_keras()
+    def make_ale_with_random_seed_noScreen(rom_file, resume_state_file):
+        rndseed = rndseed = random.randint(0, 1<<30)
+        print MU.color("Using random seed %d for a new episode." % (rndseed), 'CYAN')
+        return aleForET(rom_file, None, rndseed, resume_state_file)
+    ale = make_ale_with_random_seed_noScreen(rom_file, resume_state_file)
     aimodel = getattr(AImodels,model_name)(model_file, mean_file, *args_passed_to_model_initializer)
 
     a = aenum.PLAYER_A_NOOP
@@ -58,6 +62,9 @@ if __name__ == "__main__":
         pred = aimodel.predict_one(img_np)
 
         a = sample_catagorical_distribution_with_logits(pred['raw_logits'])
+
+        if epEnd: # Re-create aleForET using a new seed
+            ale = make_ale_with_random_seed_noScreen(rom_file, resume_state_file)
 
         diff_time = time.time()-ale._last_time
         if diff_time > 600:

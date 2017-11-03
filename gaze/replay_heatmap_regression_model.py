@@ -6,8 +6,10 @@
 
 import sys, pygame, time, os, re, tarfile, cStringIO as StringIO
 from pygame.constants import *
+import input_utils as read_result_data
+sys.path.insert(0, '../shared') # After research, this is the best way to import a file in another dir
+from base_input_utils import frameid_from_filename, read_gaze_data_asc_file
 import vip_constants as V
-from input_utils import frameid_from_filename, read_gaze_data_asc_file, read_result_data
 
 def preprocess_and_sanity_check(png_files):
     hasWarning = False

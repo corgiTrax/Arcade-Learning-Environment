@@ -3,9 +3,10 @@
 # I wrote a main function for this script, so it can be run to for testing/debuging purposes
 
 import re,sys,os,time
-from aleForET import aleForET
 import pygame
 from IPython import embed
+sys.path.insert(0, '../shared') # After research, this is the best way to import a file in another dir
+from aleForET import aleForET
 
 class ScreenRecorder:
     def __init__(self, UTID):
