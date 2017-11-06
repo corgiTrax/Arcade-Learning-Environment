@@ -31,7 +31,7 @@ class DatasetDQN(object):
     print ("Time spent to read train/val data: %.1fs" % (time.time()-t1))
 
 def read_dataset_via_running_ReplayEnv(LABELS_FILE):
-  env = wrap_dqn(ReplayEnv(LABELS_FILE), random_number_NoOp_when_reset=False, nature8484=True)
+  env = wrap_dqn(ReplayEnv(LABELS_FILE), being_used_to_generate_dataset=True)
   first_obs = env.reset()
   imgs = [np.array(first_obs)] # see below
   while True:
@@ -41,10 +41,9 @@ def read_dataset_via_running_ReplayEnv(LABELS_FILE):
         break
   imgs_np = np.array(imgs)
   # env.unwrapped can be used to access the innermost env, i.e., ReplayEnv
-  assert len(imgs_np) == int(len(env.unwrapped.imgs)/4 - 1), ("Our goal is to make sure len(preprocessed dataset) = " + 
-      "len(raw game playing data)/4")  # I cannot figure out why -1
-  print ("Dataset is shrinked to its 1/4. ( %d -> %d )" % (len(env.unwrapped.imgs),len(imgs_np)))
+  print ("Dataset size change: %d -> %d " % (len(env.unwrapped.imgs),len(imgs_np)))
   return imgs_np, env.unwrapped.lbl, env.unwrapped.gaze, env.unwrapped.fid, env.unwrapped.weight
+
 
 
 class ReplayEnv(gym.Env): 

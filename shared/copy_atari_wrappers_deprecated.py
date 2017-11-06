@@ -194,7 +194,7 @@ class LazyFrames(object):
 
 
 class FrameStack(gym.Wrapper):
-    def __init__(self, env, k):
+    def __init__(self, env, k, skip=1):
         """Stack k last frames.
 
         Returns lazy array, which is much more memory efficient.
@@ -205,13 +205,14 @@ class FrameStack(gym.Wrapper):
         """
         gym.Wrapper.__init__(self, env)
         self.k = k
-        self.frames = deque([], maxlen=k)
+        self.skip = skip
+        self.frames = deque([], maxlen=k*skip)
         shp = env.observation_space.shape
         self.observation_space = spaces.Box(low=0, high=255, shape=(shp[0], shp[1], shp[2] * k))
 
     def _reset(self):
         ob = self.env.reset()
-        for _ in range(self.k):
+        for _ in range(self.k*self.skip):
             self.frames.append(ob)
         return self._get_ob()
 
@@ -221,8 +222,9 @@ class FrameStack(gym.Wrapper):
         return self._get_ob(), reward, done, info
 
     def _get_ob(self):
-        assert len(self.frames) == self.k
-        return LazyFrames(list(self.frames))
+        result = list(self.frames)[0 : len(self.frames) : self.skip]
+        assert len(result) == self.k
+        return LazyFrames(result)
 
 
 class ScaledFloatFrame(gym.ObservationWrapper):
@@ -232,23 +234,29 @@ class ScaledFloatFrame(gym.ObservationWrapper):
         return np.array(obs).astype(np.float32) / 255.0
 
 
-def wrap_dqn(env,
-             random_number_NoOp_when_reset=gflag.NoneOr.random_number_NoOp_when_reset,
-             nature8484=gflag.NoneOr.nature8484):
-    """Apply a common set of wrappers for Atari games."""
+def wrap_dqn(env, being_used_to_generate_dataset=gflag.NoneOr.being_used_to_generate_dataset):
+    """
+    Apply a common set of wrappers for Atari games. 
+    This function is rewritten, and is different from the one in the original OpenAI's repo:
+
+    We replaced the call to "ProcessFrame84" with "WarpFrame_from_atari_wrappers_py", which
+    resizes frames to 84x84 as done in the Nature paper.
+    
+    When this function is `being_used_to_generate_dataset` by my special env 'ReplayEnv', we use different gym.Wrapper 
+    to guarantee that the dataset is less 'surprising' (losing a few frames caused by some wrappers), 
+    but still guarantee the generated dataset will be the same as 'being_used_to_generate_dataset' is False
+    thus suitable for training.
+    """
+
     assert 'NoFrameskip' in env.spec.id
     env = EpisodicLifeEnv(env)
-    if random_number_NoOp_when_reset: # NoopResetEnv randomly skips frames
+    if not being_used_to_generate_dataset: # NoopResetEnv randomly skips frames
         env = NoopResetEnv(env, noop_max=30)
-    env = MaxAndSkipEnv(env, skip=4)
-    if 'FIRE' in env.unwrapped.get_action_meanings():
+    env = MaxAndSkipEnv(env, skip=4) if not being_used_to_generate_dataset else MaxAndSkipEnv(env, skip=1)
+    if not being_used_to_generate_dataset and 'FIRE' in env.unwrapped.get_action_meanings(): # FireResetEnv might skip 2 frames
         env = FireResetEnv(env)
-    if nature8484:
-        env = WarpFrame_from_atari_wrappers_py(env)
-    else:
-        env = ProcessFrame84(env)
-    print ("Using Nature preprocessing (flag nature8484) = ", nature8484)
-    env = FrameStack(env, 4)
+    env = WarpFrame_from_atari_wrappers_py(env)
+    env = FrameStack(env, 4) if not being_used_to_generate_dataset else FrameStack(env, k=4, skip=4)
     env = ClippedRewardsWrapper(env)
     return env
 
