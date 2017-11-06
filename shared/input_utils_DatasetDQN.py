@@ -114,8 +114,3 @@ class ReplayEnv(gym.Env):
       16 : "DOWNRIGHTFIRE",
       17 : "DOWNLEFTFIRE",
   }
-
-
-
-d = DatasetDQN('/Users/parrot/ale/mypylink/screen_record/36_TMP-train.txt'
-    , '/Users/parrot/ale/mypylink/screen_record/36_TMP-val.txt')
