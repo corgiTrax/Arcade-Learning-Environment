@@ -11,19 +11,12 @@ def keras_model_serialization_bug_fix(): # stupid keras
     f=lambda obj_to_serialize: \
         get_custom_objects().update({obj_to_serialize.__name__: obj_to_serialize})
     f(loss_func); f(acc_);
-    f(loss_func_nonsparse)
-    f(acc_nonsparse_wrong)
     f(my_softmax)
     f(my_kld)
     f(NSS)
 
 def loss_func(target, pred): 
     return K.backend.sparse_categorical_crossentropy(output=pred, target=target, from_logits=True)
-
-# This is function is used in ale/modeling/pyModel/main-SmoothLabel.py, because in that case
-# the target label is a prob distribution rather than a number
-def loss_func_nonsparse(target, pred): 
-    return K.backend.categorical_crossentropy(output=pred, target=target, from_logits=True)
 
 def acc_(y_true, y_pred): # don't rename it to acc or accuracy (otherwise stupid keras will replace this func with its own accuracy function when serializing )
   return tf.reduce_mean(
