@@ -4,7 +4,7 @@ import numpy as np
 from IPython import embed
 from scipy import misc
 import gym
-import gflag
+from gflag import gflag
 import vip_constants as V
 from copy_atari_wrappers_deprecated import wrap_dqn
 from base_input_utils import read_np_parallel
@@ -43,6 +43,7 @@ def read_dataset_via_running_ReplayEnv(LABELS_FILE):
   # env.unwrapped can be used to access the innermost env, i.e., ReplayEnv
   assert len(imgs_np) == int(len(env.unwrapped.imgs)/4 - 1), ("Our goal is to make sure len(preprocessed dataset) = " + 
       "len(raw game playing data)/4")  # I cannot figure out why -1
+  print ("Dataset is shrinked to its 1/4. ( %d -> %d )" % (len(env.unwrapped.imgs),len(imgs_np)))
   return imgs_np, env.unwrapped.lbl, env.unwrapped.gaze, env.unwrapped.fid, env.unwrapped.weight
 
 

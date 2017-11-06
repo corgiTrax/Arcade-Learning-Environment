@@ -1,7 +1,7 @@
 import cv2
 import gym
 import numpy as np
-import gflag
+from gflag import gflag
 
 from PIL import Image
 from collections import deque
