@@ -4,30 +4,30 @@ import numpy as np
 from IPython import embed
 from scipy import misc
 import vip_constants as V
-# Don't import tensorflow or keras here, as people who import this file might not have keras or tf
 
+# Don't import tensorflow or keras here, as people who import this file might not have keras or tf
 
 class Dataset(object):
   train_imgs, train_lbl, train_fid, train_size, train_weight = None, None, None, None, None
   val_imgs, val_lbl, val_fid, val_size, val_weight = None, None, None, None, None
   def __init__(self, LABELS_FILE_TRAIN, LABELS_FILE_VAL, RESIZE_SHAPE):
     t1=time.time()
-    print "Reading all training data into memory..."
+    print ("Reading all training data into memory...")
     self.train_imgs, self.train_lbl, self.train_gaze, self.train_fid, self.train_weight = read_np_parallel(LABELS_FILE_TRAIN, RESIZE_SHAPE)
     self.train_size = len(self.train_lbl)
-    print "Reading all validation data into memory..."
+    print ("Reading all validation data into memory...")
     self.val_imgs, self.val_lbl, self.val_gaze, self.val_fid, self.val_weight = read_np_parallel(LABELS_FILE_VAL, RESIZE_SHAPE)
     self.val_size = len(self.val_lbl)
-    print "Time spent to read train/val data: %.1fs" % (time.time()-t1)
+    print ("Time spent to read train/val data: %.1fs" % (time.time()-t1))
 
     from collections import defaultdict
     d = defaultdict(int)
     for lbl in self.val_lbl: d[lbl] += 1
-    print "Baseline Accuracy (predicting to the majority class label): %.1f%%" % (100.0*max(d.values())/len(self.val_lbl))
+    print ("Baseline Accuracy (predicting to the majority class label): %.1f%%" % (100.0*max(d.values())/len(self.val_lbl)))
 
-    print "Performing standardization (x-mean)..."
+    print ("Performing standardization (x-mean)...")
     self.standardize()
-    print "Done."
+    print ("Done.")
 
   def standardize(self):
     self.mean = np.mean(self.train_imgs, axis=(0,1,2))
@@ -58,7 +58,7 @@ class Dataset_PastKFrames(Dataset):
     # Could cause the model unable to train  if this assumption does not hold
     self.train_lbl = self.train_lbl[-self.train_imgs.shape[0]:]
     self.val_lbl = self.val_lbl[-self.val_imgs.shape[0]:]
-    print "Time spent to transform train/val data to pask K frames: %.1fs" % (time.time()-t1)
+    print ("Time spent to transform train/val data to pask K frames: %.1fs" % (time.time()-t1))
 
 def transform_to_past_K_frames(original, K, stride, before):
     newdat = []
@@ -124,27 +124,30 @@ def read_gaze_data_asc_file(fname):
             if frameid2action[frameid] is None:
                 frameid2action[frameid] = int(action_label)
             else:
-                print "Warning: there are more than 1 action for frame id %s. Not supposed to happen." % str(frameid)
+                print ("Warning: there are more than 1 action for frame id %s. Not supposed to happen." % str(frameid))
             continue
 
     frameid2pos[frameid] = [] # throw out gazes after the last frame, because the game has ended but eye tracker keeps recording
 
     if len(frameid2pos) < 1000: # simple sanity check
-        print "Warning: did you provide the correct ASC file? Because the data for only %d frames is detected" % (len(frameid2pos))
+        print ("Warning: did you provide the correct ASC file? Because the data for only %d frames is detected" % (len(frameid2pos)))
         raw_input("Press any key to continue")
 
     few_cnt = 0
     for v in frameid2pos.values():
         if len(v) < 10: few_cnt += 1
-    print "Warning:  %d frames have less than 10 gaze samples. (%.1f%%, total frame: %d)" % \
-        (few_cnt, 100.0*few_cnt/len(frameid2pos), len(frameid2pos))
+    print ("Warning:  %d frames have less than 10 gaze samples. (%.1f%%, total frame: %d)" % \
+            (few_cnt, 100.0*few_cnt/len(frameid2pos), len(frameid2pos)))
     return frameid2pos, frameid2action
 
 
-def read_np_parallel(label_file, RESIZE_SHAPE, num_thread=6):
+def read_np_parallel(label_file, RESIZE_SHAPE, num_thread=6, preprocess_deprecated=True):
     """
+    Args:
+        preprocess_deprecated: This is newly added for backward-compatibility. Old code assume this funciton does
+            some resizeing and scaling. But now we defer this for easier intergration with OpenAI's repo "baselines".
+
     Read the whole dataset into memory. 
-    Remember to run "imgs.nbytes" to see how much memory it uses
     Provide a label file (text file) which has "{image_path} {label}\n" per line.
     Returns a numpy array of the images, and a numpy array of labels
     """
@@ -167,7 +170,7 @@ def read_np_parallel(label_file, RESIZE_SHAPE, num_thread=6):
             gaze.append((float(x)*RESIZE_SHAPE[1]/V.SCR_W, float(y)*RESIZE_SHAPE[0]/V.SCR_H))
             weight.append(float(w))
     N = len(labels)
-    imgs = np.empty((N,RESIZE_SHAPE[0],RESIZE_SHAPE[1],1), dtype=np.float32)
+    imgs = [None] * N
     labels = np.asarray(labels, dtype=np.int32)
     gaze = np.asarray(gaze, dtype=np.float32)
     weight = np.asarray(weight, dtype=np.float32)
@@ -175,15 +178,19 @@ def read_np_parallel(label_file, RESIZE_SHAPE, num_thread=6):
     def read_thread(PID):
         d = os.path.dirname(label_file)
         for i in range(PID, N, num_thread):
-            img = misc.imread(os.path.join(d, png_files[i]), 'Y') # 'Y': grayscale  
-            img = misc.imresize(img, [RESIZE_SHAPE[0],RESIZE_SHAPE[1]], interp='bilinear')
-            img = np.expand_dims(img, axis=2)
-            img = img.astype(np.float32) / 255.0 # normalize image to [0,1]
-            imgs[i,:] = img
+            if preprocess_deprecated:
+                img = misc.imread(os.path.join(d, png_files[i]), 'Y') # 'Y': grayscale  
+                img = misc.imresize(img, [RESIZE_SHAPE[0],RESIZE_SHAPE[1]], interp='bilinear')
+                img = np.expand_dims(img, axis=2)
+                img = img.astype(np.float32) / 255.0 # normalize image to [0,1]
+            else:
+                img = misc.imread(os.path.join(d, png_files[i])) # uint8 RGB (210,160,3)
+            imgs[i] = img
 
     o=ForkJoiner(num_thread=num_thread, target=read_thread)
     o.join()
-    return imgs, labels, gaze, fids, weight
+    return np.asarray(imgs), labels, gaze, fids, weight
+
 
 class ForkJoiner():
     def __init__(self, num_thread, target):
@@ -237,7 +244,7 @@ def preprocess_gaze_heatmap(GHmap, sigmaH, sigmaW, bg_prob_density, debug_plot_r
         model.add(K.layers.Conv2D(1, kernel_size=gkernel.shape, strides=1, padding="valid", use_bias=False,
               activation="linear", kernel_initializer=K.initializers.Constant(gkernel)))
     else:
-        print "WARNING: Gaussian filter's sigma is 0, i.e. no blur."
+        print ("WARNING: Gaussian filter's sigma is 0, i.e. no blur.")
     # The following normalization hurts accuracy. I don't know why. But intuitively it should increase accuracy
     #def GH_normalization(x):
     #    sum_per_GH = tf.reduce_sum(x,axis=[1,2,3])
@@ -253,13 +260,13 @@ def preprocess_gaze_heatmap(GHmap, sigmaH, sigmaW, bg_prob_density, debug_plot_r
     output=model.predict(GHmap, batch_size=500)
 
     if debug_plot_result:
-        print r"""debug_plot_result is True. Entering IPython console. You can run:
-        %matplotlib
-        import matplotlib.pyplot as plt
-        f, axarr = plt.subplots(1,2)
-        axarr[0].imshow(gkernel)
-        rnd=np.random.randint(output.shape[0]); print "rand idx:", rnd
-        axarr[1].imshow(output[rnd,...,0])"""
+        print (r"""debug_plot_result is True. Entering IPython console. You can run:
+                %matplotlib
+                import matplotlib.pyplot as plt
+                f, axarr = plt.subplots(1,2)
+                axarr[0].imshow(gkernel)
+                rnd=np.random.randint(output.shape[0]); print "rand idx:", rnd
+                axarr[1].imshow(output[rnd,...,0])""")
         embed()
     
     shape_before, shape_after = GHmap.shape, output.shape
