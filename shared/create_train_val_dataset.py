@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 
 import sys, re, tarfile, os, shutil, subprocess, threading
-from base_input_utils import read_gaze_data_asc_file, frameid_from_filename
+from base_input_utils import read_gaze_data_asc_file, frameid_from_filename, rescale_and_clip_gaze_pos
 from IPython import embed
 
 def untar(tar_path, output_path):
@@ -13,7 +13,7 @@ def untar(tar_path, output_path):
 
 def use_spec_file():
 
-    print "Reading dataset specification file..."
+    print ("Reading dataset specification file...")
     spec_file, dataset_name, output_path = sys.argv[2], sys.argv[3], sys.argv[4]
     lines = []
     with open(spec_file,'r') as f:
@@ -30,26 +30,26 @@ def use_spec_file():
         if not os.path.exists(fname): 
             raise IOError("No such file: %s" % fname)
     
-    print "Untaring files in parallel..."
+    print ("Untaring files in parallel...")
     png_files_each=[None]*len(spec)
     def untar_thread(PID):
         png_files_each[PID] = untar(spec[PID]['TAR'], output_path)
     untar_work=ForkJoiner(num_thread=len(spec), target=untar_thread)
 
-    print "Reading asc files while untaring..."
+    print ("Reading asc files while untaring...")
     frameid2action_each=[None]*len(spec)
     frameid2pos_each=[[]]*len(spec)
     for i in range(len(spec)):
         frameid2pos_each[i], frameid2action_each[i] = read_gaze_data_asc_file(spec[i]['ASC'])
 
-    print "Concatenating asc file while untaring..."
+    print ("Concatenating asc file while untaring...")
     asc_filename = output_path+'/'+dataset_name+'.asc'
     with open(asc_filename, 'w') as f:
         subprocess.call(['cat']+[entry['ASC'] for entry in spec], stdout=f)
-    print "Waiting for untaring to finish..."
+    print ("Waiting for untaring to finish...")
     untar_work.join()
 
-    print "Generating train/val label files..."
+    print ("Generating train/val label files...")
     xy_str_train = []
     xy_str_val =   []
     BAD_GAZE = (-1,-1)
@@ -70,7 +70,7 @@ def use_spec_file():
                     weight = 1
                     # loop to find if there is bad gaze; if there is, then set weight to 0
                     for j in range(len(frameid2pos_each[i][fid])):
-                        isbad, _, _ = BIU.rescale_and_clip_gaze_pos(frameid2pos_each[i][fid][j][0], frameid2pos_each[i][fid][j][1], RESIZE_SHAPE[0], RESIZE_SHAPE[1])
+                        isbad, _, _ = rescale_and_clip_gaze_pos(frameid2pos_each[i][fid][j][0], frameid2pos_each[i][fid][j][1], RESIZE_SHAPE[0], RESIZE_SHAPE[1])
                         if isbad:
                             frameid2pos_each[i][fid] = [BAD_GAZE]
                             weight = 0
@@ -81,7 +81,7 @@ def use_spec_file():
                 else:# if no gaze, set gaze to -1 and weight to 0
                     xy_str.append('%s %d %f %f %f' % (png, frameid2action_each[i][fid], BAD_GAZE[0], BAD_GAZE[1], 0))
             else:
-                print "Warning: Cannot find the label for frame ID %s. Skipping this frame." % str(fid)
+                print ("Warning: Cannot find the label for frame ID %s. Skipping this frame." % str(fid))
         
         # assign each xy_str to the train/val part of the dataset
         def assign(range_list, target):
@@ -108,11 +108,11 @@ def use_spec_file():
         f.write('\n'.join(xy_str_val))
         f.write('\n')
 
-    print "\nDone. Outputs are:"
-    print " %s" % asc_filename
-    print " %s (%d examples)" % (train_file_name, len(xy_str_train))
-    print " %s (%d examples)" % (val_file_name, len(xy_str_val))
-    print "For convenience, dataset specification is also prepended to train/val text file."
+    print ("\nDone. Outputs are:")
+    print (" %s" % asc_filename)
+    print (" %s (%d examples)" % (train_file_name, len(xy_str_train)))
+    print (" %s (%d examples)" % (val_file_name, len(xy_str_val)))
+    print ("For convenience, dataset specification is also prepended to train/val text file.")
 
 
 class ForkJoiner():
@@ -126,7 +126,7 @@ class ForkJoiner():
 
 if __name__ == '__main__':
     if len(sys.argv)<5:
-        print "Usage: "
-        print "  %s --spec text_file(see dataset_specification_example.txt) dataset_name(give a name to this dataset)  output_path(e.g. a directory called 'dataset')\n"  % sys.argv[0]
+        print ("Usage: ")
+        print ("  %s --spec text_file(see dataset_specification_example.txt) dataset_name(give a name to this dataset)  output_path(e.g. a directory called 'dataset')\n"  % sys.argv[0])
         sys.exit(0)
     use_spec_file()
