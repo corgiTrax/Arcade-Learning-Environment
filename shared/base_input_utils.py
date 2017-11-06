@@ -170,7 +170,7 @@ def read_np_parallel(label_file, RESIZE_SHAPE, num_thread=6, preprocess_deprecat
             gaze.append((float(x)*RESIZE_SHAPE[1]/V.SCR_W, float(y)*RESIZE_SHAPE[0]/V.SCR_H))
             weight.append(float(w))
     N = len(labels)
-    imgs = np.empty((N,RESIZE_SHAPE[0],RESIZE_SHAPE[1],1), dtype=np.float32)
+    imgs = [None] * N
     labels = np.asarray(labels, dtype=np.int32)
     gaze = np.asarray(gaze, dtype=np.float32)
     weight = np.asarray(weight, dtype=np.float32)
@@ -185,11 +185,11 @@ def read_np_parallel(label_file, RESIZE_SHAPE, num_thread=6, preprocess_deprecat
                 img = img.astype(np.float32) / 255.0 # normalize image to [0,1]
             else:
                 img = misc.imread(os.path.join(d, png_files[i])) # uint8 RGB (210,160,3)
-            imgs[i,:] = img
+            imgs[i] = img
 
     o=ForkJoiner(num_thread=num_thread, target=read_thread)
     o.join()
-    return imgs, labels, gaze, fids, weight
+    return np.asarray(imgs), labels, gaze, fids, weight
 
 
 class ForkJoiner():
