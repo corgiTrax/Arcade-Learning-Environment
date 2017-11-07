@@ -2,8 +2,8 @@
 GFlag stands for "global flag".
 
 Example usage: 
+  from gflag import gflag
   gflag.dueling 
-  gflag.NoneOr.dueling (if dueling flag is not set, it's None)
 
 This file has two use cases:
 + Storing command line flags(i.e arguments)
@@ -27,10 +27,15 @@ class GFlag(object):
       raise AttributeError("GFlag is already initialized")
 
   def add_read_only(self, name, val):
+    if GFlag._dict is None:
+      GFlag._dict = {} # initialize
     if name not in GFlag._dict:
       GFlag._dict[name] = val
     elif GFlag._dict[name] != val:
       raise AttributeError("GFlag is immutable after initialization")
+
+  def exists(self, name):
+    return (GFlag._dict is not None) and (name in GFlag._dict)
 
   def __getattr__(self, name):
     if GFlag._dict is None:
@@ -41,21 +46,6 @@ class GFlag(object):
 
   def __setattr__(self, name, val):
     raise AttributeError("GFlag is immutable after initialization")
+    
 
-  class GFlagOrNone(object): # If flag not found, return None rather than raise AttributeError
-    def __getattr__(self, name):
-      if (GFlag._dict is None) or (name not in GFlag._dict):
-        return None
-      return GFlag._dict[name]
-
-  NoneOr = GFlagOrNone()
-
-if sys.version_info[0] > 2:  # for Python 3
-  # Replace the module with the object to support simple syntax like 
-  # `import gflag`
-  # `gflag.random_seed` `gflag.dueling` ...
-  # (see https://stackoverflow.com/questions/2447353/getattr-on-a-module)
-  sys.modules[__name__] = GFlag()
-else:
-  gflag = GFlag() # for Python 2 and 3, use `from gflag import gflag`
-
+gflag = GFlag() # Allow `from gflag import gflag`. Works in both Python 2 and 3

@@ -28,10 +28,22 @@ class DatasetDQN(object):
     print ("Reading all validation data into memory...")
     self.val_imgs, self.val_lbl, self.val_gaze, self.val_fid, self.val_weight = read_dataset_via_running_ReplayEnv(LABELS_FILE_VAL)
     self.val_size = len(self.val_lbl)
+    self.div255()
     print ("Time spent to read train/val data: %.1fs" % (time.time()-t1))
 
+  def div255(self):
+    self.train_imgs = self.train_imgs.astype(np.float32) / 255.0
+    self.val_imgs = self.val_imgs.astype(np.float32) / 255.0
+
+
 def read_dataset_via_running_ReplayEnv(LABELS_FILE):
-  env = wrap_dqn(ReplayEnv(LABELS_FILE), being_used_to_generate_dataset=True)
+  imgs_raw, lbl, gaze, fid, weight = \
+  read_np_parallel(LABELS_FILE, RESIZE_SHAPE=(84,84), preprocess_deprecated=False) 
+        # RESIZE_SHAPE=(84,84) because read_np_parallel() needs it to rescale gaze. 
+        # It can (and should) be None after finishing read_np_parallel's TODO
+  print ("Done: read_np_parallel('%s')" % LABELS_FILE)
+
+  env = wrap_dqn(ReplayEnv(imgs_raw), being_used_to_generate_dataset=True, scale_and_grayscale=True)
   first_obs = env.reset()
   imgs = [np.array(first_obs)] # see below
   while True:
@@ -42,7 +54,9 @@ def read_dataset_via_running_ReplayEnv(LABELS_FILE):
   imgs_np = np.array(imgs)
   # env.unwrapped can be used to access the innermost env, i.e., ReplayEnv
   print ("Dataset size change: %d -> %d " % (len(env.unwrapped.imgs),len(imgs_np)))
-  return imgs_np, env.unwrapped.lbl, env.unwrapped.gaze, env.unwrapped.fid, env.unwrapped.weight
+  return imgs_np, lbl, gaze, fid, weight
+
+
 
 
 
@@ -51,16 +65,9 @@ class ReplayEnv(gym.Env):
   Implements a fake Atari env which replays all images in a label file.
   gym.Env doc: https://github.com/openai/gym/blob/69b677e6d8bfc0b86f586ca5ee13620b20fab90e/gym/core.py#L13
   """
-  def __init__(self, LABELS_FILE):
-    print("[ReplayEnv] LABELS_FILE: " + LABELS_FILE)
+  def __init__(self, imgs):
     self._init_attr()
-    # except for self.imgs, all other attributes are not used in this class, 
-    # and those info are just there to be extracted by other code.
-    self.imgs, self.lbl, self.gaze, self.fid, self.weight = \
-    read_np_parallel(LABELS_FILE, RESIZE_SHAPE=(84,84), preprocess_deprecated=False) 
-          # RESIZE_SHAPE=(84,84) because read_np_parallel() needs it to rescale gaze. 
-          # It can (and should) be None after finishing read_np_parallel's TODO
-    print("[ReplayEnv] read_np_parallel() done.")
+    self.imgs = imgs
   def _reset(self):
     self._ptr = 0
     #  The contract of reset() is to return the initial observation.

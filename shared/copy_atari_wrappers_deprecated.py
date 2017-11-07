@@ -234,7 +234,7 @@ class ScaledFloatFrame(gym.ObservationWrapper):
         return np.array(obs).astype(np.float32) / 255.0
 
 
-def wrap_dqn(env, being_used_to_generate_dataset=gflag.NoneOr.being_used_to_generate_dataset):
+def wrap_dqn(env, being_used_to_generate_dataset=False, scale_and_grayscale=True):
     """
     Apply a common set of wrappers for Atari games. 
     This function is rewritten, and is different from the one in the original OpenAI's repo:
@@ -246,6 +246,8 @@ def wrap_dqn(env, being_used_to_generate_dataset=gflag.NoneOr.being_used_to_gene
     to guarantee that the dataset is less 'surprising' (losing a few frames caused by some wrappers), 
     but still guarantee the generated dataset will be the same as 'being_used_to_generate_dataset' is False
     thus suitable for training.
+
+    Please don't change the default value of the arguments.
     """
 
     assert 'NoFrameskip' in env.spec.id
@@ -255,7 +257,8 @@ def wrap_dqn(env, being_used_to_generate_dataset=gflag.NoneOr.being_used_to_gene
     env = MaxAndSkipEnv(env, skip=4) if not being_used_to_generate_dataset else MaxAndSkipEnv(env, skip=1)
     if not being_used_to_generate_dataset and 'FIRE' in env.unwrapped.get_action_meanings(): # FireResetEnv might skip 2 frames
         env = FireResetEnv(env)
-    env = WarpFrame_from_atari_wrappers_py(env)
+    if scale_and_grayscale:
+        env = WarpFrame_from_atari_wrappers_py(env)
     env = FrameStack(env, 4) if not being_used_to_generate_dataset else FrameStack(env, k=4, skip=4)
     env = ClippedRewardsWrapper(env)
     return env
