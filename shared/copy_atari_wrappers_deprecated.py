@@ -234,7 +234,7 @@ class ScaledFloatFrame(gym.ObservationWrapper):
         return np.array(obs).astype(np.float32) / 255.0
 
 
-def wrap_dqn(env, being_used_to_generate_dataset=False, scale_and_grayscale=True):
+def wrap_dqn(env, user="RLtraining"):
     """
     Apply a common set of wrappers for Atari games. 
     This function is rewritten, and is different from the one in the original OpenAI's repo:
@@ -249,18 +249,23 @@ def wrap_dqn(env, being_used_to_generate_dataset=False, scale_and_grayscale=True
 
     Please don't change the default value of the arguments.
     """
-
+    assert user in ["RLtraining", "ReplayEnv_img"]
     assert 'NoFrameskip' in env.spec.id
-    env = EpisodicLifeEnv(env)
-    if not being_used_to_generate_dataset: # NoopResetEnv randomly skips frames
-        env = NoopResetEnv(env, noop_max=30)
-    env = MaxAndSkipEnv(env, skip=4) if not being_used_to_generate_dataset else MaxAndSkipEnv(env, skip=1)
-    if not being_used_to_generate_dataset and 'FIRE' in env.unwrapped.get_action_meanings(): # FireResetEnv might skip 2 frames
-        env = FireResetEnv(env)
-    if scale_and_grayscale:
+    if user == 'RLtraining':
+        env = EpisodicLifeEnv(env)
+        env = NoopResetEnv(env, noop_max=30) # NoopResetEnv randomly skips frames
+        env = MaxAndSkipEnv(env, skip=4)
+        if 'FIRE' in env.unwrapped.get_action_meanings(): # FireResetEnv might skip 2 frames
+            env = FireResetEnv(env)
         env = WarpFrame_from_atari_wrappers_py(env)
-    env = FrameStack(env, 4) if not being_used_to_generate_dataset else FrameStack(env, k=4, skip=4)
-    env = ClippedRewardsWrapper(env)
+        env = FrameStack(env, 4)
+        env = ClippedRewardsWrapper(env)
+    elif user == 'ReplayEnv_img':
+        env = EpisodicLifeEnv(env)
+        env = MaxAndSkipEnv(env, skip=1)
+        env = WarpFrame_from_atari_wrappers_py(env)
+        env = FrameStack(env, k=4, skip=4)
+        env = ClippedRewardsWrapper(env)
     return env
 
 
