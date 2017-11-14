@@ -17,44 +17,40 @@ dropout = 0.25
 MODEL_DIR = 'Breakout_42_44'
 resume_model = False
 
-MU.save_GPU_mem_keras()
+MU.BMU.save_GPU_mem_keras()
 MU.keras_model_serialization_bug_fix()
 
-expr = MU.ExprCreaterAndResumer(MODEL_DIR,postfix="baseline")
+expr = MU.BMU.ExprCreaterAndResumer(MODEL_DIR,postfix="baseline")
 expr.redirect_output_to_logfile_if_not_on("eldar-11")
 
-if resume_model:
-    model = expr.load_weight_and_training_config_and_state()
-    expr.printdebug("Checkpoint found. Resuming model at %s" % expr.dir_lasttime)
-else:
-    inputs=L.Input(shape=SHAPE)
-    x=inputs # inputs is used by the line "Model(inputs, ... )" below
-    x=L.Conv2D(20, (8,8), strides=4, padding='same')(x)
-    x=L.BatchNormalization()(x)
-    x=L.Activation('relu')(x)
-    x=L.Dropout(dropout)(x)
-    
-    x=L.Conv2D(40, (4,4), strides=2, padding='same')(x)
-    x=L.BatchNormalization()(x)
-    x=L.Activation('relu')(x)
-    x=L.Dropout(dropout)(x)
-    
-    x=L.Conv2D(80, (3,3), strides=2, padding='same')(x)
-    x=L.BatchNormalization()(x)
-    x=L.Activation('relu')(x)
-    x=L.Dropout(dropout)(x)
-    x=L.Flatten()(x)
-    
-    x=L.Dense(256, activation='relu')(x)
-    x=L.Dropout(dropout)(x)
-    logits=L.Dense(NUM_CLASSES, name="logits")(x)
-    prob=L.Activation('softmax', name="prob")(logits)
-    model=Model(inputs=inputs, outputs=[logits, prob])
+inputs=L.Input(shape=SHAPE)
+x=inputs # inputs is used by the line "Model(inputs, ... )" below
+x=L.Conv2D(20, (8,8), strides=4, padding='same')(x)
+x=L.BatchNormalization()(x)
+x=L.Activation('relu')(x)
+x=L.Dropout(dropout)(x)
 
-    opt=K.optimizers.Adadelta(lr=1.0, rho=0.95, epsilon=1e-08, decay=0.0)
+x=L.Conv2D(40, (4,4), strides=2, padding='same')(x)
+x=L.BatchNormalization()(x)
+x=L.Activation('relu')(x)
+x=L.Dropout(dropout)(x)
 
-    model.compile(loss={"prob":None, "logits": MU.loss_func},
-                 optimizer=opt,metrics={"logits": MU.acc_})
+x=L.Conv2D(80, (3,3), strides=2, padding='same')(x)
+x=L.BatchNormalization()(x)
+x=L.Activation('relu')(x)
+x=L.Dropout(dropout)(x)
+x=L.Flatten()(x)
+
+x=L.Dense(256, activation='relu')(x)
+x=L.Dropout(dropout)(x)
+logits=L.Dense(NUM_CLASSES, name="logits")(x)
+prob=L.Activation('softmax', name="prob")(logits)
+model=Model(inputs=inputs, outputs=[logits, prob])
+
+opt=K.optimizers.Adadelta(lr=1.0, rho=0.95, epsilon=1e-08, decay=0.0)
+
+model.compile(loss={"prob":None, "logits": MU.loss_func},
+             optimizer=opt,metrics={"logits": MU.acc_})
 
 expr.dump_src_code_and_model_def(sys.argv[0], model)
 
@@ -64,7 +60,7 @@ model.fit(d.train_imgs, d.train_lbl, BATCH_SIZE, epochs=num_epoch,
     shuffle=True,verbose=2,
     callbacks=[K.callbacks.TensorBoard(log_dir=expr.dir),
         K.callbacks.ReduceLROnPlateau(monitor='val_loss', factor=0.5,patience=3, min_lr=0.001),
-        MU.PrintLrCallback()])
+        MU.BMU.PrintLrCallback()])
 
 expr.save_weight_and_training_config_state(model)
 

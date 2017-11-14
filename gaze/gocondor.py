@@ -1,14 +1,21 @@
 #!/usr/bin/env python
-
+"""
+this is an independent script that can be used to submit jobs to condor,
+and run the same xxx.py file with different hyper-parameters.
+the primary place you might want to change is multi_experiment().
+for more detailed behaviors, please take a look at the code.
+"""
 def multi_experiment():
     l = [] # compose a list of arguments needed to be passed to the python script
-#  for dp in ["0 0.2","0 0.3","0 0.4","0 0.5"]:
-#    for lr in ["0.1","0.05","0.01","0.005","0.001"]:
-#        l.append(' '.join([dp,lr]))
-    for dp in ["0 0.3","0 0.4","0 0.5"]: 
-        for k in ["2","4","8"]:
-            for s in ["1"]:
-                l.append(' '.join([dp,k,s]))
+
+    for param in ["seaquest 0 0.4",
+                  "mspacman 0 0.4",
+                  "centipede 0 0.5",
+                  "venture 0 0.4",
+                  "riverraid 0 0.4",
+                  "enduro 0 0.4"]: 
+        l.append(' '.join([param]))
+
     return l
 
 import sys, re, os, subprocess
@@ -24,7 +31,7 @@ remote_initialdir = /scratch/cluster/zharucs/ale/gaze/
 Universe = vanilla
 
 # UTCS has 18 such machine, to take a look, run 'condor_status  -constraint 'GTX1080==true' 
-Requirements=(TARGET.GTX1080== true)
+Requirements=(TARGET.MACHINE=="eldar-22.cs.utexas.edu"||TARGET.MACHINE=="eldar-23.cs.utexas.edu"||TARGET.MACHINE=="eldar-24.cs.utexas.edu"||TARGET.MACHINE=="eldar-25.cs.utexas.edu"||TARGET.MACHINE=="eldar-26.cs.utexas.edu"||TARGET.MACHINE=="eldar-27.cs.utexas.edu"||TARGET.MACHINE=="eldar-28.cs.utexas.edu"||TARGET.MACHINE=="eldar-29.cs.utexas.edu"||TARGET.MACHINE=="eldar-30.cs.utexas.edu")
 
 executable = /u/zharucs/anaconda2/bin/ipython 
 getenv = true
@@ -33,6 +40,8 @@ error = CondorOutput/$(Cluster).err
 log = CondorOutput/log.txt
 Queue
 """
+
+#Requirements=(TARGET.GTX1080== true)
 
 if len(sys.argv) < 2:
   print "Usage: %s target_py_file" % __file__ 
@@ -44,6 +53,9 @@ print "Job output will be directed to folder ./CondorOutput"
 target_py_file = sys.argv[1]
 
 arg_str_list = multi_experiment()
+
+print '\n'.join(arg_str_list)
+raw_input('The above arguments will be used to call %s. Confirm? Ctrl-C to quit.' % (target_py_file))
 
 for arg_str in arg_str_list:
   submission = basestr.format(target_py_file + ' ' + arg_str)

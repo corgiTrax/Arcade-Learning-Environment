@@ -1,27 +1,32 @@
 import cv2, tarfile, time, sys, os
 import numpy as np
-from input_utils import frameid_from_filename, ForkJoiner
+sys.path.insert(0, '../shared') # After research, this is the best way to import a file in another dir
+from base_input_utils import frameid_from_filename, ForkJoiner
 import matplotlib.pyplot as plt
 from replay import preprocess_and_sanity_check
 
 RESIZE_SHAPE = (84,84)
+INPUT_SHAPE = (210,160)
 
-if len(sys.argv) < 2:
-   print "Usage: %s saved_frames_png_tar" % (sys.argv[0])
+if len(sys.argv) < 3:
+   print "Usage: %s saved_frames_png_tar save_path" % (sys.argv[0])
    sys.exit(0)
 
 dataset = sys.argv[1]
 dataset_name = dataset.split('.')[-3].split('/')[-1] # eg: 42_RZ_4988291_May-16-21-33-46
-if not os.path.exists('../../dataset_gaze/optical_flow/' + dataset_name):
-    os.mkdir('../../dataset_gaze/optical_flow/' + dataset_name)
+save_path = sys.argv[2]
+if not os.path.exists(save_path + dataset_name):
+    os.mkdir(save_path + dataset_name)
 
 tar = tarfile.open(dataset, 'r')
 png_files = tar.getnames()
+#tar.extractall("../../dataset_gaze")
 png_files = preprocess_and_sanity_check(png_files)
 
 num_thread = 6
+l = len(png_files)
 def read_thread(PID):
-    for i in range(PID+1, len(png_files), num_thread):
+    for i in range(PID+1, l, num_thread):
         prev = cv2.imread('../../dataset_gaze/' + png_files[i-1], 0)
         cur = cv2.imread('../../dataset_gaze/' + png_files[i], 0)
 
@@ -33,10 +38,14 @@ def read_thread(PID):
         fx, fy = flow[:,:,0], flow[:,:,1]
         # ang = np.arctan2(fy, fx) + np.pi
         v = np.sqrt(fx*fx+fy*fy)
-
+        
         gray = cv2.normalize(v, None, 0, 255, cv2.NORM_MINMAX)
         gray = cv2.resize(gray, RESIZE_SHAPE)
-        cv2.imwrite('../../dataset_gaze/optical_flow/' + png_files[i], gray)
+        cv2.imwrite(save_path + png_files[i], gray)
+
+        # print the processing bar
+        print "\r%d/%d" % (i,l),
+        sys.stdout.flush()
 
 print "Saving optical flow images for dataset %s" % dataset_name
 t1 = time.time()

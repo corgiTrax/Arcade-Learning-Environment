@@ -5,6 +5,7 @@ from pygame import *
 from aleForET import aleForET
 from IPython import embed
 from ScreenRecorder import ScreenRecorder
+sys.path.insert(0, '../shared')
 import vip_constants as V
 import action_enums
 

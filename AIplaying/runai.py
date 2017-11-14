@@ -1,11 +1,11 @@
 import sys, random, pygame, numpy as np
-import action_enums as aenum
-import vip_constants as V
-from aleForET import aleForET
 import AImodels, misc_utils as MU
 from pygame.constants import RESIZABLE,DOUBLEBUF,RLEACCEL
 from IPython import embed
-
+sys.path.insert(0, '../shared') # After research, this is the best way to import a file in another dir
+import action_enums as aenum
+import vip_constants as V
+from aleForET import aleForET
 
 def sample_catagorical_distribution_with_logits(logits):
     e_x = np.exp(logits - np.max(logits))
@@ -35,8 +35,8 @@ if __name__ == "__main__":
         print 'Usage:' + ' '.join(expected_args + opt_args)
         sys.exit()
 
-
     # parse the command line args in a simple way (and prone to bugs too!)
+    # TODO: use import argparse
 
     rom_file, model_name, model_file, mean_file  = sys.argv[1], sys.argv[2], sys.argv[3], sys.argv[4]
 
@@ -66,6 +66,7 @@ if __name__ == "__main__":
     print_logits = True
     draw_GHmap = True
     pred = {'gaze': None}
+    ep_reward = 0
 
     while True:
 
@@ -75,6 +76,12 @@ if __name__ == "__main__":
         pred = aimodel.predict_one(img_np)
 
         a = sample_catagorical_distribution_with_logits(pred['raw_logits'])
+
+        # bookkeeping
+        ep_reward += r
+        if epEnd:
+            print ("Episode ended. Reward: %d" % ep_reward)
+            ep_reward = 0
 
         # --------- BEGIN keyboard event handling ------- 
         for event in pygame.event.get():
@@ -102,9 +109,9 @@ if __name__ == "__main__":
             for i in range(len(logits)):
                 cur = " %.1f" % logits[i]
                 if i==m:
-                    string += MU.color(cur,'RED')   # the action that has max logit
+                    string += MU.BMU.color(cur,'RED')   # the action that has max logit
                 elif i==a:
-                    string += MU.color(cur,'GREEN') # actual action sampled
+                    string += MU.BMU.color(cur,'GREEN') # actual action sampled
                 else:
                     string += cur
             print string

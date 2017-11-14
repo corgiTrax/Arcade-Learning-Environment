@@ -1,0 +1,96 @@
+OpticalFlow/Breakout/4_pKf_dp0.30_k4s1/breakout_{92}val-flow_past4.npz
+NSS: 6.008842
+AUC: 0.967744
+KL: 1.356956
+CC: 0.567153
+
+BottomUp/Breakout/3_pKf_dp0.30_k4s1/breakout_{92}val-bottom_past4.npz
+NSS: 5.825403
+AUC: 0.963818
+KL: 1.466485
+CC: 0.542819
+
+OpticalFlow/Freeway/4_pKf_dp0.40_k4s1/freeway_{72}val-flow_past4.npz
+NSS: 6.697541
+AUC: 0.972316
+KL: 1.287066
+CC: 0.582241
+
+BottomUp/Freeway/3_pKf_dp0.30_k4s1/freeway_{72}val-bottom_past4.npz
+NSS: 6.771965
+AUC: 0.972293
+KL: 1.281587
+CC: 0.584530
+
+OpticalFlow/Enduro/3_pKf_dp0.30_k4s1/enduro_{98_103}val-flow_past4.npz
+NSS: 8.462716
+AUC: 0.987477
+KL: 0.844398
+CC: 0.703612
+
+BottomUp/Enduro/3_pKf_dp0.30_k4s1/enduro_{98_103}val-bottom_past4.npz
+NSS: 8.079250
+AUC: 0.987108
+KL: 0.900174
+CC: 0.680175
+
+OpticalFlow/Riverraid/3_pKf_dp0.30_k4s1/riverraid_{95_99}val-flow_past4.npz
+NSS: 5.031692
+AUC: 0.951408
+KL: 1.828676
+CC: 0.450044
+
+BottomUp/Riverraid/3_pKf_dp0.30_k4s1/riverraid_{95_99}val-bottom_past4.npz
+NSS: 4.864848
+AUC: 0.953189
+KL: 1.865603
+CC: 0.436968
+
+OpticalFlow/Seaquest/3_pKf_dp0.30_k4s1/seaquest_{70_75}val-flow_past4.npz
+NSS: 6.049950
+AUC: 0.959194
+KL: 1.539701
+CC: 0.536829
+
+BottomUp/Seaquest/3_pKf_dp0.30_k4s1/seaquest_{70_75}val-bottom_past4.npz
+NSS: 6.038481
+AUC: 0.959948
+KL: 1.543746
+CC: 0.535114
+
+OpticalFlow/Mspacman/4_pKf_dp0.40_k4s1/mspacman_{71_76}val-flow_past4.npz
+NSS: 3.751599
+AUC: 0.919191
+KL: 2.217219
+CC: 0.378382
+
+BottomUp/Mspacman/4_pKf_dp0.40_k4s1/mspacman_{71_76}val-bottom_past4.npz
+NSS: 3.117572
+AUC: 0.903050
+KL: 2.475393
+CC: 0.318072
+
+OpticalFlow/Centipede/4_pKf_dp0.40_k4s1/centipede_{78_80}val-flow_past4.npz
+NSS: 5.201763
+AUC: 0.957940
+KL: 1.686043
+CC: 0.485083
+
+BottomUp/Centipede/5_pKf_dp0.50_k4s1/centipede_{78_80}val-bottom_past4.npz
+NSS: 4.771902
+AUC: 0.951866
+KL: 1.830763
+CC: 0.450770
+
+OpticalFlow/Venture/3_pKf_dp0.30_k4s1/venture_{100_101}val-flow_past4.npz
+NSS: 5.591310
+AUC: 0.955976
+KL: 1.648023
+CC: 0.503974
+
+BottomUp/Venture/3_pKf_dp0.30_k4s1/venture_{100_101}val-bottom_past4.npz
+NSS: 4.976660
+AUC: 0.946422
+KL: 1.910442
+CC: 0.447099
+
