@@ -2,10 +2,10 @@ import os, subprocess, random, gc, sys, time as T # avoid collision with pygame.
 from EyeLinkCoreGraphicsPyGame import EyeLinkCoreGraphicsPyGame
 from pylink import *
 from pygame import *
-from aleForET import aleForET
 from IPython import embed
 from ScreenRecorder import ScreenRecorder
 sys.path.insert(0, '../shared')
+from aleForET import aleForET
 import vip_constants as V
 import action_enums
 

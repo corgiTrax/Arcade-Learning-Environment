@@ -157,3 +157,8 @@ Breakout (done)
 
 ========================================
 56 LX seaquest data ok start fresh saveto: seaquestLX_2471220.npz fps: 20 
+
+========================================
+
+125 JAW-TEST ms_pacman data ok start fresh saveto: saved_games/ms_pacmanJAW-TEST_1301890.npz fps: 20 
+
