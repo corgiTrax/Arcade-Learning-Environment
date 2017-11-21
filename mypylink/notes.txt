@@ -160,5 +160,4 @@ Breakout (done)
 
 ========================================
 
-125 JAW-TEST ms_pacman data ok start fresh saveto: saved_games/ms_pacmanJAW-TEST_1301890.npz fps: 20 
 

@@ -10,7 +10,7 @@ import vip_constants as V
 import action_enums
 import string
 
-TIME_LIMIT = 1 # minutes
+TIME_LIMIT = 15 # minutes
 
 RIGHT_EYE = 1
 LEFT_EYE = 0
