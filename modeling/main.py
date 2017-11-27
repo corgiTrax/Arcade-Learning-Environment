@@ -25,7 +25,7 @@ dropout = float(sys.argv[3])
 save_model = True if '--save' in sys.argv else False # you can specify "--save" in argument
 
 MU.keras_model_serialization_bug_fix()
-expr = MU.ExprCreaterAndResumer(MODEL_DIR,postfix="fv2ch_dr%s" % (str(dropout)))
+expr = MU.BMU.ExprCreaterAndResumer(MODEL_DIR,postfix="fv2ch_dr%s" % (str(dropout)))
 
 if True: # I just want to indent
     inputs=L.Input(shape=SHAPE)
@@ -75,15 +75,15 @@ if True: # I just want to indent
 
 expr.dump_src_code_and_model_def(sys.argv[0], model)
 
-d=input_utils.Dataset(LABELS_FILE_TRAIN, LABELS_FILE_VAL, SHAPE)
-dfv=input_utils.Dataset(fv_LABELS_FILE_TRAIN, fv_LABELS_FILE_VAL, SHAPE)
+d=input_utils.BIU.Dataset(LABELS_FILE_TRAIN, LABELS_FILE_VAL, SHAPE)
+dfv=input_utils.BIU.Dataset(fv_LABELS_FILE_TRAIN, fv_LABELS_FILE_VAL, SHAPE)
 
 model.fit([d.train_imgs,dfv.train_imgs], d.train_lbl, BATCH_SIZE, epochs=num_epoch,
     validation_data=([d.val_imgs,dfv.val_imgs], d.val_lbl, d.val_weight),
     shuffle=True, sample_weight=d.train_weight, verbose=2,
     callbacks=[K.callbacks.TensorBoard(log_dir=expr.dir),
         K.callbacks.ReduceLROnPlateau(monitor='val_loss', factor=0.5,patience=3, min_lr=0.001),
-        MU.PrintLrCallback()])
+        MU.BMU.PrintLrCallback()])
 
 
 score = model.evaluate([d.val_imgs, dfv.val_imgs], d.val_lbl, BATCH_SIZE, 0, sample_weight=d.val_weight)

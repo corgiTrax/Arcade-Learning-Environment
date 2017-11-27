@@ -2,11 +2,13 @@ import os, subprocess, random, gc, sys, time as T # avoid collision with pygame.
 from EyeLinkCoreGraphicsPyGame import EyeLinkCoreGraphicsPyGame
 from pylink import *
 from pygame import *
-from aleForET import aleForET
 from IPython import embed
 from ScreenRecorder import ScreenRecorder
+sys.path.insert(0, '../shared')
+from aleForET import aleForET
 import vip_constants as V
 import action_enums
+import string
 
 TIME_LIMIT = 15 # minutes
 
@@ -304,6 +306,13 @@ if __name__ == "__main__":
 		sys.exit()
 	rom_file = sys.argv[1]
 	step_by_step_mode = sys.argv[2].upper() == "TRUE"
+        
+        #Bug fix: do not allow experimentors to use arbitrary name, can only use uppercase letters; otherwise this case problems for string matching in base_input_utils.py.read_gaze_data_asc_file
+        legal_name = set(string.ascii_uppercase)
+        if not(set(sys.argv[3]) <= legal_name):
+            print("Illegal experimenter ID, can only use uppercase letters")
+            sys.exit()
+
 	unique_trial_id = "%s_%d" % (sys.argv[3], int(T.time())%10000000)
 	resume_state_file = sys.argv[4] if len(sys.argv) > 4 else None
 	gamename = os.path.basename(rom_file).split('.')[0]

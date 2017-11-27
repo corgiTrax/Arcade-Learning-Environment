@@ -59,8 +59,12 @@ Venture
 - done
 
 Riverraid
+121 riverraid data ok load riverraidRZ_3605715.npz saveto:riverraidRZ_4560739.npz fps: 20
+122 riverraid data ok load riverraidRZ_4560739.npz saveto: none fps: 20 (died)
 
 Enduro 
+123 enduro data ok load: enduroRZ_3688272.npz saveto: enduroRZ_4885375.npz fps: 20 
+124 enduro data ok load: enduroRZ_4885375.npz saveto: enduroRZ_4886576.npz fps: 20
 
 Breakout
 120 breakout data ok load breakoutRZ_2923868.nps saveto: none fps: 20 
@@ -153,3 +157,7 @@ Breakout (done)
 
 ========================================
 56 LX seaquest data ok start fresh saveto: seaquestLX_2471220.npz fps: 20 
+
+========================================
+
+
