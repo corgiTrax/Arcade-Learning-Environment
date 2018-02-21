@@ -144,6 +144,7 @@ class aleForET:
                 # Apply an action and get the resulting reward
                 a = self.legal_actions[a_index]
                 reward = self.ale.act(a);
+                print("step reward: ", reward)
                 total_reward += reward
                 if record_a_and_r_func != None:
                     record_a_and_r_func(a, reward)

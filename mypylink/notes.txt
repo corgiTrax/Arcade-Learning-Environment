@@ -1,4 +1,4 @@
-Stimulus size:
+GStimulus size:
 vertical: 15 9/12 inch = 40.005cm | 28.50 visual degrees (210 * 4)
 horizontal: 25 5/12 inch = 64.5583cm | 44.58 visual degrees (160 * 8)
 distance: 31 inch = 78.74cm
@@ -231,8 +231,20 @@ Freeway
 156 KM freeway data ok start fresh saveto: freewayKM_6306308.npz fps: 20
 157 KM freeway data ok start fresh saveto: freewayKM_6307437.npz fps: 20 
 
+Enduro
+158 KM enduro data ok start fresh saveto: enduroKM_9158498.npz fps:20
+159 KM enduro data ok start fresh saveto: enduroKM_9159582.npz fps:20
+
 
 
 ========================================
 Ruohan New games
 !!!!!!!!!! Notice: color averaging off starting from this point!!!
+from trial 158
+
+Asterix
+160 RZ asterix data ok start fresh saveto: asterixRZ_9166697.npz fps: 20
+162 RZ asterix data ok start fresh saveto: asterixRZ_9237724.npz fps: 20
+
+Name this game
+161 RZ name_this_game data ok start fresh saveto: name_this_gameRZ_9170137.npz fps:20 
