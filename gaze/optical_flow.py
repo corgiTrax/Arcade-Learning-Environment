@@ -8,13 +8,13 @@ from replay import preprocess_and_sanity_check
 RESIZE_SHAPE = (84,84)
 INPUT_SHAPE = (210,160)
 
-if len(sys.argv) < 3:
-   print "Usage: %s saved_frames_png_tar save_path" % (sys.argv[0])
+if len(sys.argv) < 2:
+   print "Usage: %s saved_frames_png_tar" % (sys.argv[0])
    sys.exit(0)
 
 dataset = sys.argv[1]
 dataset_name = dataset.split('.')[-3].split('/')[-1] # eg: 42_RZ_4988291_May-16-21-33-46
-save_path = sys.argv[2]
+save_path = '/scratch/cluster/zharucs/dataset_gaze/optical_flow/'
 if not os.path.exists(save_path + dataset_name):
     os.mkdir(save_path + dataset_name)
 
@@ -27,8 +27,8 @@ num_thread = 6
 l = len(png_files)
 def read_thread(PID):
     for i in range(PID+1, l, num_thread):
-        prev = cv2.imread('../../dataset_gaze/' + png_files[i-1], 0)
-        cur = cv2.imread('../../dataset_gaze/' + png_files[i], 0)
+        prev = cv2.imread('/scratch/cluster/zharucs/dataset_gaze/' + png_files[i-1], 0)
+        cur = cv2.imread('/scratch/cluster/zharucs/dataset_gaze/' + png_files[i], 0)
 
         # calculate optical flow. 
         # The function is: calcOpticalFlowFarneback(prev, next, flow, pyr_scale, levels, winsize, iterations, poly_n, poly_sigma, flags)

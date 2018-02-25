@@ -42,6 +42,8 @@ Queue
 """
 
 #Requirements=(TARGET.GTX1080== true)
+#requirements=eldar
+#+GPUJob=true
 
 if len(sys.argv) < 2:
   print "Usage: %s target_py_file" % __file__ 

@@ -22,16 +22,18 @@ for file_ in files:
     datas.append(copy.deepcopy(data))
 # plot rewards
 fig, (ax1) = plt.subplots(1,1)
-ax1.errorbar(angles, fv_mean, yerr=fv_ser, fmt = 'o',color = 'r', ls = 'solid', lw = 2, label="Foveated")
+ax1.errorbar(angles, fv_mean, yerr=fv_ser, fmt = 'o',color = 'b', ls = '--', lw = 2, ecolor = 'r')
 #ax1.errorbar(angles, base_mean, yerr=0, color = 'b', ls = 'solid', lw = 2, label="Baseline")
 handles, labels = ax1.get_legend_handles_labels()
 #ax1.legend(handles, labels, loc = 'upper left', frameon = False)
 plt.ylim((49,55))
 plt.xlim((4,111))
-plt.xlabel("Visual Angle (Degree)")
-plt.ylabel("Prediction Accuracy (%)")
-font = {'size': 32, 'weight':'bold'}
-plt.rc('font', **font)
+plt.xlabel("Visual Angle (Degree)", fontsize = 17)
+plt.ylabel("Prediction Accuracy (%)", fontsize = 17)
+plt.xticks(fontsize = 17)
+plt.yticks(fontsize = 17)
+#font = {'size': 32}
+#plt.rc('font', **font)
 
 
 plt.show()

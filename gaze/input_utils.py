@@ -14,6 +14,7 @@ import sys
 sys.path.insert(0, '../shared') # After research, this is the best way to import a file in another dir
 import base_input_utils as BIU
 import vip_constants as V
+from input_utils_DatasetDQN import DatasetDQN_withGHmap
 
 class DatasetWithHeatmap(BIU.Dataset):
   frameid2pos, frameid2action_notused = None, None
