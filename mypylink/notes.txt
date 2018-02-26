@@ -1,4 +1,4 @@
-Stimulus size:
+GStimulus size:
 vertical: 15 9/12 inch = 40.005cm | 28.50 visual degrees (210 * 4)
 horizontal: 25 5/12 inch = 64.5583cm | 44.58 visual degrees (160 * 8)
 distance: 31 inch = 78.74cm
@@ -59,8 +59,12 @@ Venture
 - done
 
 Riverraid
+121 riverraid data ok load riverraidRZ_3605715.npz saveto:riverraidRZ_4560739.npz fps: 20
+122 riverraid data ok load riverraidRZ_4560739.npz saveto: none fps: 20 (died)
 
 Enduro 
+123 enduro data ok load: enduroRZ_3688272.npz saveto: enduroRZ_4885375.npz fps: 20 
+124 enduro data ok load: enduroRZ_4885375.npz saveto: enduroRZ_4886576.npz fps: 20
 
 Breakout
 120 breakout data ok load breakoutRZ_2923868.nps saveto: none fps: 20 
@@ -153,3 +157,94 @@ Breakout (done)
 
 ========================================
 56 LX seaquest data ok start fresh saveto: seaquestLX_2471220.npz fps: 20 
+
+========================================
+
+125 JAW-TEST ms_pacman data ok start fresh saveto: saved_games/ms_pacmanJAW-TEST_1301890.npz fps: 20 
+
+========================================
+Jake, 15min sessions 
+
+MsPacman
+125 JAW ms_pacman data ok start fresh saveto: ms_pacmanJAW_2679477.npz fps: 20
+126 JAW ms_pacman data ok start fresh saveto: ms_pacmanJAW_2682560.npz fps: 20
+
+Venture
+127 JAW venture data ok start fresh saveto: ventureJAW_2764190.npz fps: 20
+128 JAW venture data BAD start fresh saveto: ventureJAW_3026731.npz fps: 20
+130 JAW venture data ok start fresh saveto: ventureJAW_3029229.npz fps: 20
+133 JAW venture data ok start fresh saveto: ventureJAW_3106946.npz fps: 20
+
+SeaQuest
+135 JAW seaquest data ok start fresh saveto: seaquestJAW_3109086.npz fps: 20
+136 JAW seaquest data ok start fresh saveto: seaquestJAW_3114817.npz fps: 20
+
+Breakout
+138 JAW breakout data ok start fresh saveto: breakoutJAW_3117023.npz fps: 20
+140 JAW breakout data ok start fresh saveto: breakoutJAW_3192484.npz fps: 20
+153 JAW breakout data ok start fresh saveto:breakoutJAW_3360398.npz  fps: 20.
+
+Riverraid
+141 JAW riverraid data ok start fresh saveto: riverraidJAW_3194001.npz fps: 20
+142 JAW riverraid data ok start fresh saveto: riverraidJAW_3195774.npz fps: 20
+
+Centipede
+143 JAW centipede data ok start fresh saveto: centipedeJAW_3272885.npz fps: 20
+144 JAW centipede data ok start fresh saveto: centipedeJAW_3273946.npz fps: 20
+
+Enduro
+146 JAW enduro data ok start fresh saveto: enduroJAW_3280425.npz fps: 20
+148 JAW enduro data ok start fresh saveto: enduroJAW_3282640.npz fps: 20
+
+Freeway
+149 JAW freeway data ok start fresh saveto: freewayJAW_3355334.npz fps: 20
+151 JAW freeway data ok start fresh saveto: freewayJAW_3358283.npz fps: 20
+
+========================================
+Karl, 15 min sessions
+
+Riverraid
+129 KM riverraid data ok start fresh saveto: riverraidKM_3028072.npz fps: 20
+139 KM riverraid data ok start fresh saveto: riverraidKM_3118094.npz fps: 20
+
+Ms Pacman
+131 KM ms_pacman data ok start fresh saveto: ms_pacmanKM_3030302.npz fps: 20
+137 KM ms_pacman data ok start fresh saveto: ms_pacmanKM_3115947.npz fps: 20
+
+Breakout
+132 KM breakout data ok start fresh saveto: breakoutKM_3105771.npz fps: 20 
+134 KM breakout data ok start fresh saveto: breakoutKM_3108024.npz fps: 20
+
+SeaQuest
+145 KM seaquest data ok start fresh saveto: seaquestKM_3278908.npz fps: 20
+147 KM seaquest data ok start fresh saveto: seaquestKM_3281547.npz fps: 20
+
+Centipede 
+150 KM centipede data ok start fresh saveto: centipedeKM_3357098.npz fps: 20
+152 KM centipede data ok start fresh saveto: centipedeKM_3359364.npz fps: 20
+
+Venture
+154 KM venture data ok start fresh saveto: ventureKM_5790027.npz fps: 20
+155 KM venture data ok start fresh saveto: ventureKM_5791179.npz fps: 20
+
+Freeway
+156 KM freeway data ok start fresh saveto: freewayKM_6306308.npz fps: 20
+157 KM freeway data ok start fresh saveto: freewayKM_6307437.npz fps: 20 
+
+Enduro
+158 KM enduro data ok start fresh saveto: enduroKM_9158498.npz fps:20
+159 KM enduro data ok start fresh saveto: enduroKM_9159582.npz fps:20
+
+
+
+========================================
+Ruohan New games
+!!!!!!!!!! Notice: color averaging off starting from this point!!!
+from trial 158
+
+Asterix
+160 RZ asterix data ok start fresh saveto: asterixRZ_9166697.npz fps: 20
+162 RZ asterix data ok start fresh saveto: asterixRZ_9237724.npz fps: 20
+
+Name this game
+161 RZ name_this_game data ok start fresh saveto: name_this_gameRZ_9170137.npz fps:20 
