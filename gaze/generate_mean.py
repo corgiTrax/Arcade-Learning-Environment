@@ -49,3 +49,4 @@ d=IU.DatasetWithHeatmap_PastKFrames(LABELS_FILE_TRAIN, LABELS_FILE_VAL, SHAPE, h
 of=IU.Dataset_OpticalFlow_PastKFrames(LABELS_FILE_TRAIN, LABELS_FILE_VAL, SHAPE, k, stride)
 np.save('mean_files/'+GAME_NAME+'.mean', d.mean)
 np.save('mean_files/'+GAME_NAME+'.of.mean', of.mean)
+
