@@ -48,7 +48,7 @@ if __name__ == "__main__":
     MU.BMU.save_GPU_mem_keras()
     def make_ale_with_random_seed_noScreen(rom_file, resume_state_file):
         rndseed = rndseed = random.randint(0, 1<<30)
-        print MU.color("Using random seed %d for a new episode." % (rndseed), 'CYAN')
+        print MU.BMU.color("Using random seed %d for a new episode." % (rndseed), 'CYAN')
         return aleForET(rom_file, None, rndseed, resume_state_file)
     ale = make_ale_with_random_seed_noScreen(rom_file, resume_state_file)
     aimodel = getattr(AImodels,model_name)(model_file, mean_file, *args_passed_to_model_initializer)
