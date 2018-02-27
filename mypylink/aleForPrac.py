@@ -30,7 +30,7 @@ class aleForET:
         self.ale.setInt('random_seed', randint(0,200))
         self.ale.setBool('sound', False)
         self.ale.setBool('display_screen', False)
-        self.ale.setBool('color_averaging', True)
+        self.ale.setBool('color_averaging', False)
         self.ale.setFloat('repeat_action_probability', 0.0)
 
         # Load the ROM file
@@ -144,6 +144,7 @@ class aleForET:
                 # Apply an action and get the resulting reward
                 a = self.legal_actions[a_index]
                 reward = self.ale.act(a);
+                print("step reward: ", reward)
                 total_reward += reward
                 if record_a_and_r_func != None:
                     record_a_and_r_func(a, reward)

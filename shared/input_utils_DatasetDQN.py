@@ -46,10 +46,14 @@ def read_img_dataset(LABELS_FILE):
 
 
 def preprocess_imgs_via_running_ReplayEnv(imgs_input, scale_and_grayscale):
+<<<<<<< HEAD
   env = wrap_dqn(
                  ReplayEnv(imgs_input),
                  being_used_to_generate_dataset=True,
                  scale_and_grayscale=scale_and_grayscale)
+=======
+  env = wrap_dqn(ReplayEnv(imgs_input), user='ReplayEnv_img')
+>>>>>>> 7a400c48f901027f8a1a5d3ccebe9f5880dfef51
   first_obs = env.reset()
   imgs = [np.array(first_obs)] # see below
   while True:
@@ -59,6 +63,7 @@ def preprocess_imgs_via_running_ReplayEnv(imgs_input, scale_and_grayscale):
         break
   imgs_np = np.array(imgs)
   # env.unwrapped can be used to access the innermost env, i.e., ReplayEnv
+<<<<<<< HEAD
   print ("Dataset size change: %d -> %d " % (len(env.unwrapped.imgs),len(imgs_np)))
   return imgs_np
 
@@ -67,11 +72,26 @@ def preprocess_imgs_via_running_ReplayEnv(imgs_input, scale_and_grayscale):
 class DatasetDQN_withGHmap(DatasetDQN):
   """
   This class adds GHmap (gaze heat map) data to DatasetDQN
+=======
+  print ("Dataset change: shape: %s -> %s dtype: %s -> %s" % (
+      str(env.unwrapped.imgs.shape),str(imgs_np.shape), str(env.unwrapped.imgs.dtype),str(imgs_np.dtype)))
+  return imgs_np
+
+
+class DatasetDQN_withGHmap(DatasetDQN):
+  """
+  This class adds GHmap (gaze heat map) data to DatasetDQN
+  And the GHmap logic should be the same as gaze/input_utils.py#DatasetWithHeatmap
+>>>>>>> 7a400c48f901027f8a1a5d3ccebe9f5880dfef51
   See more at the comments of DatasetDQN. 
   """
 
   def __init__(self, LABELS_FILE_TRAIN, LABELS_FILE_VAL, GAZE_POS_ASC_FILE):
+<<<<<<< HEAD
     super(DatasetWithHeatmap, self).__init__(LABELS_FILE_TRAIN, LABELS_FILE_VAL)
+=======
+    super(DatasetDQN_withGHmap, self).__init__(LABELS_FILE_TRAIN, LABELS_FILE_VAL)
+>>>>>>> 7a400c48f901027f8a1a5d3ccebe9f5880dfef51
     print "Reading gaze data ASC file, and converting per-frame gaze positions to heat map..."
     self.frameid2pos, self.frameid2action_notused = BIU.read_gaze_data_asc_file(GAZE_POS_ASC_FILE)
     self.train_GHmap = np.zeros([self.train_size, 84, 84, 1], dtype=np.float32)
@@ -109,10 +129,13 @@ class DatasetDQN_withGHmap(DatasetDQN):
             self.val_GHmap[i] /= SUM
     t2 = time.time()
     print "Done. BIU.convert_gaze_pos_to_heap_map() and preprocess (convolving GHmap) used: %.1fs" % (t2-t1)   
+<<<<<<< HEAD
     print "Running ReplayEnv on GHmap..."
     self.train_GHmap = preprocess_imgs_via_running_ReplayEnv(self.train_GHmap, False)
     self.val_GHmap = preprocess_imgs_via_running_ReplayEnv(self.train_GHmap, False)
     print "Done. preprocess_imgs_via_running_ReplayEnv() used: %.1fs" % (time.time()-t2)
+=======
+>>>>>>> 7a400c48f901027f8a1a5d3ccebe9f5880dfef51
 
 
 class ReplayEnv(gym.Env): 
@@ -148,6 +171,7 @@ class ReplayEnv(gym.Env):
     self._action_set = np.array([ 0,  1,  2,  3,  4,  5,  6,  7,  8,  9, 10, 11, 12, 13, 14,
       15, 16, 17],dtype=np.int32)
     self.action_space = gym.spaces.Discrete(len(self._action_set))
+    self.observation_space = gym.spaces.Box(low=0, high=255, shape=(210, 160, 1))
     self.get_action_meanings = lambda: [ReplayEnv.ACTION_MEANING[i] for i in self._action_set]
   @staticmethod
   def make_obj(**kwargs): # helper function used by _init_attr()
