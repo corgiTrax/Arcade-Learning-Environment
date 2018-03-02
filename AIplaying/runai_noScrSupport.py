@@ -34,9 +34,10 @@ if __name__ == "__main__":
     _d = sys.argv.index('==') if '==' in sys.argv else -1
     args_passed_to_model_initializer = sys.argv[(_d+1):] if _d != -1 else []
 
-    MODEL_DIR = 'Expr/'+os.path.splitext(os.path.basename(rom_file))[0]
+    MODEL_DIR = 'Expr_tmp/'+os.path.splitext(os.path.basename(rom_file))[0]
     expr = MU.BMU.ExprCreaterAndResumer(MODEL_DIR, 
         postfix="%s" % (model_name))
+    expr.dump_src_code_and_model_def(sys.argv[0], kerasmodel=None)
 
     print "\nReceived Command Line Arguments:"
     print "rom_file, model_name, model_file, mean_file = ", rom_file, model_name, model_file, mean_file
