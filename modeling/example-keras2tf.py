@@ -41,4 +41,3 @@ for i in range(2):
     print(get_last_layer_kernel_norm())
 
 print('You can see the norm is changing, indicating that the layer is being trained.')
-

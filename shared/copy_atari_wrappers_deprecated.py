@@ -9,7 +9,7 @@ from gym import spaces
 from IPython import embed
 
 # This file is copied from 
-# https://github.com/zerolocker/baselines/blob/c8c6f49094e8e207ce1d5a56566eae6104cc1485/baselines/common/atari_wrappers_deprecated.py
+# https://github.com/zerolocker/baselines/blob/eebcb58539f454627774500ecae34a9151767348/baselines/common/atari_wrappers_deprecated.py
 # Why should we keep track of where this file comes from? Because we have to keep the preprocessing the same between
 # the supervised training of models (i.e. under repo 'ale') and the loading and using of models (i.e. under OpenAI's RL repo 'baselines')
 # So we should periodically compare this file and its "origin" and update this file to the latest verison of its "origin".

@@ -50,8 +50,9 @@ class ExprCreaterAndResumer:
     def dump_src_code_and_model_def(self, fname, kerasmodel):
         fname = os.path.abspath(fname) # if already absolute path, it does nothing
         shutil.copyfile(fname, self.dir + '/' + os.path.basename(fname))
-        with open(self.dir + '/model.yaml', 'w') as f:
-            f.write(kerasmodel.to_yaml())
+        if kerasmodel != None:
+            with open(self.dir + '/model.yaml', 'w') as f:
+                f.write(kerasmodel.to_yaml())
         # copy all py files in current directory
         task_dir = fname.split('/')[-2] # this will give "gaze" "modeling" etc
         task_snapshot_dir = self.dir + '/all_py_files_snapshot/' + task_dir

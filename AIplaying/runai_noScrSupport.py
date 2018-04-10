@@ -38,6 +38,7 @@ if __name__ == "__main__":
     MODEL_DIR = 'ECCV/'+os.path.splitext(os.path.basename(rom_file))[0]
     expr = MU.BMU.ExprCreaterAndResumer(MODEL_DIR, 
         postfix="%s" % (model_name))
+    expr.dump_src_code_and_model_def(sys.argv[0], kerasmodel=None)
 
     print "\nReceived Command Line Arguments:"
     print "rom_file, model_name, model_file, mean_file = ", rom_file, model_name, model_file, mean_file

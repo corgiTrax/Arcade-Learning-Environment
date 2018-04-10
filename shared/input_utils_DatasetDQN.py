@@ -45,7 +45,7 @@ def read_img_dataset(LABELS_FILE):
   return preprocess_imgs_via_running_ReplayEnv(imgs_raw, True), lbl, gaze, fid, weight
 
 
-def preprocess_imgs_via_running_ReplayEnv(imgs_input, scale_and_grayscale):
+def preprocess_imgs_via_running_ReplayEnv(imgs_input):
   env = wrap_dqn(ReplayEnv(imgs_input), user='ReplayEnv_img')
   first_obs = env.reset()
   imgs = [np.array(first_obs)] # see below
