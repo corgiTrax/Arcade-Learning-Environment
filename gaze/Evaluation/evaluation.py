@@ -83,7 +83,7 @@ if __name__ == "__main__":
     ############# ground truth ##############################
     t2 = time.time()
     print "Reading asc file..."
-    gazepos, _ = read_gaze_data_asc_file(GAZE_FILE) # gazepos: {fid: [(1,1),(2,2)]}
+    gazepos, _, _ = read_gaze_data_asc_file(GAZE_FILE) # gazepos: {fid: [(1,1),(2,2)]}
 
     print "Processing gaze pos and converting to heatmap..."
     bad_count, tot_count = 0, 0
