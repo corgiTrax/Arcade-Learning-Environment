@@ -53,10 +53,10 @@ def action_map(k, game):
         elif k[pygame.K_UP] and k[pygame.K_LEFT]: return PLAYER_A_UPLEFT
         elif k[pygame.K_UP] and k[pygame.K_RIGHT]: return PLAYER_A_UPRIGHT
 
-        #elif k[pygame.K_KP7]: return PLAYER_A_UPLEFT
-        #elif k[pygame.K_KP9]: return PLAYER_A_UPRIGHT
-        #elif k[pygame.K_KP1]: return PLAYER_A_DOWNLEFT
-        #elif k[pygame.K_KP3]: return  PLAYER_A_DOWNRIGHT
+        elif k[pygame.K_KP7]: return PLAYER_A_UPLEFT
+        elif k[pygame.K_KP9]: return PLAYER_A_UPRIGHT
+        elif k[pygame.K_KP1]: return PLAYER_A_DOWNLEFT
+        elif k[pygame.K_KP3]: return  PLAYER_A_DOWNRIGHT
    
         elif k[pygame.K_SPACE]:  return PLAYER_A_FIRE
         elif k[pygame.K_UP] or k[pygame.K_w] or k[pygame.K_KP8]: return PLAYER_A_UP
