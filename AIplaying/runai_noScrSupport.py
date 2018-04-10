@@ -6,6 +6,7 @@ sys.path.insert(0, '../shared') # After research, this is the best way to import
 import action_enums as aenum
 import vip_constants as V
 from aleForET import aleForET
+import roulette
 
 def sample_catagorical_distribution_with_logits(logits):
     e_x = np.exp(logits - np.max(logits))
@@ -34,7 +35,7 @@ if __name__ == "__main__":
     _d = sys.argv.index('==') if '==' in sys.argv else -1
     args_passed_to_model_initializer = sys.argv[(_d+1):] if _d != -1 else []
 
-    MODEL_DIR = 'Expr_tmp/'+os.path.splitext(os.path.basename(rom_file))[0]
+    MODEL_DIR = 'ECCV/'+os.path.splitext(os.path.basename(rom_file))[0]
     expr = MU.BMU.ExprCreaterAndResumer(MODEL_DIR, 
         postfix="%s" % (model_name))
     expr.dump_src_code_and_model_def(sys.argv[0], kerasmodel=None)
@@ -61,7 +62,11 @@ if __name__ == "__main__":
     while True:
         img_np, r, epEnd = ale.proceed_one_step__fast__no_scr_support(a)
         pred = aimodel.predict_one(img_np)
-
+        
+        #roul = roulette.Roulette(pred['raw_logits'][0])
+        #print(pred['raw_logits'])
+        #a = roul.select()
+        #a = argmax_catagorical_distribution_with_logits(pred['raw_logits'])
         a = sample_catagorical_distribution_with_logits(pred['raw_logits'])
 
         if epEnd: # Re-create aleForET using a new seed

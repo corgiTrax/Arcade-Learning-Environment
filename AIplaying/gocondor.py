@@ -1,16 +1,18 @@
 #!/usr/bin/env python
 import sys, re, os, subprocess, numpy as np, string
 
+Exp_type = sys.argv[3] # hacky, TODO
+
 def create_bgrun_sh_content_imgOf_model(GAME_NAME):
   sh_file_content = ""
   for run in range(3):
     rom_file = "../roms/%s.bin" % GAME_NAME
     model_name = "PastKFrameOpticalFlowGaze_and_CurrentFrameAction"
-    model_file = "PreMul-2ch_actionModels/%s.gazeIsFrom.Img+OF.hdf5" % GAME_NAME
-    mean_file = "Img+OF_gazeModels/%s.mean.npy" % GAME_NAME
-    gaze_model_file = "Img+OF_gazeModels/%s.hdf5" % GAME_NAME 
-    optical_flow_mean_file = "Img+OF_gazeModels/%s.of.mean.npy" % GAME_NAME
-    sh_file_content += ' '.join(['ipython', 'runai_noScrSupport.py', '--',
+    model_file = "PreMul-2ch_actionModels/" + Exp_type + "/%s.gazeIsFrom.Img+OF.hdf5" % GAME_NAME
+    mean_file = "Img+OF_gazeModels/" + Exp_type + "/%s.mean.npy" % GAME_NAME
+    gaze_model_file = "Img+OF_gazeModels/" + Exp_type + "/%s.hdf5" % GAME_NAME 
+    optical_flow_mean_file = "Img+OF_gazeModels/" + Exp_type + "/%s.of.mean.npy" % GAME_NAME
+    sh_file_content += ' '.join(['python', 'runai_noScrSupport.py', 
       rom_file, model_name, model_file, mean_file,
        '== 4 1 0', gaze_model_file, optical_flow_mean_file,
        '&\n'
@@ -24,10 +26,10 @@ def create_bgrun_sh_content_imgOnly_model(GAME_NAME):
   for run in range(3):
     rom_file = "../roms/%s.bin" % GAME_NAME
     model_name = "PastKFrameGaze_and_CurrentFrameAction"
-    model_file = "PreMul-2ch_actionModels/%s.gazeIsFrom.ImgOnly.hdf5" % GAME_NAME
-    mean_file = "Img+OF_gazeModels/%s.mean.npy" % GAME_NAME
-    gaze_model_file = "ImgOnly_gazeModels/%s.hdf5" % GAME_NAME
-    sh_file_content += ' '.join(['ipython', 'runai_noScrSupport.py', '--',
+    model_file = "PreMul-2ch_actionModels/" + Exp_type + "/%s.gazeIsFrom.ImgOnly.hdf5" % GAME_NAME
+    mean_file = "Img+OF_gazeModels/" + Exp_type + "/%s.mean.npy" % GAME_NAME
+    gaze_model_file = "ImgOnly_gazeModels/" + Exp_type + "/%s.hdf5" % GAME_NAME
+    sh_file_content += ' '.join(['python', 'runai_noScrSupport.py',
       rom_file, model_name, model_file, mean_file,
        '== 4 1 0', gaze_model_file, 
        '&\n'
@@ -41,9 +43,9 @@ def create_bgrun_sh_content_baseline_model(GAME_NAME):
   for run in range(3):
     rom_file = "../roms/%s.bin" % GAME_NAME
     model_name = "BaselineModel"
-    model_file = "baseline_actionModels/%s.hdf5" % GAME_NAME
-    mean_file = "Img+OF_gazeModels/%s.mean.npy" % GAME_NAME
-    sh_file_content += ' '.join(['ipython', 'runai_noScrSupport.py', '--',
+    model_file = "baseline_actionModels/" + Exp_type + "/%s.hdf5" % GAME_NAME
+    mean_file = "Img+OF_gazeModels/" + Exp_type + "/%s.mean.npy" % GAME_NAME
+    sh_file_content += ' '.join(['python', 'runai_noScrSupport.py',
       rom_file, model_name, model_file, mean_file,
        '&\n'
        ]
@@ -55,7 +57,7 @@ def main(bg_run_creator_func):
     basestr="""
     # doc at : http://research.cs.wisc.edu/htcondor/manual/current/condor_submit.html
     arguments = {0}
-    remote_initialdir = /scratch/cluster/zhuode93/ale/AIplaying/
+    remote_initialdir = /scratch/cluster/zharucs/ale/AIplaying/
     +Group ="GRAD"
     +Project ="AI_ROBOTICS"
     +ProjectDescription="ale"
@@ -63,7 +65,7 @@ def main(bg_run_creator_func):
     Universe = vanilla
 
     # UTCS has 18 such machine, to take a look, run 'condor_status  -constraint 'GTX1080==true' 
-    Requirements=(TARGET.GTX1080== true)
+    requirements=eldar
 
     executable = /bin/bash 
     getenv = true
@@ -86,6 +88,7 @@ def main(bg_run_creator_func):
     ]
 
     def fix_wrong_game_name(cmdstr):
+        '''Some ale rom files do not have the same name as the model'''
         return string.replace(cmdstr, 'mspacman.bin', 'ms_pacman.bin')
 
     SH_FILE_DIR =  os.path.abspath('bgrun_yard')
@@ -114,10 +117,11 @@ model_to_func = {
         "baseline": create_bgrun_sh_content_baseline_model,
         }
 
-if len(sys.argv) < 3:
-  print "Usage: %s <GAME_NAME|all> <MODEL_NAME>" % __file__ 
+if len(sys.argv) < 4:
+  print "Usage: %s <GAME_NAME|all> <MODEL_NAME> <EXP_TYPE>" % __file__ 
   print "'all' means run all games."
   print "Supported MODEL_NAME are: " , model_to_func.keys() 
+  print "Experiment type are sub-directories in model folders"
   sys.exit(1)
 
 if sys.argv[2] in model_to_func:

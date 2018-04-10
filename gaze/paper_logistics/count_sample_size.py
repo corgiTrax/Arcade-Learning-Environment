@@ -49,7 +49,7 @@ with open(label_file,'r') as f:
         if float(w) == 0.0:
             bad_frame += 1
 
-print "Total image numbers: %d" % count_tar
-print "Total label numbers: %d" % count_label
-print "Bad frame numbers: %d" % bad_frame
-
+print "Total image number: %d" % count_tar
+print "Total label number: %d" % count_label
+print "Bad frame number: %d" % bad_frame
+print "Usable data number: %d" % (count_tar - bad_frame)

@@ -72,7 +72,7 @@ if __name__ == "__main__":
     GAZE_FILE = sys.argv[1]
     RESULT_SALIENCY = sys.argv[2]
     HEATMAP_SHAPE = (84,84)
-    RESULT_FILE = "evaluation_test.txt"
+    RESULT_FILE = "evaluation_result_CrossSubject.txt"
 
     ############# result saliency map #######################
     t1 = time.time()

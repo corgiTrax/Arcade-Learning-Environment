@@ -14,7 +14,6 @@ import sys
 sys.path.insert(0, '../shared') # After research, this is the best way to import a file in another dir
 import base_input_utils as BIU
 import vip_constants as V
-from input_utils_DatasetDQN import DatasetDQN_withGHmap
 
 class DatasetWithHeatmap(BIU.Dataset):
   frameid2pos, frameid2action_notused = None, None
@@ -24,8 +23,8 @@ class DatasetWithHeatmap(BIU.Dataset):
     super(DatasetWithHeatmap, self).__init__(LABELS_FILE_TRAIN, LABELS_FILE_VAL, RESIZE_SHAPE)
     print "Reading gaze data ASC file, and converting per-frame gaze positions to heat map..."
     self.frameid2pos, self.frameid2action_notused = BIU.read_gaze_data_asc_file(GAZE_POS_ASC_FILE)
-    self.train_GHmap = np.zeros([self.train_size, HEATMAP_SHAPE, HEATMAP_SHAPE, 1], dtype=np.float16)
-    self.val_GHmap = np.zeros([self.val_size, HEATMAP_SHAPE, HEATMAP_SHAPE, 1], dtype=np.float16)
+    self.train_GHmap = np.zeros([self.train_size, HEATMAP_SHAPE, HEATMAP_SHAPE, 1], dtype=np.float32)
+    self.val_GHmap = np.zeros([self.val_size, HEATMAP_SHAPE, HEATMAP_SHAPE, 1], dtype=np.float32)
 
     # Prepare train val gaze data
     print "Running BIU.convert_gaze_pos_to_heap_map() and convolution..."
@@ -44,8 +43,8 @@ class DatasetWithHeatmap(BIU.Dataset):
 
     sigmaH = 28.50 * HEATMAP_SHAPE / V.SCR_H
     sigmaW = 44.58 * HEATMAP_SHAPE / V.SCR_W
-    self.train_GHmap = BIU.preprocess_gaze_heatmap(self.train_GHmap, sigmaH, sigmaW, 0)
-    self.val_GHmap = BIU.preprocess_gaze_heatmap(self.val_GHmap, sigmaH, sigmaW, 0)
+    self.train_GHmap = BIU.preprocess_gaze_heatmap(self.train_GHmap, sigmaH, sigmaW, 0).astype(np.float32)
+    self.val_GHmap = BIU.preprocess_gaze_heatmap(self.val_GHmap, sigmaH, sigmaW, 0).astype(np.float32)
 
     print "Normalizing the train/val heat map..."
     for i in range(len(self.train_GHmap)):
@@ -168,7 +167,7 @@ def read_optical_flow(label_file, RESIZE_SHAPE, num_thread=6):
             png_files.append(fname)
 
     N = len(png_files)
-    imgs = np.empty((N,RESIZE_SHAPE[0],RESIZE_SHAPE[1],1), dtype=np.float16)
+    imgs = np.empty((N,RESIZE_SHAPE[0],RESIZE_SHAPE[1],1), dtype=np.float32)
 
     def read_thread(PID):
         d = os.path.dirname(label_file)
@@ -176,10 +175,10 @@ def read_optical_flow(label_file, RESIZE_SHAPE, num_thread=6):
             try:
                 img = misc.imread(os.path.join(d+'/optical_flow', png_files[i]))
             except IOError:
-                img = np.zeros((RESIZE_SHAPE[0],RESIZE_SHAPE[1]), dtype=np.float16)
+                img = np.zeros((RESIZE_SHAPE[0],RESIZE_SHAPE[1]), dtype=np.float32)
                 print "Warning: %s has no optical flow image. Set to zero." % png_files[i]
             img = np.expand_dims(img, axis=2)
-            img = img.astype(np.float16) / 255.0 # normalize image to [0,1]            
+            img = img.astype(np.float32) / 255.0 # normalize image to [0,1]            
             imgs[i,:] = img
 
     o=BIU.ForkJoiner(num_thread=num_thread, target=read_thread)
@@ -198,7 +197,7 @@ def read_bottom_up(label_file, RESIZE_SHAPE, num_thread=6):
             png_files.append(fname)
 
     N = len(png_files)
-    imgs = np.empty((N,RESIZE_SHAPE[0],RESIZE_SHAPE[1],1), dtype=np.float16)
+    imgs = np.empty((N,RESIZE_SHAPE[0],RESIZE_SHAPE[1],1), dtype=np.float32)
 
     def read_thread(PID):
         d = os.path.dirname(label_file)
@@ -206,10 +205,10 @@ def read_bottom_up(label_file, RESIZE_SHAPE, num_thread=6):
             try:
                 img = misc.imread(os.path.join(d+'/bottom_up', png_files[i]))
             except IOError:
-                img = np.zeros((RESIZE_SHAPE[0],RESIZE_SHAPE[1]), dtype=np.float16)
+                img = np.zeros((RESIZE_SHAPE[0],RESIZE_SHAPE[1]), dtype=np.float32)
                 print "Warning: %s has no bottom up image. Set to zero." % png_files[i]
             img = np.expand_dims(img, axis=2)
-            img = img.astype(np.float16) / 255.0 # normalize image to [0,1]            
+            img = img.astype(np.float32) / 255.0 # normalize image to [0,1]            
             imgs[i,:] = img
 
     o=BIU.ForkJoiner(num_thread=num_thread, target=read_thread)

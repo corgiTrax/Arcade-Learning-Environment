@@ -28,7 +28,7 @@ class aleForET:
         self.ale.setInt("random_seed", rndseed)
         self.ale.setBool('sound', False)
         self.ale.setBool('display_screen', False)
-        self.ale.setBool('color_averaging', False)
+        self.ale.setBool('color_averaging', True) #TODO!
         self.ale.setFloat('repeat_action_probability', 0.0)
         
         # Load the ROM file
