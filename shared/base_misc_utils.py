@@ -50,14 +50,25 @@ class ExprCreaterAndResumer:
     def dump_src_code_and_model_def(self, fname, kerasmodel):
         fname = os.path.abspath(fname) # if already absolute path, it does nothing
         shutil.copyfile(fname, self.dir + '/' + os.path.basename(fname))
-        with open(self.dir + '/model.yaml', 'w') as f:
-            f.write(kerasmodel.to_yaml())
-        # copy all py files 
-        snapshot_dir = self.dir + '/all_py_files_snapshot'
-        os.makedirs(snapshot_dir)
-        py_files = [os.path.dirname(fname)+'/'+x for x in os.listdir(os.path.dirname(fname)) if x.endswith('.py')]
-        for py in py_files:
-            shutil.copyfile(py, snapshot_dir + '/' + os.path.basename(py))
+        if kerasmodel != None:
+            with open(self.dir + '/model.yaml', 'w') as f:
+                f.write(kerasmodel.to_yaml())
+        # copy all py files in current directory
+        task_dir = fname.split('/')[-2] # this will give "gaze" "modeling" etc
+        task_snapshot_dir = self.dir + '/all_py_files_snapshot/' + task_dir
+        os.makedirs(task_snapshot_dir)
+        task_py_files = [os.path.dirname(fname)+'/'+x for x in os.listdir(os.path.dirname(fname)) if x.endswith('.py')]
+        for py in task_py_files:
+            shutil.copyfile(py, task_snapshot_dir + '/' + os.path.basename(py))
+            if '__init__.py' in py:
+                shutil.copyfile(py, self.dir + '/all_py_files_snapshot/' + os.path.basename(py))
+        
+        # copy all py files in shared directory
+        shared_snapshot_dir = self.dir + '/all_py_files_snapshot/' + 'shared'
+        os.makedirs(shared_snapshot_dir)
+        shared_py_files = [os.path.dirname(fname)+'/../shared/'+x for x in os.listdir(os.path.dirname(fname)+'/../shared/') if x.endswith('.py')]
+        for py in shared_py_files:
+            shutil.copyfile(py, shared_snapshot_dir + '/' + os.path.basename(py))
 
     def save_weight_and_training_config_state(self, model):
         model.save(self.dir + '/model.hdf5')

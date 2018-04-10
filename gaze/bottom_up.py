@@ -18,14 +18,15 @@ from base_input_utils import frameid_from_filename, ForkJoiner
 from replay import preprocess_and_sanity_check
 
 if len(sys.argv) < 2:
-   print "Usage: %s saved_frames_png_tar(path+name)" % (sys.argv[0])
+   print "Usage: %s saved_frames_png_tar" % (sys.argv[0])
    sys.exit(0)
 
 RESIZE_SHAPE = (84, 84)
 dataset = sys.argv[1]
 dataset_name = dataset.split('.')[-3].split('/')[-1] # eg: 42_RZ_4988291_May-16-21-33-46
-if not os.path.exists('/scratch/cluster/zharucs/dataset_gaze/bottom_up/' + dataset_name):
-    os.mkdir('/scratch/cluster/zharucs/dataset_gaze/bottom_up/' + dataset_name)
+save_path = '/scratch/cluster/zharucs/dataset_gaze/bottom_up/'
+if not os.path.exists(save_path + dataset_name):
+    os.mkdir(save_path + dataset_name)
 
 tar = tarfile.open(dataset, 'r')
 png_files = tar.getnames()
@@ -48,7 +49,7 @@ def read_thread(PID):
 	saliency_map = cv2.resize(saliency_map, RESIZE_SHAPE)
 	saliency_map = cv2.normalize(saliency_map, None, 0, 255, cv2.NORM_MINMAX)
 
-	cv2.imwrite('/scratch/cluster/zharucs/dataset_gaze/bottom_up/' + png_files[i], saliency_map)
+	cv2.imwrite(save_path + png_files[i], saliency_map)
 
 	# print the processing bar
        	print "\r%d/%d" % (i,l),
