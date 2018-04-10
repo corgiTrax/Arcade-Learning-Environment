@@ -6,16 +6,16 @@ import input_utils, misc_utils as MU
 import ipdb
 
 NUM_CLASSES=18
-BASE_FILE_NAME = "/scratch/cluster/zharucs/dataset_gaze/old_data/cat{36_38_39_43_RZ}tr_{37_RZ}val"
+BASE_FILE_NAME = "/scratch/cluster/zharucs/dataset_gaze/" + sys.argv[1]
 LABELS_FILE_TRAIN = BASE_FILE_NAME + '-train.txt'
 LABELS_FILE_VAL =  BASE_FILE_NAME + '-val.txt'
 GAZE_POS_ASC_FILE = BASE_FILE_NAME + '.asc'
 SHAPE = (84,84,1) # height * width * channel. Cannot be read from file; Needs to be provided here
 BATCH_SIZE=100
 num_epoch = 50
-dropout = 0.5
-MODEL_DIR = "seaquest_36-43"
-save_model = True if '--save' in sys.argv else False # you can specify "--save" in argument
+MODEL_DIR = sys.argv[2]
+dropout = float(sys.argv[3])
+save_model = True #if '--save' in sys.argv else False # you can specify "--save" in argument
 
 MU.BMU.save_GPU_mem_keras()
 MU.keras_model_serialization_bug_fix()

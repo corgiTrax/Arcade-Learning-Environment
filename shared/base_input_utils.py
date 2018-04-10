@@ -38,7 +38,7 @@ class Dataset(object):
     self.train_lbl = self._convert_one_hot_label_to_prob_dist(self.train_lbl, moving_avarage_window_radius, NUM_CLASSES)
     self.val_lbl = self._convert_one_hot_label_to_prob_dist(self.val_lbl, moving_avarage_window_radius, NUM_CLASSES)
   def _convert_one_hot_label_to_prob_dist(self, lbl, r, NUM_CLASSES):
-    result = np.zeros((len(lbl), NUM_CLASSES), dtype=np.float32)
+    result = np.zeros((len(lbl), NUM_CLASSES), dtype=np.float16)
     for i in range(len(lbl)):
         result[i][lbl[i]] = 1.0
     for i in range(len(lbl)):
