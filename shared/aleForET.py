@@ -149,7 +149,7 @@ class aleForET:
             reward = self.ale.act(a)
             self.score += reward
             if record_a_and_r_func != None:
-                record_a_and_r_func(a, reward)
+                record_a_and_r_func(a, reward, self.episode, self.score)
 
             pygame.event.pump() # need this line to get new key pressed
         assert False, "Returning should only happen in the while True loop"
@@ -201,5 +201,5 @@ class aleForET:
             reward = self.ale.act(a)
             self.score += reward
             if record_a_and_r_func != None:
-                record_a_and_r_func(a, reward)
+                record_a_and_r_func(a, reward, self.episode, self.score)
         assert False, "Returning code should only be in the while True loop"
