@@ -38,7 +38,7 @@ class Dataset(object):
     self.train_lbl = self._convert_one_hot_label_to_prob_dist(self.train_lbl, moving_avarage_window_radius, NUM_CLASSES)
     self.val_lbl = self._convert_one_hot_label_to_prob_dist(self.val_lbl, moving_avarage_window_radius, NUM_CLASSES)
   def _convert_one_hot_label_to_prob_dist(self, lbl, r, NUM_CLASSES):
-    result = np.zeros((len(lbl), NUM_CLASSES), dtype=np.float32)
+    result = np.zeros((len(lbl), NUM_CLASSES), dtype=np.float16)
     for i in range(len(lbl)):
         result[i][lbl[i]] = 1.0
     for i in range(len(lbl)):
@@ -96,13 +96,14 @@ def read_gaze_data_asc_file(fname):
     frameid, xpos, ypos = "BEFORE-FIRST-FRAME", None, None
     frameid2pos = {frameid: []}
     frameid2action = {frameid: None}
+    frameid2duration = {frameid: None} 
+    start_timestamp = 0
     scr_msg = re.compile("MSG\s+(\d+)\s+SCR_RECORDER FRAMEID (\d+) UTID (\w+)")
     freg = "[-+]?[0-9]*\.?[0-9]+" # regex for floating point numbers
     gaze_msg = re.compile("(\d+)\s+(%s)\s+(%s)" % (freg, freg))
     act_msg = re.compile("MSG\s+(\d+)\s+key_pressed atari_action (\d+)")
 
     for (i,line) in enumerate(lines):
-
         match_sample = gaze_msg.match(line)
         if match_sample:
             timestamp, xpos, ypos = match_sample.group(1), match_sample.group(2), match_sample.group(3)
@@ -112,7 +113,10 @@ def read_gaze_data_asc_file(fname):
 
         match_scr_msg = scr_msg.match(line)
         if match_scr_msg: # when a new id is encountered
+            old_frameid = frameid 
             timestamp, frameid, UTID = match_scr_msg.group(1), match_scr_msg.group(2), match_scr_msg.group(3)
+            frameid2duration[old_frameid] = int(timestamp) - start_timestamp 
+            start_timestamp = int(timestamp)
             frameid = make_unique_frame_id(UTID, frameid)
             frameid2pos[frameid] = []
             frameid2action[frameid] = None
@@ -138,7 +142,7 @@ def read_gaze_data_asc_file(fname):
         if len(v) < 10: few_cnt += 1
     print ("Warning:  %d frames have less than 10 gaze samples. (%.1f%%, total frame: %d)" % \
             (few_cnt, 100.0*few_cnt/len(frameid2pos), len(frameid2pos)))
-    return frameid2pos, frameid2action
+    return frameid2pos, frameid2action, frameid2duration
 
 
 def read_np_parallel(label_file, RESIZE_SHAPE, num_thread=6, preprocess_deprecated=True):

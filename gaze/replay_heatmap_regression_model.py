@@ -119,7 +119,7 @@ if __name__ == "__main__":
     pygame.display.set_mode((w, h), RESIZABLE | DOUBLEBUF | RLEACCEL, 32)
     screen = pygame.display.get_surface()
     print "Reading gaze data in ASC file into memory..."
-    frameid2pos, _ = read_gaze_data_asc_file(asc_path)
+    frameid2pos, _, _ = read_gaze_data_asc_file(asc_path)
     predicts = read_result_data(result_path, RESIZE_SHAPE)
     dw = drawgc_wrapper('original')
     dw_pred = drawgc_wrapper('predict')

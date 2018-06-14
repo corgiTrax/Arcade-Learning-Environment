@@ -111,7 +111,7 @@ if __name__ == "__main__":
     pygame.display.set_mode((w, h), RESIZABLE | DOUBLEBUF | RLEACCEL, 32)
     screen = pygame.display.get_surface()
     print "Reading gaze data in ASC file into memory..."
-    frameid2pos, _ = read_gaze_data_asc_file(asc_path)
+    frameid2pos, _, frameid2duration = read_gaze_data_asc_file(asc_path)
     dw = drawgc_wrapper()
 
     ds.target_fps = 60
@@ -121,8 +121,7 @@ if __name__ == "__main__":
     clock = pygame.time.Clock()
     while ds.cur_frame_id < ds.total_frame:
         #print(ds.cur_frame_id)
-        clock.tick(ds.target_fps)  # control FPS 
-
+        #clock.tick(ds.target_fps)  # control FPS 
         # Display FPS
         diff_time = time.time()-last_time
         if diff_time > 1.0:
@@ -137,6 +136,8 @@ if __name__ == "__main__":
         s = pygame.transform.scale(s, (w,h))
         screen.blit(s, (0,0))
         UFID=(UTIDhash, ds.cur_frame_id) # Unique frame ID in 'frameid2pos' is defined as a tuple: (UTID's hash value, frame number)
+
+
         if UFID in frameid2pos and len(frameid2pos[UFID])>0:
             for gaze_pos in frameid2pos[UFID]:
                 dw.draw_gc(screen, gaze_pos)
@@ -147,6 +148,8 @@ if __name__ == "__main__":
 
         if not ds.pause:
             ds.cur_frame_id += 1
+
+        time.sleep(frameid2duration[UFID] * 0.001) #duration is in msec
 
     print "Replay ended."
 

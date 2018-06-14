@@ -1,13 +1,13 @@
 # compute the mean score of the saliency results
 
 import numpy as np
-from input_utils import read_gaze_data_asc_file, ForkJoiner, convert_gaze_pos_to_heap_map, preprocess_gaze_heatmap, rescale_and_clip_gaze_pos
 import tarfile, sys, os, time, math
 from scipy import misc
 from sklearn import metrics
 import copy as cp
 sys.path.insert(0, '../../shared') # After research, this is the best way to import a file in another dir
 from scipy.stats import entropy
+from base_input_utils import read_gaze_data_asc_file, ForkJoiner, convert_gaze_pos_to_heap_map, preprocess_gaze_heatmap, rescale_and_clip_gaze_pos
 import vip_constants as V
 
 def computeNSS(saliency_map, gt_interest_points):
@@ -72,7 +72,7 @@ if __name__ == "__main__":
     GAZE_FILE = sys.argv[1]
     RESULT_SALIENCY = sys.argv[2]
     HEATMAP_SHAPE = (84,84)
-    RESULT_FILE = "evaluation_result.txt"
+    RESULT_FILE = "evaluation_result_CrossSubject.txt"
 
     ############# result saliency map #######################
     t1 = time.time()
@@ -83,7 +83,7 @@ if __name__ == "__main__":
     ############# ground truth ##############################
     t2 = time.time()
     print "Reading asc file..."
-    gazepos, _ = read_gaze_data_asc_file(GAZE_FILE) # gazepos: {fid: [(1,1),(2,2)]}
+    gazepos, _, _ = read_gaze_data_asc_file(GAZE_FILE) # gazepos: {fid: [(1,1),(2,2)]}
 
     print "Processing gaze pos and converting to heatmap..."
     bad_count, tot_count = 0, 0
@@ -141,7 +141,7 @@ if __name__ == "__main__":
 
         fid = (fid_list[0],fid_list[1])
         # exclude bad/no gaze
-        if fid in gazepos and gazepos[fid]:
+        if fid in gazepos and len(gazepos[fid]):
             NSS_score += computeNSS(heatmap_pred[i], gazepos[fid])
 
             AUC_score += computeAUC(heatmap_pred[i], fixationmap_gt[count,:,:,0])
