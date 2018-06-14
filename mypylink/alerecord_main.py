@@ -216,10 +216,11 @@ def read_leaderboard_file(gamename):
 				other_lines.append(line)
 	return game_lines, other_lines
 
-def record_a_and_r_callback_func(atari_action, reward):
+def record_a_and_r_callback_func(atari_action, reward, episode, score):
 	getEYELINK().sendMessage("key_pressed atari_action %d" % (atari_action))
 	getEYELINK().sendMessage("reward %d" % (reward))
-
+	getEYELINK().sendMessage("episode %d" % (episode))
+	getEYELINK().sendMessage("score %d" % (score))
 
 def run_trials(rom_file, screen, resume_state_file):
 	''' This function is used to run all trials and handles the return value of each trial. '''

@@ -245,6 +245,39 @@ from trial 158
 Asterix
 160 RZ asterix data ok start fresh saveto: asterixRZ_9166697.npz fps: 20
 162 RZ asterix data ok start fresh saveto: asterixRZ_9237724.npz fps: 20
+163 RZ asterix data ok start fresh saveto: asterixRZ_9932825.npz fps: 20 
 
 Name this game
 161 RZ name_this_game data ok start fresh saveto: name_this_gameRZ_9170137.npz fps:20 
+166 RZ name_this_game data ok start fresh saveto: name_this_gameRZ_9937249.npz fps:20
+
+Berzerk
+164 RZ berzerk data ok start fresh saveto: berzerkRZ_9934643.npz fps: 30
+165 RZ berzerk data ok start fresh saveto: berzerkRZ_9935913.npz fps: 30
+
+Demon_Attack
+175 RZ demon_attack data ok start fresh saveto: demon_attackRZ_8393573.npz fps:20
+
+Bowling
+176 RZ bowling data (no val afterwards) start fresh saveto: bowlingRZ_8400023.npz fps:50 (continuous)
+178 RZ bowling data (no val afterwards) start fresh saveto: bowlingRZ_9006327.npz fps:50 (step)
+
+Space Invaders
+177 RZ space_invaders data ok start fresh saveto: space_invadersRZ_9004819.npz fps:20
+========================================
+Jake New games
+!!!!!!!!!! Notice: color averaging off starting from this point!!!
+from trial 158
+
+Asterix
+167 JAW asterix data ok start fresh saveto: asterixJAW_2356024.npz fps: 20
+168 JAW asterix data ok start fresh saveto: asterixJAW_2357233.npz fps: 20
+171 JAW asterix data ok start fresh saveto: asterixJAW_3395791.npz fps: 20
+
+Amidar
+169 JAW amidar data ok start fresh saveto: amidarJAW_3300946.npz fps: 20
+170 JAW amidar data ok start fresh saveto: amidarJAW_3394421.npz fps: 20
+
+Frostbite
+173 JAW frostbite data ok start fresh saveto: frostbiteJAW_3567992.npz fps: 20 
+174 JAW frostbite data ok start fresh saveto: frostbiteJAW_4171531.npz fps: 20
