@@ -10,6 +10,8 @@ import vip_constants as V
 FRAME_RATE = 20 # important parameters, control how fast game goes 
 print("****************************FrameRate:%s**********************" % FRAME_RATE) 
 # now using 30 for venture and 20 for others
+COLOR_AVG = False
+print("**************************Color Averaging: %s*****************" % COLOR_AVG)
 
 class aleForET:
     def __init__(self,rom_file, screen, rndseed, resume_state_file=None):
@@ -28,7 +30,7 @@ class aleForET:
         self.ale.setInt("random_seed", rndseed)
         self.ale.setBool('sound', False)
         self.ale.setBool('display_screen', False)
-        self.ale.setBool('color_averaging', False) 
+        self.ale.setBool('color_averaging', COLOR_AVG) 
         self.ale.setFloat('repeat_action_probability', 0.0)
         
         # Load the ROM file

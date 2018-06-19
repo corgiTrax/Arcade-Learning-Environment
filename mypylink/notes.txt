@@ -261,7 +261,7 @@ Demon_Attack
 
 Bowling
 176 RZ bowling data (no val afterwards) start fresh saveto: bowlingRZ_8400023.npz fps:50 (continuous, do not use)
-178 RZ bowling data (no val afterwards) start fresh saveto: bowlingRZ_9006327.npz fps:50 (step) (off)
+178 RZ bowling data (no val afterwards) start fresh saveto: bowlingRZ_9006327.npz fps:50 (step) 
 
 Space Invaders
 177 RZ space_invaders data ok start fresh saveto: space_invadersRZ_9004819.npz fps:20
@@ -269,11 +269,13 @@ Space Invaders
 Phoenix
 180 RZ phoenix data ok start fresh saveto: phoenixRZ_9095735.npz fps:20 (color averaging on!)
 184 RZ phoenix data ok start fresh saveto: phoenixRZ_9435442.npz fps:20 (color averaging on!)
+186 RZ phoenix data ok start fresh saveto: phoenixRZ_9439314.npz fps:20
 
 Defender
 181 RZ defender data ok start fresh saveto: defenderRZ_9097191.npz fps:20 (color averaging on!)
 
 Seaquest (color averaging off test)
+185 RZ seaquest data ok start fresh saveto: seaquestRZ_9437843.npz fps:20
 
 ========================================
 Jake New games
