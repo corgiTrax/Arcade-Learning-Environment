@@ -256,14 +256,25 @@ Berzerk
 165 RZ berzerk data ok start fresh saveto: berzerkRZ_9935913.npz fps: 30
 
 Demon_Attack
-175 RZ demon_attack data ok start fresh saveto: demon_attackRZ_8393573.npz fps:20
+175 RZ demon_attack data ok start fresh saveto: demon_attackRZ_8393573.npz fps:20 
+179 RZ demon_attack data ok (val failed for strange reason) start fresh saveto: demon_attackRZ_9009155.npz fps:20 (color averaging on!)
 
 Bowling
-176 RZ bowling data (no val afterwards) start fresh saveto: bowlingRZ_8400023.npz fps:50 (continuous)
-178 RZ bowling data (no val afterwards) start fresh saveto: bowlingRZ_9006327.npz fps:50 (step)
+176 RZ bowling data (no val afterwards) start fresh saveto: bowlingRZ_8400023.npz fps:50 (continuous, do not use)
+178 RZ bowling data (no val afterwards) start fresh saveto: bowlingRZ_9006327.npz fps:50 (step) (off)
 
 Space Invaders
 177 RZ space_invaders data ok start fresh saveto: space_invadersRZ_9004819.npz fps:20
+
+Phoenix
+180 RZ phoenix data ok start fresh saveto: phoenixRZ_9095735.npz fps:20 (color averaging on!)
+184 RZ phoenix data ok start fresh saveto: phoenixRZ_9435442.npz fps:20 (color averaging on!)
+
+Defender
+181 RZ defender data ok start fresh saveto: defenderRZ_9097191.npz fps:20 (color averaging on!)
+
+Seaquest (color averaging off test)
+
 ========================================
 Jake New games
 !!!!!!!!!! Notice: color averaging off starting from this point!!!
@@ -281,3 +292,10 @@ Amidar
 Frostbite
 173 JAW frostbite data ok start fresh saveto: frostbiteJAW_3567992.npz fps: 20 
 174 JAW frostbite data ok start fresh saveto: frostbiteJAW_4171531.npz fps: 20
+
+Space Invaders 
+182 JAW space_invaders data ok start fresh saveto: space_invadersJAW_9348778.npz fps:20 (color averaging on!)
+
+Bowling 
+183 JAW bowling data ok start fresh saveto: bowlingJAW_9350924.npz fps: 20 (color averaging on!)
+

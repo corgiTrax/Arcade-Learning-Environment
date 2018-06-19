@@ -8,13 +8,4 @@ Before doing a "git add" / "git commit" to this directory, do both of the follow
 + FIND all the usages of the function/class that you changed, so as to know what code will be affected.
 
 
-TODO(Ruohan):
-+ move aleForET.py here, and change the import of its dependent files
-+ move vip_contants.py here, and change the import of its dependent files
-+ move action_enums.py here, and change the import of its dependent files
-+ try to train a model to see if Python complains about any error 
 
-These tasks can also be seen as a good way to practice and get used to the new code structure.
-To start, you could take a look at the header of the new gaze/input_utils.py and modeling/input_utils.py to gain some initial familarity.
-
-Let me do a breif Code Review before commiting the above changes. (To simplify the code review process, you can just `git add` the changed files and I will log-in to do a `git diff`)
