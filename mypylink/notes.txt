@@ -270,12 +270,17 @@ Phoenix
 180 RZ phoenix data ok start fresh saveto: phoenixRZ_9095735.npz fps:20 (color averaging on!)
 184 RZ phoenix data ok start fresh saveto: phoenixRZ_9435442.npz fps:20 (color averaging on!)
 186 RZ phoenix data ok start fresh saveto: phoenixRZ_9439314.npz fps:20
+194 RZ phoenix data ok start fresh saveto: phoenixRZ_204115.npz  fps: 20
 
 Defender
 181 RZ defender data ok start fresh saveto: defenderRZ_9097191.npz fps:20 (color averaging on!)
 
 Seaquest (color averaging off test)
 185 RZ seaquest data ok start fresh saveto: seaquestRZ_9437843.npz fps:20
+
+Hero 
+195 RZ hero data ok start fresh saveto: heroRZ_205678.npz fps:20 (practice)
+196 RZ hero data ok start fresh saveto: heroRZ_207631.npz fps:20
 
 ========================================
 Jake New games
@@ -297,7 +302,18 @@ Frostbite
 
 Space Invaders 
 182 JAW space_invaders data ok start fresh saveto: space_invadersJAW_9348778.npz fps:20 (color averaging on!)
+193 JAW space_invaders data ok start fresh saveto: space_invadersJAW_35607.npz fps: 20
 
 Bowling 
 183 JAW bowling data ok start fresh saveto: bowlingJAW_9350924.npz fps: 20 (color averaging on!)
+187 JAW bowling data BAD -- computer froze 
+188 JAW bowling data ok start fresh saveto: bowlingJAW_9694003.npz fps: 20
+
+Demon_Attack
+189 JAW demon_attack data ok start fresh saveto: demon_attackJAW_9695598.npz fps: 20
+190 JAW demon_attack data ok start fresh saveto: demon_attackJAW_9953661.npz fps: 20
+
+Berzerk
+191 JAW berzerk data ok start fresh saveto: berzerkJAW_9955253.npz fps: 20
+192 JAW berzerk data ok start fresh saveto: berzerkJAW_34452.npz fps: 20
 
