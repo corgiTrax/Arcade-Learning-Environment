@@ -14,8 +14,27 @@ def keras_model_serialization_bug_fix(): # stupid keras
     f(loss_func_nonsparse)
     f(acc_nonsparse_wrong)
 
-def loss_func(target, pred): 
+def loss_func(target, pred): # should be called cross_entropy_loss_func, but it's too late to change it
     return K.backend.sparse_categorical_crossentropy(output=pred, target=target, from_logits=True)
+
+
+def multi_head_huber_loss_func(target, pred):
+  """ This func assumes the following:
+      For example, if 10000 example, pred's shape is (10000, 2),
+      which are 10000 tuples of (action_label, mc_return)
+  """
+  num_actions = 18 # OK to make this assumption; because when it's not 18, tf will raise errors to let us know
+  q_target = target[:,1]
+  action_selected = tf.cast(target[:,0], tf.uint8)
+  q_selected = tf.reduce_sum(pred * tf.one_hot(action_selected, num_actions), 1)
+  def huber_loss(x, delta=1.0):
+    return tf.where(
+        tf.abs(x) < delta,
+        tf.square(x) * 0.5,
+        delta * (tf.abs(x) - 0.5 * delta)
+    )
+  return tf.reduce_mean(huber_loss(q_target - q_selected))
+
 
 # This is function is used in ale/modeling/pyModel/main-SmoothLabel.py, because in that case
 # the target label is a prob distribution rather than a number

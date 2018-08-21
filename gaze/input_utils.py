@@ -22,7 +22,7 @@ class DatasetWithHeatmap(BIU.Dataset):
   def __init__(self, LABELS_FILE_TRAIN, LABELS_FILE_VAL, RESIZE_SHAPE, HEATMAP_SHAPE, GAZE_POS_ASC_FILE):
     super(DatasetWithHeatmap, self).__init__(LABELS_FILE_TRAIN, LABELS_FILE_VAL, RESIZE_SHAPE)
     print "Reading gaze data ASC file, and converting per-frame gaze positions to heat map..."
-    self.frameid2pos, self.frameid2action_notused, _ = BIU.read_gaze_data_asc_file(GAZE_POS_ASC_FILE)
+    self.frameid2pos, self.frameid2action_notused, _, _, _ = BIU.read_gaze_data_asc_file(GAZE_POS_ASC_FILE)
     self.train_GHmap = np.zeros([self.train_size, HEATMAP_SHAPE, HEATMAP_SHAPE, 1], dtype=np.float32)
     self.val_GHmap = np.zeros([self.val_size, HEATMAP_SHAPE, HEATMAP_SHAPE, 1], dtype=np.float32)
 

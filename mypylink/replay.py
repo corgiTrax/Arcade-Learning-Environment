@@ -111,7 +111,7 @@ if __name__ == "__main__":
     pygame.display.set_mode((w, h), RESIZABLE | DOUBLEBUF | RLEACCEL, 32)
     screen = pygame.display.get_surface()
     print "Reading gaze data in ASC file into memory..."
-    frameid2pos, _, frameid2duration = read_gaze_data_asc_file(asc_path)
+    frameid2pos, _, frameid2duration, _, _ = read_gaze_data_asc_file(asc_path)
     dw = drawgc_wrapper()
 
     ds.target_fps = 60

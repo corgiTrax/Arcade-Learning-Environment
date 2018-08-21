@@ -97,11 +97,15 @@ def read_gaze_data_asc_file(fname):
     frameid2pos = {frameid: []}
     frameid2action = {frameid: None}
     frameid2duration = {frameid: None} 
+    frameid2unclipped_reward = {frameid: None}
+    frameid2episode = {frameid: None}
     start_timestamp = 0
-    scr_msg = re.compile("MSG\s+(\d+)\s+SCR_RECORDER FRAMEID (\d+) UTID (\w+)")
-    freg = "[-+]?[0-9]*\.?[0-9]+" # regex for floating point numbers
-    gaze_msg = re.compile("(\d+)\s+(%s)\s+(%s)" % (freg, freg))
-    act_msg = re.compile("MSG\s+(\d+)\s+key_pressed atari_action (\d+)")
+    scr_msg = re.compile(r"MSG\s+(\d+)\s+SCR_RECORDER FRAMEID (\d+) UTID (\w+)")
+    freg = r"[-+]?[0-9]*\.?[0-9]+" # regex for floating point numbers
+    gaze_msg = re.compile(r"(\d+)\s+(%s)\s+(%s)" % (freg, freg))
+    act_msg = re.compile(r"MSG\s+(\d+)\s+key_pressed atari_action (\d+)")    
+    reward_msg = re.compile(r"MSG\s+(\d+)\s+reward (\d+)")
+    episode_msg = re.compile(r"MSG\s+(\d+)\s+episode (\d+)")
 
     for (i,line) in enumerate(lines):
         match_sample = gaze_msg.match(line)
@@ -128,7 +132,23 @@ def read_gaze_data_asc_file(fname):
             if frameid2action[frameid] is None:
                 frameid2action[frameid] = int(action_label)
             else:
-                print ("Warning: there are more than 1 action for frame id %s. Not supposed to happen." % str(frameid))
+                print ("Warning: there is more than 1 action for frame id %s. Not supposed to happen." % str(frameid))
+            continue
+
+        match_reward = reward_msg.match(line)
+        if match_reward:
+            timestamp, reward = match_reward.group(1), match_reward.group(2)
+            if frameid not in frameid2unclipped_reward:
+                frameid2unclipped_reward[frameid] = int(reward)
+            else:
+                print ("Warning: there is more than 1 reward for frame id %s. Not supposed to happen." % str(frameid))
+            continue
+
+        match_episode = episode_msg.match(line)
+        if match_episode:
+            timestamp, episode = match_episode.group(1), match_episode.group(2)
+            assert frameid not in frameid2episode, "ERROR: there is more than 1 episode for frame id %s. Not supposed to happen." % str(frameid)
+            frameid2episode[frameid] = int(episode) 
             continue
 
     frameid2pos[frameid] = [] # throw out gazes after the last frame, because the game has ended but eye tracker keeps recording
@@ -142,7 +162,7 @@ def read_gaze_data_asc_file(fname):
         if len(v) < 10: few_cnt += 1
     print ("Warning:  %d frames have less than 10 gaze samples. (%.1f%%, total frame: %d)" % \
             (few_cnt, 100.0*few_cnt/len(frameid2pos), len(frameid2pos)))
-    return frameid2pos, frameid2action, frameid2duration
+    return frameid2pos, frameid2action, frameid2duration, frameid2unclipped_reward, frameid2episode
 
 
 def read_np_parallel(label_file, RESIZE_SHAPE, num_thread=6, preprocess_deprecated=True):

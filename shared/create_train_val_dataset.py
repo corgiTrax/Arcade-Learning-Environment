@@ -40,7 +40,7 @@ def use_spec_file():
     frameid2action_each=[None]*len(spec)
     frameid2pos_each=[[]]*len(spec)
     for i in range(len(spec)):
-        frameid2pos_each[i], frameid2action_each[i] = read_gaze_data_asc_file(spec[i]['ASC'])
+        frameid2pos_each[i], frameid2action_each[i], _, _, _ = read_gaze_data_asc_file(spec[i]['ASC'])
 
     print ("Concatenating asc file while untaring...")
     asc_filename = output_path+'/'+dataset_name+'.asc'

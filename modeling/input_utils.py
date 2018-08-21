@@ -4,6 +4,7 @@ from IPython import embed
 from scipy import misc
 sys.path.insert(0, '../shared') # After research, this is the best way to import a file in another dir
 import base_input_utils as BIU
+from input_utils_DatasetDQN import DatasetDQN_withMonteCarloReturn
 import vip_constants as V
 
 # This method is for the expr that multiply the game frame using a predicted gaze heatmap, 
@@ -101,7 +102,7 @@ class DatasetWithGaze(BIU.Dataset):
   def __init__(self, LABELS_FILE_TRAIN, LABELS_FILE_VAL, RESIZE_SHAPE, GAZE_POS_ASC_FILE, bg_prob_density, gaussian_sigma):
     super(DatasetWithGaze, self).__init__(LABELS_FILE_TRAIN, LABELS_FILE_VAL, RESIZE_SHAPE)
     print "Reading gaze data ASC file, and converting per-frame gaze positions to heat map..."
-    self.frameid2pos, self.frameid2action_notused, _ = BIU.read_gaze_data_asc_file(GAZE_POS_ASC_FILE)
+    self.frameid2pos, self.frameid2action_notused, _,_,_ = BIU.read_gaze_data_asc_file(GAZE_POS_ASC_FILE)
     self.train_GHmap = np.zeros([self.train_size, RESIZE_SHAPE[0], RESIZE_SHAPE[1], 1], dtype=np.float32)
     self.val_GHmap = np.zeros([self.val_size, RESIZE_SHAPE[0], RESIZE_SHAPE[1], 1], dtype=np.float32)
 
