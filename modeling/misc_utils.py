@@ -19,9 +19,9 @@ def loss_func(target, pred): # should be called cross_entropy_loss_func, but it'
 
 
 def multi_head_huber_loss_func(target, pred):
-  """ This func assumes the following:
-      For example, if 10000 example, pred's shape is (10000, 2),
-      which are 10000 tuples of (action_label, mc_return)
+  """ This func assumes about the argument 'target':
+      For example, if 10000 example, target's shape is (10000, 2),
+      which is 10000 tuples of (action_label, mc_return)
   """
   num_actions = 18 # OK to make this assumption; because when it's not 18, tf will raise errors to let us know
   q_target = target[:,1]
@@ -46,6 +46,12 @@ def acc_(y_true, y_pred): # don't rename it to acc or accuracy (otherwise stupid
     tf.cast(tf.nn.in_top_k(
       targets=tf.squeeze(tf.cast(y_true,tf.int32)), 
       predictions=y_pred,k=1),tf.float32))
+
+def maxQval_action_acc(target, pred):
+  """ This function assumes the same as the comment in multi_head_huber_loss_func() 
+      The accuracy compted from assuming the action having the maximum Q-value is selected
+  """
+  return acc_(tf.cast(target[:,0], tf.int32), pred)
 
 # This is function is used in ale/modeling/pyModel/main-SmoothLabel.py, because in that case
 # the target label is a prob distribution rather than a number, so there is no "accuracy" defined.

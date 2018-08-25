@@ -92,6 +92,7 @@ class DatasetDQN_withMonteCarloReturn(object):
     self.train_mc_return = self.compute_mc_return(self.train_fid, train_rewards, discount_factor=0.9)
     self.val_mc_return = self.compute_mc_return(self.val_fid, val_rewards, discount_factor=0.9)
     assert len(self.train_mc_return) == self.train_size and len(self.val_mc_return) == self.val_size
+    self.print_baseline_loss()
 
   def extract_rewards_from_gaze_data(self, fids_in_label_file):
     """gaze_data in its name means self.frameid2unclipped_reward obtained from the gaze data ASC file"""
@@ -137,6 +138,17 @@ class DatasetDQN_withMonteCarloReturn(object):
         when computing Monte Carlo return. Make sure data is correct: for example, make sure\
         every end-of-life is marked as end-of-episode in the data")
     return returns_np
+
+  def print_baseline_loss(self):
+    def huber_loss(x, delta=1.0):
+      return np.where(
+          np.abs(x) < delta,
+          np.square(x) * 0.5,
+          delta * (np.abs(x) - 0.5 * delta)
+      )
+    print("\nbaseline loss (predicting to mean of MC return in validation): %.4f\n" % \
+      np.mean(huber_loss(self.val_mc_return - np.mean(self.val_mc_return))))
+
 
 
 class DatasetDQN_withGHmap(DatasetDQN):

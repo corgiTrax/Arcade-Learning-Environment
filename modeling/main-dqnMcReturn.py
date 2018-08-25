@@ -9,8 +9,9 @@ import ipdb
     uses the same preprocessing as DQN, the same loss function in OpenAI repo (Huber loss)
 """
 
+print("sys.argv is: %s" % str(sys.argv))
 NUM_CLASSES=18
-BASE_FILE_NAME = "/scratch/cluster/zharucs/dataset_gaze/" + sys.argv[1] 
+BASE_FILE_NAME = "/scratch/cluster/zharucs/dataset_gaze/seaquest_all"
 LABELS_FILE_TRAIN = BASE_FILE_NAME + '-train.txt'
 LABELS_FILE_VAL =  BASE_FILE_NAME + '-val.txt'
 GAZE_POS_ASC_FILE = BASE_FILE_NAME + '.asc'
@@ -23,23 +24,31 @@ save_model = True #if '--save' in sys.argv else False # you can specify "--save"
 MU.BMU.save_GPU_mem_keras()
 MU.keras_model_serialization_bug_fix()
 
-expr = MU.BMU.ExprCreaterAndResumer(MODEL_DIR,postfix="MCreturn_noBN")
+expr = MU.BMU.ExprCreaterAndResumer(MODEL_DIR,postfix="MCreturn_BNrelu")
 
 if True: # I just want to indent
     inputs=L.Input(shape=SHAPE)
     x=inputs # inputs is used by the line "Model(inputs, ... )" below
-    x=L.Conv2D(32, (8,8), strides=4, padding='same', activation="relu")(x)
-    x=L.Conv2D(64, (4,4), strides=2, padding='same', activation="relu")(x)
-    x=L.Conv2D(64, (3,3), strides=2, padding='same', activation="relu")(x)
+    x=L.Conv2D(32, (8,8), strides=4, padding='same')(x)
+    x=L.BatchNormalization()(x)
+    x=L.Activation('relu')(x)
+    x=L.Conv2D(64, (4,4), strides=2, padding='same')(x)
+    x=L.BatchNormalization()(x)
+    x=L.Activation('relu')(x)
+    x=L.Conv2D(64, (3,3), strides=1, padding='same')(x)
+    x=L.BatchNormalization()(x)
+    x=L.Activation('relu')(x)
     x=L.Flatten()(x)
-    x=L.Dense(512, activation='relu')(x)
+    x=L.Dense(512)(x)
+    x=L.BatchNormalization()(x)
+    x=L.Activation('relu')(x)
     logits=L.Dense(NUM_CLASSES, name="logits")(x)
     model=Model(inputs=inputs, outputs=[logits])
-
     opt=K.optimizers.Adadelta(lr=1.0, rho=0.95, epsilon=1e-08, decay=0.0)
 
     model.compile(optimizer=opt, # DQN training in OpenAI repo uses Huber loss, 
-        loss={"logits": MU.multi_head_huber_loss_func}) # so we use the same here for initializing DQN
+        loss={"logits": MU.multi_head_huber_loss_func}, # so we use the same here for initializing DQN
+        metrics={"logits": MU.maxQval_action_acc})
 
 expr.dump_src_code_and_model_def(sys.argv[0], model)
 
