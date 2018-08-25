@@ -81,7 +81,7 @@ class DatasetDQN_withMonteCarloReturn(object):
 
     print("Reading all validation data into memory...")
     val_imgs_raw, self.val_lbl, self.val_gaze, self.val_fid, self.val_weight = \
-        BIU.read_np_parallel(LABELS_FILE_TRAIN, RESIZE_SHAPE=(84,84), preprocess_deprecated=False)
+        BIU.read_np_parallel(LABELS_FILE_VAL, RESIZE_SHAPE=(84,84), preprocess_deprecated=False)
     self.val_size = len(self.val_lbl)
     val_rewards_before_replay = self.extract_rewards_from_gaze_data(self.val_fid)
     self.val_imgs, val_rewards = preprocess_imgs_via_running_ReplayEnv(val_imgs_raw, val_rewards_before_replay)

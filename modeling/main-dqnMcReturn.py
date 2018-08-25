@@ -10,7 +10,7 @@ import ipdb
 """
 
 NUM_CLASSES=18
-BASE_FILE_NAME = "../toy_dataset/seaquest_toy"
+BASE_FILE_NAME = "/scratch/cluster/zharucs/dataset_gaze/" + sys.argv[1] 
 LABELS_FILE_TRAIN = BASE_FILE_NAME + '-train.txt'
 LABELS_FILE_VAL =  BASE_FILE_NAME + '-val.txt'
 GAZE_POS_ASC_FILE = BASE_FILE_NAME + '.asc'

@@ -8,12 +8,11 @@ for more detailed behaviors, please take a look at the code.
 def multi_experiment():
   l = [] # compose a list of arguments needed to be passed to the python script
   EXPRIMENTS=[
-      ("seaquest_{70_75}val","seaquest_AAAI"),
+      ("seaquest_all"),
   ]
 
-  for (BASE_FILE_NAME, MODEL_DIR) in EXPRIMENTS:
-      for dropout in ['0','0.1', '0.2', '0.3', '0.4', '0.5']:
-          l.append(' '.join([BASE_FILE_NAME, MODEL_DIR, dropout]))
+  for (BASE_FILE_NAME) in EXPRIMENTS:
+          l.append(' '.join([BASE_FILE_NAME]))
 
   return l
 
@@ -21,7 +20,7 @@ import sys, re, os, subprocess
 
 basestr="""
 # doc at : http://research.cs.wisc.edu/htcondor/manual/current/condor_submit.html
-arguments = /scratch/cluster/zhuode93/ale/modeling/{0}
+arguments = /scratch/cluster/zharucs/ale/modeling/{0}
 +Group ="GRAD"
 +Project ="AI_ROBOTICS"
 +ProjectDescription="ale"
@@ -31,7 +30,7 @@ Universe = vanilla
 # UTCS has 18 such machine, to take a look, run 'condor_status  -constraint 'GTX1080==true' 
 Requirements=(TARGET.GTX1080== true)
 
-executable = /u/zhuode93/anaconda2/bin/ipython 
+executable = /u/zharucs/anaconda2/bin/ipython 
 getenv = true
 output = CondorOutput/$(Cluster).out
 error = CondorOutput/$(Cluster).err
