@@ -211,8 +211,8 @@ class ReplayEnv(gym.Env):
     """
     self._init_attr()
     self.imgs = imgs
-    self.rewards = ReplayEnv.DEFAULT_REWARD if rewards is None else rewards
-    assert len(rewards) == len(imgs)
+    self.rewards = rewards
+    assert  (self.rewards is None) or (len(self.rewards) == len(imgs))
   def _reset(self):
     self._ptr = 0
     #  The contract of reset() is to return the initial observation.
