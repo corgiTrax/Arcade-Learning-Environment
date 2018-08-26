@@ -35,21 +35,18 @@ class DatasetDQN(object):
         BIU.read_np_parallel(LABELS_FILE_TRAIN, RESIZE_SHAPE=(84,84), preprocess_deprecated=False)
     self.val_size = len(self.val_lbl)
     self.val_imgs = preprocess_imgs_via_running_ReplayEnv(val_imgs_raw)
-    div255(self)
     print("Time spent to read train/val data: %.1fs" % (time.time()-t1))
 
-def div255(DatasetObj): # div255 is not a member function because it's also used by other classes here
-  DatasetObj.train_imgs = DatasetObj.train_imgs.astype(np.float32) / 255.0
-  DatasetObj.val_imgs = DatasetObj.val_imgs.astype(np.float32) / 255.0
 
 def preprocess_imgs_via_running_ReplayEnv(imgs_input, optional_rewards_input=None):
+  preprocess = lambda img: np.array(img, dtype=np.float32) / 255.0
   env = wrap_dqn(ReplayEnv(imgs_input, optional_rewards_input), user='ReplayEnv_img')
   first_obs = env.reset()
-  imgs = [np.array(first_obs)] # see below
+  imgs = [preprocess(first_obs)]
   rewards = [0]
   while True:
     obs, reward, done, info = env.step(action=0)
-    imgs.append(np.array(obs)) # convert LazyFrame (defined in copy_atari_wrappers_deprecated) to np array. TODO maybe we can keep LazyFrame and save memory. Explore.
+    imgs.append(preprocess(obs))
     rewards.append(reward)
     if done:
         break
@@ -85,7 +82,6 @@ class DatasetDQN_withMonteCarloReturn(object):
     self.val_size = len(self.val_lbl)
     val_rewards_before_replay = self.extract_rewards_from_gaze_data(self.val_fid)
     self.val_imgs, val_rewards = preprocess_imgs_via_running_ReplayEnv(val_imgs_raw, val_rewards_before_replay)
-    div255(self)
     print("Time spent to read train/val data: %.1fs" % (time.time()-t1))
 
     print("Computing Monte Carlo Return...")
