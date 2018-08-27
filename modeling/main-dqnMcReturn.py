@@ -18,13 +18,13 @@ GAZE_POS_ASC_FILE = BASE_FILE_NAME + '.asc'
 SHAPE = (84,84,4) # height * width * channel. Cannot be read from file; Needs to be provided here
 BATCH_SIZE=100
 num_epoch = 50
-MODEL_DIR = "expr_DQNDataset"
+MODEL_DIR = "expr_MCreturn"
 save_model = True #if '--save' in sys.argv else False # you can specify "--save" in argument
 
 MU.BMU.save_GPU_mem_keras()
 MU.keras_model_serialization_bug_fix()
 
-expr = MU.BMU.ExprCreaterAndResumer(MODEL_DIR,postfix="MCreturn_BNrelu")
+expr = MU.BMU.ExprCreaterAndResumer(MODEL_DIR,postfix="BNrelu_penalizeNonSelected")
 
 if True: # I just want to indent
     inputs=L.Input(shape=SHAPE)
@@ -46,13 +46,13 @@ if True: # I just want to indent
     model=Model(inputs=inputs, outputs=[logits])
     opt=K.optimizers.Adadelta(lr=1.0, rho=0.95, epsilon=1e-08, decay=0.0)
 
-    model.compile(optimizer=opt, # DQN training in OpenAI repo uses Huber loss, 
-        loss={"logits": MU.multi_head_huber_loss_func}, # so we use the same here for initializing DQN
-        metrics={"logits": MU.maxQval_action_acc})
+    model.compile(optimizer=opt,
+        loss={"logits": MU.multi_head_huber_loss_func_with_penalizing_non_selected_Qval}, # DQN training in OpenAI repo uses Huber loss,
+        metrics={"logits": MU.maxQval_action_acc}) # so we use the same here for initializing DQN
 
 expr.dump_src_code_and_model_def(sys.argv[0], model)
 
-d=input_utils.DatasetDQN_withMonteCarloReturn(LABELS_FILE_TRAIN, LABELS_FILE_VAL, GAZE_POS_ASC_FILE)
+d=input_utils.DatasetDQN_withMonteCarloReturn(LABELS_FILE_TRAIN, LABELS_FILE_VAL, GAZE_POS_ASC_FILE, discount_factor=0.9)
 train_target = np.stack([d.train_lbl, d.train_mc_return],1) # its shape is, if 10000 example,  (10000, 2),
 val_target = np.stack([d.val_lbl, d.val_mc_return],1) # which are 10000 tuples of (action_label, mc_return)
 

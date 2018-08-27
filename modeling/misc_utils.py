@@ -25,15 +25,28 @@ def multi_head_huber_loss_func(target, pred):
   """
   num_actions = 18 # OK to make this assumption; because when it's not 18, tf will raise errors to let us know
   q_target = target[:,1]
-  action_selected = tf.cast(target[:,0], tf.uint8)
-  q_selected = tf.reduce_sum(pred * tf.one_hot(action_selected, num_actions), 1)
+  action_target = tf.cast(target[:,0], tf.uint8)
+  q_pred = tf.reduce_sum(pred * tf.one_hot(action_target, num_actions), 1)
   def huber_loss(x, delta=1.0):
     return tf.where(
         tf.abs(x) < delta,
         tf.square(x) * 0.5,
         delta * (tf.abs(x) - 0.5 * delta)
     )
-  return tf.reduce_mean(huber_loss(q_target - q_selected))
+  return tf.reduce_mean(huber_loss(q_target - q_pred))
+
+def multi_head_huber_loss_func_with_penalizing_non_selected_Qval(target, pred):
+  """ same as multi_head_huber_loss_func() except that it assumes the non_selected_Qval target is zero """
+  num_actions = 18
+  action_target = tf.cast(target[:,0], tf.uint8)
+  q_target = tf.one_hot(action_target, num_actions) * tf.expand_dims(target[:,1],-1)
+  def huber_loss(x, delta=1.0):
+    return tf.where(
+        tf.abs(x) < delta,
+        tf.square(x) * 0.5,
+        delta * (tf.abs(x) - 0.5 * delta)
+    )
+  return tf.reduce_mean(huber_loss(q_target - pred))
 
 
 # This is function is used in ale/modeling/pyModel/main-SmoothLabel.py, because in that case

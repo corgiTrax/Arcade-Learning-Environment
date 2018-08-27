@@ -10,6 +10,21 @@ from copy_atari_wrappers_deprecated import wrap_dqn
 import base_input_utils as BIU
 import vip_constants as V
 
+def preprocess_imgs_via_running_ReplayEnv(imgs_input, optional_rewards_input=None):
+  preprocess = lambda img: np.array(img, dtype=np.float32) / 255.0
+  env = wrap_dqn(ReplayEnv(imgs_input, optional_rewards_input), user='ReplayEnv_img')
+  first_obs = env.reset()
+  imgs_np=np.zeros([len(imgs_input), 84, 84, 4], dtype=np.float32)
+  imgs_np[0,:,:,:] = preprocess(first_obs)
+  rewards = [0]
+  for i in range(1, len(imgs_input)):
+    obs, reward, done, info = env.step(action=0)
+    imgs_np[i,:,:,:] = preprocess(obs)
+    rewards.append(reward)
+    assert (not done) or (i==len(imgs_input)-1), "ReplayEnv has fewer images than len(imgs_input)"
+  assert done, "ReplayEnv has more images than len(imgs_input)"
+  return imgs_np if optional_rewards_input is None else (imgs_np, rewards)
+
 class DatasetDQN(object):
   """
   The goal of this Dataset is utilize ReplayEnv to call copy_atari_wrappers_deprecated.wrap_dqn() 
@@ -37,31 +52,12 @@ class DatasetDQN(object):
     self.val_imgs = preprocess_imgs_via_running_ReplayEnv(val_imgs_raw)
     print("Time spent to read train/val data: %.1fs" % (time.time()-t1))
 
-
-def preprocess_imgs_via_running_ReplayEnv(imgs_input, optional_rewards_input=None):
-  preprocess = lambda img: np.array(img, dtype=np.float32) / 255.0
-  env = wrap_dqn(ReplayEnv(imgs_input, optional_rewards_input), user='ReplayEnv_img')
-  first_obs = env.reset()
-  imgs = [preprocess(first_obs)]
-  rewards = [0]
-  while True:
-    obs, reward, done, info = env.step(action=0)
-    imgs.append(preprocess(obs))
-    rewards.append(reward)
-    if done:
-        break
-  imgs_np = np.array(imgs)
-  # env.unwrapped can be used to access the innermost env, i.e., ReplayEnv
-  print ("Dataset change: shape: %s -> %s dtype: %s -> %s" % (
-      str(env.unwrapped.imgs.shape),str(imgs_np.shape), str(env.unwrapped.imgs.dtype),str(imgs_np.dtype)))
-  return imgs_np if optional_rewards_input is None else (imgs_np, rewards)
-
 class DatasetDQN_withMonteCarloReturn(object):
   """
   This class adds MC-return (Monte Carlo Return) data to DatasetDQN, which is computed
   from the per-frame rewards in the .asc file
   """  
-  def __init__(self, LABELS_FILE_TRAIN, LABELS_FILE_VAL, GAZE_POS_ASC_FILE):
+  def __init__(self, LABELS_FILE_TRAIN, LABELS_FILE_VAL, GAZE_POS_ASC_FILE, discount_factor):
     t1=time.time()
     
     print("Calling read_gaze_data_asc_file()...")
@@ -85,8 +81,8 @@ class DatasetDQN_withMonteCarloReturn(object):
     print("Time spent to read train/val data: %.1fs" % (time.time()-t1))
 
     print("Computing Monte Carlo Return...")
-    self.train_mc_return = self.compute_mc_return(self.train_fid, train_rewards, discount_factor=0.9)
-    self.val_mc_return = self.compute_mc_return(self.val_fid, val_rewards, discount_factor=0.9)
+    self.train_mc_return = self.compute_mc_return(self.train_fid, train_rewards, discount_factor)
+    self.val_mc_return = self.compute_mc_return(self.val_fid, val_rewards, discount_factor)
     assert len(self.train_mc_return) == self.train_size and len(self.val_mc_return) == self.val_size
     self.print_baseline_loss()
 
