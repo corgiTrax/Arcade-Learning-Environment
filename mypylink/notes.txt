@@ -277,10 +277,18 @@ Defender
 
 Seaquest (color averaging off test)
 185 RZ seaquest data ok start fresh saveto: seaquestRZ_9437843.npz fps:20
+197 RZ seaquest data ok start fresh saveto: seaquestRZ_3876283.npz fps:20
+
+Breakout
+198 RZ breakout data ok start fresh saveto: breakoutRZ_3877709.npz fps:20
 
 Hero 
 195 RZ hero data ok start fresh saveto: heroRZ_205678.npz fps:20 (practice)
 196 RZ hero data ok start fresh saveto: heroRZ_207631.npz fps:20
+
+Montezuma's revenge
+
+Pitfall
 
 ========================================
 Jake New games
