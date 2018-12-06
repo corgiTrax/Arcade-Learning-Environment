@@ -287,11 +287,13 @@ Breakout
 Hero 
 195 RZ hero data ok start fresh saveto: heroRZ_205678.npz fps:20 (practice)
 196 RZ hero data ok start fresh saveto: heroRZ_207631.npz fps:20
+203 RZ hero data ok start fresh saveto: heroRZ_4052784.npz fps:20
 
 Montezuma's revenge
 
 Maspacman
-199 RZ mspacman data ok start fresh saveto: ms_pacmanRZ_3968652.npz 
+199 RZ mspacman data ok start fresh saveto: ms_pacmanRZ_3968652.npz fps:20
+202 RZ mspacman data ok start fresh saveto: ms_pacmanRZ_4051421.npz fps:20
 
 Pitfall
 
