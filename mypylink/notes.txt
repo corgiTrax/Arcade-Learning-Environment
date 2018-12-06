@@ -283,6 +283,7 @@ Seaquest (color averaging off test)
 
 Breakout
 198 RZ breakout data ok start fresh saveto: breakoutRZ_3877709.npz fps:20
+205 RZ breakout data ok start fresh saveto: breakoutRZ_4137619.npz fps:20
 
 Hero 
 195 RZ hero data ok start fresh saveto: heroRZ_205678.npz fps:20 (practice)
@@ -296,6 +297,9 @@ Maspacman
 202 RZ mspacman data ok start fresh saveto: ms_pacmanRZ_4051421.npz fps:20
 
 Pitfall
+
+Centipede
+204 RZ centipede data ok start fresh saveto: centipedeRZ_4136256.npz fps:20
 
 ========================================
 Jake New games
