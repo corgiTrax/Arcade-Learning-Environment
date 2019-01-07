@@ -250,10 +250,12 @@ Asterix
 Name this game
 161 RZ name_this_game data ok start fresh saveto: name_this_gameRZ_9170137.npz fps:20 
 166 RZ name_this_game data ok start fresh saveto: name_this_gameRZ_9937249.npz fps:20
+207 RZ name_this_game data ok start fresh saveto: name_this_gameRZ_6884496.npz fps:20
 
 Berzerk
 164 RZ berzerk data ok start fresh saveto: berzerkRZ_9934643.npz fps: 30
 165 RZ berzerk data ok start fresh saveto: berzerkRZ_9935913.npz fps: 30
+208 RZ berzerk data ok start fresh saveto: berzerkRZ_6886042.npz fps: 20
 
 Demon_Attack
 175 RZ demon_attack data ok start fresh saveto: demon_attackRZ_8393573.npz fps:20 
