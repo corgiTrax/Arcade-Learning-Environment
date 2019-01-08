@@ -297,13 +297,14 @@ Montezuma's revenge
 Maspacman
 199 RZ mspacman data ok start fresh saveto: ms_pacmanRZ_3968652.npz fps:20
 202 RZ mspacman data ok start fresh saveto: ms_pacmanRZ_4051421.npz fps:20
+209 RZ mspacman data ok start fresh saveto: ms_pacmanRZ_6964528.npz fps:20
 
 Pitfall
 
 Centipede
 204 RZ centipede data ok start fresh saveto: centipedeRZ_4136256.npz fps:20
 206 RZ centipede data ok start fresh saveto: centipedeRZ_4478127.npz fps:20
-
+210 RZ centipede data ok start fresh saveto: centipedeRZ_6966080.npz fps:20
 ========================================
 Jake New games
 !!!!!!!!!! Notice: color averaging off starting from this point!!!
