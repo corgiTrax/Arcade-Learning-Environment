@@ -246,6 +246,7 @@ Asterix
 160 RZ asterix data ok start fresh saveto: asterixRZ_9166697.npz fps: 20
 162 RZ asterix data ok start fresh saveto: asterixRZ_9237724.npz fps: 20
 163 RZ asterix data ok start fresh saveto: asterixRZ_9932825.npz fps: 20 
+213 RZ asterix data ok start fresh saveto: asterixRZ_7141559.npz fps: 20
 
 Name this game
 161 RZ name_this_game data ok start fresh saveto: name_this_gameRZ_9170137.npz fps:20 
@@ -283,6 +284,7 @@ Defender
 Seaquest (color averaging off test)
 185 RZ seaquest data ok start fresh saveto: seaquestRZ_9437843.npz fps:20
 197 RZ seaquest data ok start fresh saveto: seaquestRZ_3876283.npz fps:20
+212 RZ seaquest data ok start fresh saveto: seaquestRZ_7139876.npz fps:20
 
 Breakout
 198 RZ breakout data ok start fresh saveto: breakoutRZ_3877709.npz fps:20
