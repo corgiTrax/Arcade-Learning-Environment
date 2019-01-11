@@ -207,7 +207,7 @@ Riverraid
 129 KM riverraid data ok start fresh saveto: riverraidKM_3028072.npz fps: 20
 139 KM riverraid data ok start fresh saveto: riverraidKM_3118094.npz fps: 20
 
-Ms Pacman
+MsPacman
 131 KM ms_pacman data ok start fresh saveto: ms_pacmanKM_3030302.npz fps: 20
 137 KM ms_pacman data ok start fresh saveto: ms_pacmanKM_3115947.npz fps: 20
 
@@ -263,6 +263,7 @@ Demon_Attack
 175 RZ demon_attack data ok start fresh saveto: demon_attackRZ_8393573.npz fps:20 
 179 RZ demon_attack data ok (val failed for strange reason) start fresh saveto: demon_attackRZ_9009155.npz fps:20 (color averaging on!)
 200 RZ demon_attack data (1.17error) start fresh saveto: demon_attackRZ_3969914.npz fps:20
+215 RZ demon_attack data ok start fresh saveto: demon_attackRZ_7227924.npz fps:20
 
 Bowling
 176 RZ bowling data (no val afterwards) start fresh saveto: bowlingRZ_8400023.npz fps:50 (continuous, do not use)
@@ -276,7 +277,8 @@ Phoenix
 180 RZ phoenix data ok start fresh saveto: phoenixRZ_9095735.npz fps:20 (color averaging on!)
 184 RZ phoenix data ok start fresh saveto: phoenixRZ_9435442.npz fps:20 (color averaging on!)
 186 RZ phoenix data ok start fresh saveto: phoenixRZ_9439314.npz fps:20
-194 RZ phoenix data ok start fresh saveto: phoenixRZ_204115.npz  fps: 20
+194 RZ phoenix data ok start fresh saveto: phoenixRZ_204115.npz  fps:20
+214 RZ phoenix data ok start fresh saveto: phoenixRZ_7226016.npz fps:20
 
 Defender
 181 RZ defender data ok start fresh saveto: defenderRZ_9097191.npz fps:20 (color averaging on!)
