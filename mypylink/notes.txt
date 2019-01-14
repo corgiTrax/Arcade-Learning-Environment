@@ -248,6 +248,9 @@ Asterix
 163 RZ asterix data ok start fresh saveto: asterixRZ_9932825.npz fps: 20 
 213 RZ asterix data ok start fresh saveto: asterixRZ_7141559.npz fps: 20
 
+Amidar
+217 RZ amidar data ok  start fresh saveto: amidarRZ_7489089.npz fps:20
+
 Name this game
 161 RZ name_this_game data ok start fresh saveto: name_this_gameRZ_9170137.npz fps:20 
 166 RZ name_this_game data ok start fresh saveto: name_this_gameRZ_9937249.npz fps:20
@@ -296,6 +299,7 @@ Hero
 195 RZ hero data ok start fresh saveto: heroRZ_205678.npz fps:20 (practice)
 196 RZ hero data ok start fresh saveto: heroRZ_207631.npz fps:20
 203 RZ hero data ok start fresh saveto: heroRZ_4052784.npz fps:20
+216 RZ hero data ok start fresh saveto: heroRZ_7487726.npz fps:20
 
 Montezuma's revenge
 
