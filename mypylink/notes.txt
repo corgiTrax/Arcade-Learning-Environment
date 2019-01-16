@@ -261,12 +261,14 @@ Berzerk
 165 RZ berzerk data ok start fresh saveto: berzerkRZ_9935913.npz fps: 30
 208 RZ berzerk data ok start fresh saveto: berzerkRZ_6886042.npz fps: 20
 211 RZ berzerk data ok start fresh saveto: berzerkRZ_7054196.npz fps: 20
+219 RZ berzerk data ok start fresh saveto: berzerkRZ_7662101.npz fps: 20
 
 Demon_Attack
 175 RZ demon_attack data ok start fresh saveto: demon_attackRZ_8393573.npz fps:20 
 179 RZ demon_attack data ok (val failed for strange reason) start fresh saveto: demon_attackRZ_9009155.npz fps:20 (color averaging on!)
 200 RZ demon_attack data (1.17error) start fresh saveto: demon_attackRZ_3969914.npz fps:20
 215 RZ demon_attack data ok start fresh saveto: demon_attackRZ_7227924.npz fps:20
+220 RZ demon_attack data (1.20error) start fresh saveto: demon_attackRZ_7664019.npz fps:20
 
 Bowling
 176 RZ bowling data (no val afterwards) start fresh saveto: bowlingRZ_8400023.npz fps:50 (continuous, do not use)
@@ -295,6 +297,7 @@ Breakout
 198 RZ breakout data ok start fresh saveto: breakoutRZ_3877709.npz fps:20
 205 RZ breakout data ok start fresh saveto: breakoutRZ_4137619.npz fps:20
 218 RZ breakout data ok start fresh saveto: breakoutRZ_7584753.npz fps:20
+
 Hero 
 195 RZ hero data ok start fresh saveto: heroRZ_205678.npz fps:20 (practice)
 196 RZ hero data ok start fresh saveto: heroRZ_207631.npz fps:20
