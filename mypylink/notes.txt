@@ -323,8 +323,9 @@ Centipede
 Frostbite
 223 RZ frostbite data ok start fresh saveto: frostbiteRZ_7843228.npz fps:20 (did not know fish was reward)
 224 RZ frostbite data ok start fresh saveto: frostbiteRZ_8090647.npz fps:20 (did not know fish was reward)
-225 RZ frostbite data ok start fresh saveto: frostbiteRZ_8092077.npz fps:20 (died)
+225 RZ frostbite data ok start fresh saveto: frostbiteRZ_8092077.npz fps:20 (died very often)
 226 RZ frostbite data ok start fresh saveto: frostbiteRZ_8093648.npz fps:20
+227 RZ frostbite data ok start fresh saveto: frostbiteRZ_8202696.npz fps:20
 
 ========================================
 Jake New games
