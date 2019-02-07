@@ -297,6 +297,7 @@ Seaquest (color averaging off test)
 185 RZ seaquest data ok start fresh saveto: seaquestRZ_9437843.npz fps:20
 197 RZ seaquest data ok start fresh saveto: seaquestRZ_3876283.npz fps:20
 212 RZ seaquest data ok start fresh saveto: seaquestRZ_7139876.npz fps:20
+235 RZ seaquest data ok start fresh saveto: seaquestRZ_9578441.npz fps:20
 
 Breakout
 198 RZ breakout data ok start fresh saveto: breakoutRZ_3877709.npz fps:20
@@ -313,6 +314,7 @@ Montezuma's revenge
 231 RZ montezuma's revenge data ok start fresh saveto: montezuma_revengeRZ_9323219.npz (practice)
 232 RZ montezuma's revenge data ok start fresh saveto: montezuma_revengeRZ_9413789.npz (practice)
 233 RZ montezuma's revenge data ok start fresh saveto: montezuma_revengeRZ_9499234.npz (parctice)
+236 RZ montezuma's revenbe data ok start fresh saveto: montezuma_revengeRZ_9579513.npz (practice)
 
 Maspacman
 199 RZ mspacman data ok start fresh saveto: ms_pacmanRZ_3968652.npz fps:20
