@@ -288,6 +288,7 @@ Phoenix
 186 RZ phoenix data ok start fresh saveto: phoenixRZ_9439314.npz fps:20
 194 RZ phoenix data ok start fresh saveto: phoenixRZ_204115.npz  fps:20
 214 RZ phoenix data ok start fresh saveto: phoenixRZ_7226016.npz fps:20
+234 RZ phoenix (1.23error) start fresh saveto: phoenixRZ_9500596.npz fps:20
 
 Defender
 181 RZ defender data ok start fresh saveto: defenderRZ_9097191.npz fps:20 (color averaging on!)
@@ -309,6 +310,9 @@ Hero
 216 RZ hero data ok start fresh saveto: heroRZ_7487726.npz fps:20
 
 Montezuma's revenge
+231 RZ montezuma's revenge data ok start fresh saveto: montezuma_revengeRZ_9323219.npz (practice)
+232 RZ montezuma's revenge data ok start fresh saveto: montezuma_revengeRZ_9413789.npz (practice)
+233 RZ montezuma's revenge data ok start fresh saveto: montezuma_revengeRZ_9499234.npz (parctice)
 
 Maspacman
 199 RZ mspacman data ok start fresh saveto: ms_pacmanRZ_3968652.npz fps:20
