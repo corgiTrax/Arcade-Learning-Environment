@@ -35,7 +35,7 @@ after 44 color_averaging is turned on
 ========================================
 ========================================
 ========================================
-August 9 2017 "Final" version of data collection: leaderboard; save/load; composed action; new random seed; frame averaging; no sound;
+August 9 2017 new version of data collection: leaderboard; save/load; composed action; new random seed; frame averaging; no sound;
 
 High score
 Seaquest
@@ -335,6 +335,16 @@ Frostbite
 226 RZ frostbite data ok start fresh saveto: frostbiteRZ_8093648.npz fps:20
 227 RZ frostbite data ok start fresh saveto: frostbiteRZ_8202696.npz fps:20
 228 RZ frostbite data ok start fresh saveto: frostbiteRZ_8272059.npz fps:20
+
+===================================================================================
+Ruohan high scores (one episode) (color averaging off)
+Seaquest
+237 RZ seaquest data ok load 235 saveto: seaquestRZ_9656617.npz fps:20
+238 RZ seaquest data ok load 237 saveto: seaquestRZ_9659492.npz fps:20
+239 RZ seaquest data ok load 238 episode end fps:20
+240 RZ seaquest data ok load 238 saveto: seaquestRZ_9931101.npz fps:20
+241 RZ seaquest data ok load 240 saveto: seaquestRZ_19306.npz fps:20
+
 
 ========================================
 Jake New games
