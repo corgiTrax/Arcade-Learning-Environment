@@ -344,6 +344,8 @@ Seaquest
 239 RZ seaquest data ok load 238 episode end fps:20
 240 RZ seaquest data ok load 238 saveto: seaquestRZ_9931101.npz fps:20
 241 RZ seaquest data ok load 240 saveto: seaquestRZ_19306.npz fps:20
+242 RZ seaquest data ok load 241 saveto: seaquestRZ_515882.npz fps:20 (died several times but not end)
+
 
 
 ========================================
