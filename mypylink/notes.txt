@@ -328,7 +328,7 @@ Centipede
 204 RZ centipede data ok start fresh saveto: centipedeRZ_4136256.npz fps:20
 206 RZ centipede data ok start fresh saveto: centipedeRZ_4478127.npz fps:20
 210 RZ centipede data ok start fresh saveto: centipedeRZ_6966080.npz fps:20
-244 RZ centipede data ok start fresh savetp: centipedeRZ_594187.npz fps:20
+244 RZ centipede data ok start fresh saveto: centipedeRZ_594187.npz fps:20
 
 Frostbite
 223 RZ frostbite data ok start fresh saveto: frostbiteRZ_7843228.npz fps:20 (did not know fish was reward)
@@ -347,12 +347,30 @@ Seaquest
 240 RZ seaquest data ok load 238 saveto: seaquestRZ_9931101.npz fps:20
 241 RZ seaquest data ok load 240 saveto: seaquestRZ_19306.npz fps:20
 242 RZ seaquest data ok load 241 saveto: seaquestRZ_515882.npz fps:20 (died several times but not end)
+248 RZ seaquest data ok load 241 saveto: seaquestRZ_802972.npz fps:20
 
 Centipede
 245 RZ centipede data ok load 244 saveto: centipedeRZ_719798.npz fps:20
+247 RZ centipede data ok load 245 episode end fps:20
+254 RZ centipede data ok load 245 saveto: centipedeRZ_1239817.npz fps:20
 
 Asterix
-246 RZ asterix data ok load 243 asterixRZ_721092.npz fps:20
+246 RZ asterix data ok load 243 saveto: asterixRZ_721092.npz fps:20
+
+Phoenix 
+252 RZ phoenix data ok load 234 saveto: phoenixRZ_1236831.npz fps:20
+
+====================================================================================
+Lin games
+251 LG demon attack (1.22 error) start fresh saveto: demon_attackLG_1235012.npz fps:20 (practice)
+253 LG demon attack data ok start fresh saveto: demon_attackLG_1238143.npz fps:20 (practice)
+
+
+
+
+
+
+
 
 
 ========================================
