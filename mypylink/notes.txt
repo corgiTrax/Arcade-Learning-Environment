@@ -353,17 +353,23 @@ Centipede
 245 RZ centipede data ok load 244 saveto: centipedeRZ_719798.npz fps:20
 247 RZ centipede data ok load 245 episode end fps:20
 254 RZ centipede data ok load 245 saveto: centipedeRZ_1239817.npz fps:20
+259 RZ centipede data ok load 254 saveto: centipedeRZ_1454534.npz fps:20
 
 Asterix
 246 RZ asterix data ok load 243 saveto: asterixRZ_721092.npz fps:20
+260 RZ asterix data ok load 246 saveto: asterixRZ_1456515.npz fps:20
 
 Phoenix 
-252 RZ phoenix data ok load 234 saveto: phoenixRZ_1236831.npz fps:20
+252 RZ phoenix data ok load 234 saveto: phoenixRZ_1236831.npz fps:20 (life doesnot regenerate)
 
 ====================================================================================
 Lin games
 251 LG demon attack (1.22 error) start fresh saveto: demon_attackLG_1235012.npz fps:20 (practice)
 253 LG demon attack data ok start fresh saveto: demon_attackLG_1238143.npz fps:20 (practice)
+255 LG demon attack data ok start fresh saveto: demon_attackLG_1306628.npz fps: 20
+256 LG demon attack data ok start fresh saveto: demon_attackLG_1308608.npz fps: 20
+257 LG demon attack data ok start fresh saveto: demon_attackLG_1388148.npz fps: 20
+258 LG demon attack (1.15 error) start fresh saveto: demon_attackLG_1389561.npz fps: 20
 
 
 
