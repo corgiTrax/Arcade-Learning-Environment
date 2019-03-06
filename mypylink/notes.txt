@@ -370,9 +370,11 @@ Lin games
 256 LG demon attack data ok start fresh saveto: demon_attackLG_1308608.npz fps: 20
 257 LG demon attack data ok start fresh saveto: demon_attackLG_1388148.npz fps: 20
 258 LG demon attack (1.15 error) start fresh saveto: demon_attackLG_1389561.npz fps: 20
-
-
-
+261 LG demon attack (head moved right after the game ends, 1.14 error) start freshsaveto: demon_attackLG_1476698.npz fps: 20
+262 LG demon attack data ok start fresh saveto: demon_attackLG_1478757.npz fps: 20
+263 LG demon attack (1.26 error) start fresh saveto: demon_attackLG_1742179.npz fps: 20
+264 discard this. starting point validation > 0.6
+265 LG demon attack (1.05 error) start fresh saveto: demon_attackLG_1743521.npz fps: 20
 
 
 
