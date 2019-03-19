@@ -215,7 +215,7 @@ Breakout
 132 KM breakout data ok start fresh saveto: breakoutKM_3105771.npz fps: 20 
 134 KM breakout data ok start fresh saveto: breakoutKM_3108024.npz fps: 20
 
-SeaQuest
+Seaquest
 145 KM seaquest data ok start fresh saveto: seaquestKM_3278908.npz fps: 20
 147 KM seaquest data ok start fresh saveto: seaquestKM_3281547.npz fps: 20
 
@@ -265,6 +265,8 @@ Berzerk
 208 RZ berzerk data ok start fresh saveto: berzerkRZ_6886042.npz fps: 20
 211 RZ berzerk data ok start fresh saveto: berzerkRZ_7054196.npz fps: 20
 219 RZ berzerk data ok start fresh saveto: berzerkRZ_7662101.npz fps: 20
+266 RZ berzerk data ok start fresh saveto: berzerkRZ_2955300.npz fps: 20
+268 RZ berzerk data ok start fresh saveto: berzerkRZ_3029374.npz fps: 20
 
 Demon_Attack
 175 RZ demon_attack data ok start fresh saveto: demon_attackRZ_8393573.npz fps:20 
@@ -310,6 +312,7 @@ Hero
 196 RZ hero data ok start fresh saveto: heroRZ_207631.npz fps:20
 203 RZ hero data ok start fresh saveto: heroRZ_4052784.npz fps:20
 216 RZ hero data ok start fresh saveto: heroRZ_7487726.npz fps:20
+269 RZ hero data ok start fresh saveto: heroRZ_3030712.npz fps:20 (episode ends once)
 
 Montezuma's revenge
 231 RZ montezuma's revenge data ok start fresh saveto: montezuma_revengeRZ_9323219.npz (practice)
@@ -361,6 +364,9 @@ Asterix
 
 Phoenix 
 252 RZ phoenix data ok load 234 saveto: phoenixRZ_1236831.npz fps:20 (life doesnot regenerate)
+
+Name this game
+267 RZ name_this_game data ok load 230 saveto: name_this_gameRZ_2956617.npz fps:20
 
 ====================================================================================
 Lin games
