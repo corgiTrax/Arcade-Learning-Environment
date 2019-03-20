@@ -313,6 +313,7 @@ Hero
 203 RZ hero data ok start fresh saveto: heroRZ_4052784.npz fps:20
 216 RZ hero data ok start fresh saveto: heroRZ_7487726.npz fps:20
 269 RZ hero data ok start fresh saveto: heroRZ_3030712.npz fps:20 (episode ends once)
+270 RZ hero data ok start fresh saveto: heroRZ_3098729.npz fps:20
 
 Montezuma's revenge
 231 RZ montezuma's revenge data ok start fresh saveto: montezuma_revengeRZ_9323219.npz (practice)
@@ -320,10 +321,11 @@ Montezuma's revenge
 233 RZ montezuma's revenge data ok start fresh saveto: montezuma_revengeRZ_9499234.npz (parctice)
 236 RZ montezuma's revenbe data ok start fresh saveto: montezuma_revengeRZ_9579513.npz (practice)
 
-Maspacman
+Mspacman
 199 RZ mspacman data ok start fresh saveto: ms_pacmanRZ_3968652.npz fps:20
 202 RZ mspacman data ok start fresh saveto: ms_pacmanRZ_4051421.npz fps:20
 209 RZ mspacman data ok start fresh saveto: ms_pacmanRZ_6964528.npz fps:20
+271 RZ mspacman data ok start fresh saveto: ms_pacmanRZ_3101375.npz fps:20
 
 Pitfall
 
