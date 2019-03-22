@@ -326,6 +326,7 @@ Mspacman
 202 RZ mspacman data ok start fresh saveto: ms_pacmanRZ_4051421.npz fps:20
 209 RZ mspacman data ok start fresh saveto: ms_pacmanRZ_6964528.npz fps:20
 271 RZ mspacman data ok start fresh saveto: ms_pacmanRZ_3101375.npz fps:20
+273 RZ mspacman (1.04 error) start fresh saveto: ms_pacmanRZ_3279899.npz fps:20
 
 Pitfall
 
@@ -342,6 +343,7 @@ Frostbite
 226 RZ frostbite data ok start fresh saveto: frostbiteRZ_8093648.npz fps:20
 227 RZ frostbite data ok start fresh saveto: frostbiteRZ_8202696.npz fps:20
 228 RZ frostbite data ok start fresh saveto: frostbiteRZ_8272059.npz fps:20
+272 RZ frostbite data ok start fresh saveto: frostbiteRZ_3276369.npz fps:20
 
 ===================================================================================
 Ruohan high scores (one episode) (color averaging off)
