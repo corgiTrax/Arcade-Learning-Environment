@@ -284,6 +284,7 @@ Space Invaders
 177 RZ space_invaders data ok start fresh saveto: space_invadersRZ_9004819.npz fps:20
 201 RZ space_invaders data ok start fresh saveto: space_invadersRZ_3972461.npz fps:20
 222 RZ space_invaders data ok start fresh saveto: space_invadersRZ_7759093.npz fps:20
+274 RZ space_invaders data ok start fresh saveto: space_invadersRZ_4246647.npz fps:20
 
 Phoenix
 180 RZ phoenix data ok start fresh saveto: phoenixRZ_9095735.npz fps:20 (color averaging on!)
@@ -328,7 +329,9 @@ Mspacman
 271 RZ mspacman data ok start fresh saveto: ms_pacmanRZ_3101375.npz fps:20
 273 RZ mspacman (1.04 error) start fresh saveto: ms_pacmanRZ_3279899.npz fps:20
 
-Pitfall
+Gopher
+276 RZ gopher data ok start fresh saveto: gopherRZ_4415229.npz fps:20 (practice)
+278 RZ gopher data ok start fresh saveto: gopherRZ_4772921.npz fps:20
 
 Centipede
 204 RZ centipede data ok start fresh saveto: centipedeRZ_4136256.npz fps:20
@@ -344,6 +347,7 @@ Frostbite
 227 RZ frostbite data ok start fresh saveto: frostbiteRZ_8202696.npz fps:20
 228 RZ frostbite data ok start fresh saveto: frostbiteRZ_8272059.npz fps:20
 272 RZ frostbite data ok start fresh saveto: frostbiteRZ_3276369.npz fps:20
+275 RZ frostbite data ok start fresh saveto: frostbiteRZ_4413916.npz fps:20 (died very often)
 
 ===================================================================================
 Ruohan high scores (one episode) (color averaging off)
@@ -386,7 +390,8 @@ Lin games
 264 discard this. starting point validation > 0.6
 265 LG demon attack (1.05 error) start fresh saveto: demon_attackLG_1743521.npz fps: 20
 
-
+277 LG river raid (1.14 error) start fresh saveto: riverraidLG_4745897.npz fps: 20 (died many times)
+ 
 
 
 
