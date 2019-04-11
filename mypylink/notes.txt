@@ -267,6 +267,7 @@ Berzerk
 219 RZ berzerk data ok start fresh saveto: berzerkRZ_7662101.npz fps: 20
 266 RZ berzerk data ok start fresh saveto: berzerkRZ_2955300.npz fps: 20
 268 RZ berzerk data ok start fresh saveto: berzerkRZ_3029374.npz fps: 20
+280 RZ berzerk data ok start fresh saveto: berzerkRZ_4950628.npz fps: 20
 
 Demon_Attack
 175 RZ demon_attack data ok start fresh saveto: demon_attackRZ_8393573.npz fps:20 
@@ -285,6 +286,7 @@ Space Invaders
 201 RZ space_invaders data ok start fresh saveto: space_invadersRZ_3972461.npz fps:20
 222 RZ space_invaders data ok start fresh saveto: space_invadersRZ_7759093.npz fps:20
 274 RZ space_invaders data ok start fresh saveto: space_invadersRZ_4246647.npz fps:20
+279 RZ space_invaders (1.05 error) start fresh saveto: space_invadersRZ_4836177.npz fps:20
 
 Phoenix
 180 RZ phoenix data ok start fresh saveto: phoenixRZ_9095735.npz fps:20 (color averaging on!)
