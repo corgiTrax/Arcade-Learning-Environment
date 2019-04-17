@@ -8,11 +8,12 @@ for more detailed behaviors, please take a look at the code.
 def multi_experiment():
   l = [] # compose a list of arguments needed to be passed to the python script
   EXPRIMENTS=[
-      ("seaquest_all"),
+      ("seaquest_mixall", "Mixall")
   ]
 
-  for (BASE_FILE_NAME) in EXPRIMENTS:
-          l.append(' '.join([BASE_FILE_NAME]))
+  for (BASE_FILE_NAME, MODEL_DIR) in EXPRIMENTS:
+      for dropout in ['0.2','0.3','0.4','0.5']:
+          l.append(' '.join([BASE_FILE_NAME, MODEL_DIR, dropout]))
 
   return l
 
@@ -28,7 +29,7 @@ arguments = /scratch/cluster/zharucs/ale/modeling/{0}
 Universe = vanilla
 
 # UTCS has 18 such machine, to take a look, run 'condor_status  -constraint 'GTX1080==true' 
-Requirements=(TARGET.GTX1080== true)
+requirements=eldar
 
 executable = /u/zharucs/anaconda2/bin/ipython 
 getenv = true

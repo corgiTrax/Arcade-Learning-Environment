@@ -27,8 +27,8 @@ def create_bgrun_sh_content_imgOnly_model(GAME_NAME):
     rom_file = "../roms/%s.bin" % GAME_NAME
     model_name = "PastKFrameGaze_and_CurrentFrameAction"
     model_file = "PreMul-2ch_actionModels/" + Exp_type + "/%s.gazeIsFrom.ImgOnly.hdf5" % GAME_NAME
-    mean_file = "Img+OF_gazeModels/" + Exp_type + "/%s.mean.npy" % GAME_NAME
-    gaze_model_file = "ImgOnly_gazeModels/" + Exp_type + "/%s.hdf5" % GAME_NAME
+    mean_file = "Img_gazeModels/" + Exp_type + "/%s.mean.npy" % GAME_NAME
+    gaze_model_file = "Img_gazeModels/" + Exp_type + "/%s.hdf5" % GAME_NAME
     sh_file_content += ' '.join(['python', 'runai_noScrSupport.py',
       rom_file, model_name, model_file, mean_file,
        '== 4 1 0', gaze_model_file, 
@@ -75,17 +75,20 @@ def main(bg_run_creator_func):
     priority = 1
     Queue
     """
-
     ALL_GAME_NAMES=[
-       ("breakout"),
-       ("centipede"),
-       ("enduro"),
-       ("freeway"),
-       ("mspacman"),
-       ("riverraid"),
-       ("seaquest"),
-       ("venture"),
+       ("seaquest")
     ]
+
+    # ALL_GAME_NAMES=[
+    #    ("breakout"),
+    #    ("centipede"),
+    #    ("enduro"),
+    #    ("freeway"),
+    #    ("mspacman"),
+    #    ("riverraid"),
+    #    ("seaquest"),
+    #    ("venture"),
+    # ]
 
     def fix_wrong_game_name(cmdstr):
         '''Some ale rom files do not have the same name as the model'''
