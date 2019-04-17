@@ -46,7 +46,8 @@ def multi_head_huber_loss_func_with_penalizing_non_selected_Qval(target, pred):
         tf.square(x) * 0.5,
         delta * (tf.abs(x) - 0.5 * delta)
     )
-  return tf.reduce_mean(huber_loss(q_target - pred))
+  EPS = 1e-8
+  return tf.reduce_mean(huber_loss(q_target - pred)/tf.expand_dims(target[:,1],-1))
 
 
 # This is function is used in ale/modeling/pyModel/main-SmoothLabel.py, because in that case

@@ -8,12 +8,11 @@ for more detailed behaviors, please take a look at the code.
 def multi_experiment():
     l = [] # compose a list of arguments needed to be passed to the python script
 
-    for param in ["seaquest 0 0.4",
-                  "mspacman 0 0.4",
-                  "centipede 0 0.5",
-                  "venture 0 0.4",
-                  "riverraid 0 0.4",
-                  "enduro 0 0.4"]: 
+    for param in [
+                  "seaquest 0 0.0",
+                  "seaquest 0 0.1",
+                  "seaquest 0 0.2",
+                  "seaquest 0 0.4"]:
         l.append(' '.join([param]))
 
     return l
@@ -31,7 +30,7 @@ remote_initialdir = /scratch/cluster/zharucs/ale/gaze/
 Universe = vanilla
 
 # UTCS has 18 such machine, to take a look, run 'condor_status  -constraint 'GTX1080==true' 
-Requirements=(TARGET.MACHINE=="eldar-22.cs.utexas.edu"||TARGET.MACHINE=="eldar-23.cs.utexas.edu"||TARGET.MACHINE=="eldar-24.cs.utexas.edu"||TARGET.MACHINE=="eldar-25.cs.utexas.edu"||TARGET.MACHINE=="eldar-26.cs.utexas.edu"||TARGET.MACHINE=="eldar-27.cs.utexas.edu"||TARGET.MACHINE=="eldar-28.cs.utexas.edu"||TARGET.MACHINE=="eldar-29.cs.utexas.edu"||TARGET.MACHINE=="eldar-30.cs.utexas.edu")
+requirements=eldar
 
 executable = /u/zharucs/anaconda2/bin/ipython 
 getenv = true
