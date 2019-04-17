@@ -258,6 +258,7 @@ Name this game
 207 RZ name_this_game data ok start fresh saveto: name_this_gameRZ_6884496.npz fps:20
 229 RZ name_this_game data (1.16 error) start fresh saveto: name_this_gameRZ_8273618.npz fps:20 
 230 RZ name_this_game data ok start fresh saveto: name_this_gameRZ_8457879.npz fps:20
+281 RZ name_this_game data ok start fresh saveto: name_this_gameRZ_5014070.npz fps:20
 
 Berzerk
 164 RZ berzerk data ok start fresh saveto: berzerkRZ_9934643.npz fps: 30
@@ -322,7 +323,8 @@ Montezuma's revenge
 231 RZ montezuma's revenge data ok start fresh saveto: montezuma_revengeRZ_9323219.npz (practice)
 232 RZ montezuma's revenge data ok start fresh saveto: montezuma_revengeRZ_9413789.npz (practice)
 233 RZ montezuma's revenge data ok start fresh saveto: montezuma_revengeRZ_9499234.npz (parctice)
-236 RZ montezuma's revenbe data ok start fresh saveto: montezuma_revengeRZ_9579513.npz (practice)
+236 RZ montezuma's revenge data ok start fresh saveto: montezuma_revengeRZ_9579513.npz (practice)
+284 RZ montezuma's revenge data ok start fresh saveto: montezuma_revengeRZ_5540489.npz
 
 Mspacman
 199 RZ mspacman data ok start fresh saveto: ms_pacmanRZ_3968652.npz fps:20
@@ -334,6 +336,7 @@ Mspacman
 Gopher
 276 RZ gopher data ok start fresh saveto: gopherRZ_4415229.npz fps:20 (practice)
 278 RZ gopher data ok start fresh saveto: gopherRZ_4772921.npz fps:20
+282 RZ gopher data ok start fresh saveto: gopherRZ_5470475.npz fps:20
 
 Centipede
 204 RZ centipede data ok start fresh saveto: centipedeRZ_4136256.npz fps:20
@@ -350,6 +353,7 @@ Frostbite
 228 RZ frostbite data ok start fresh saveto: frostbiteRZ_8272059.npz fps:20
 272 RZ frostbite data ok start fresh saveto: frostbiteRZ_3276369.npz fps:20
 275 RZ frostbite data ok start fresh saveto: frostbiteRZ_4413916.npz fps:20 (died very often)
+283 RZ frostbite data ok start fresh saveto: frostbiteRZ_5539449.npz fps:20
 
 ===================================================================================
 Ruohan high scores (one episode) (color averaging off)
