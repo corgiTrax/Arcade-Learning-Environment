@@ -236,7 +236,6 @@ Enduro
 159 KM enduro data ok start fresh saveto: enduroKM_9159582.npz fps:20
 
 
-
 ========================================
 Ruohan New games
 !!!!!!!!!! Notice: color averaging off starting from this point!!!
@@ -248,6 +247,9 @@ Asterix
 163 RZ asterix data ok start fresh saveto: asterixRZ_9932825.npz fps: 20 
 213 RZ asterix data ok start fresh saveto: asterixRZ_7141559.npz fps: 20
 243 RZ asterix data ok start fresh saveto: asterixRZ_593078.npz fps:20
+------------------------------------------------------------------------
+246 RZ asterix data ok load 243 saveto: asterixRZ_721092.npz fps:20
+260 RZ asterix data ok load 246 saveto: asterixRZ_1456515.npz fps:20
 
 Amidar
 217 RZ amidar data ok  start fresh saveto: amidarRZ_7489089.npz fps:20
@@ -259,6 +261,8 @@ Name this game
 229 RZ name_this_game data (1.16 error) start fresh saveto: name_this_gameRZ_8273618.npz fps:20 
 230 RZ name_this_game data ok start fresh saveto: name_this_gameRZ_8457879.npz fps:20
 281 RZ name_this_game data ok start fresh saveto: name_this_gameRZ_5014070.npz fps:20
+---------------------------------------------------------------------------------
+267 RZ name_this_game data ok load 230 saveto: name_this_gameRZ_2956617.npz fps:20
 
 Berzerk
 164 RZ berzerk data ok start fresh saveto: berzerkRZ_9934643.npz fps: 30
@@ -296,6 +300,8 @@ Phoenix
 194 RZ phoenix data ok start fresh saveto: phoenixRZ_204115.npz  fps:20
 214 RZ phoenix data ok start fresh saveto: phoenixRZ_7226016.npz fps:20
 234 RZ phoenix (1.23error) start fresh saveto: phoenixRZ_9500596.npz fps:20
+-----------------------------------------------------------------------------
+252 RZ phoenix data ok load 234 saveto: phoenixRZ_1236831.npz fps:20 (life doesnot regenerate)
 
 Defender
 181 RZ defender data ok start fresh saveto: defenderRZ_9097191.npz fps:20 (color averaging on!)
@@ -305,6 +311,14 @@ Seaquest (color averaging off test)
 197 RZ seaquest data ok start fresh saveto: seaquestRZ_3876283.npz fps:20
 212 RZ seaquest data ok start fresh saveto: seaquestRZ_7139876.npz fps:20
 235 RZ seaquest data ok start fresh saveto: seaquestRZ_9578441.npz fps:20
+--------------------------------------------------------------------------
+237 RZ seaquest data ok load 235 saveto: seaquestRZ_9656617.npz fps:20
+238 RZ seaquest data ok load 237 saveto: seaquestRZ_9659492.npz fps:20
+239 RZ seaquest data ok load 238 episode end fps:20
+240 RZ seaquest data ok load 238 saveto: seaquestRZ_9931101.npz fps:20
+241 RZ seaquest data ok load 240 saveto: seaquestRZ_19306.npz fps:20
+242 RZ seaquest data ok load 241 saveto: seaquestRZ_515882.npz fps:20 (died several times but not end)
+248 RZ seaquest data ok load 241 saveto: seaquestRZ_802972.npz fps:20
 
 Breakout
 198 RZ breakout data ok start fresh saveto: breakoutRZ_3877709.npz fps:20
@@ -320,11 +334,13 @@ Hero
 270 RZ hero data ok start fresh saveto: heroRZ_3098729.npz fps:20
 
 Montezuma's revenge
-231 RZ montezuma's revenge data ok start fresh saveto: montezuma_revengeRZ_9323219.npz (practice)
-232 RZ montezuma's revenge data ok start fresh saveto: montezuma_revengeRZ_9413789.npz (practice)
-233 RZ montezuma's revenge data ok start fresh saveto: montezuma_revengeRZ_9499234.npz (parctice)
-236 RZ montezuma's revenge data ok start fresh saveto: montezuma_revengeRZ_9579513.npz (practice)
-284 RZ montezuma's revenge data ok start fresh saveto: montezuma_revengeRZ_5540489.npz
+231 RZ montezuma's revenge data ok start fresh saveto: montezuma_revengeRZ_9323219.npz fps:20 (practice)
+232 RZ montezuma's revenge data ok start fresh saveto: montezuma_revengeRZ_9413789.npz fps:20 (practice)
+233 RZ montezuma's revenge data ok start fresh saveto: montezuma_revengeRZ_9499234.npz fps:20 (parctice)
+236 RZ montezuma's revenge data ok start fresh saveto: montezuma_revengeRZ_9579513.npz fps:20 (practice)
+284 RZ montezuma's revenge data ok start fresh saveto: montezuma_revengeRZ_5540489.npz fps:20
+285 RZ montezuma's revenge data ok start fresh saveto: montezuma_revengeRZ_5619207.npz fps:20
+287 RZ montezuma's revenge data ok start fresh saveto: montezuma_revengeRZ_7172481.npz fps:20
 
 Mspacman
 199 RZ mspacman data ok start fresh saveto: ms_pacmanRZ_3968652.npz fps:20
@@ -343,6 +359,12 @@ Centipede
 206 RZ centipede data ok start fresh saveto: centipedeRZ_4478127.npz fps:20
 210 RZ centipede data ok start fresh saveto: centipedeRZ_6966080.npz fps:20
 244 RZ centipede data ok start fresh saveto: centipedeRZ_594187.npz fps:20
+286 RZ centipede data ok start fresh saveto: centipedeRZ_5620664.npz fps:20
+----------------------------------------------------------------------------
+245 RZ centipede data ok load 244 saveto: centipedeRZ_719798.npz fps:20
+247 RZ centipede data ok load 245 episode end fps:20
+254 RZ centipede data ok load 245 saveto: centipedeRZ_1239817.npz fps:20
+259 RZ centipede data ok load 254 saveto: centipedeRZ_1454534.npz fps:20
 
 Frostbite
 223 RZ frostbite data ok start fresh saveto: frostbiteRZ_7843228.npz fps:20 (did not know fish was reward)
@@ -355,32 +377,9 @@ Frostbite
 275 RZ frostbite data ok start fresh saveto: frostbiteRZ_4413916.npz fps:20 (died very often)
 283 RZ frostbite data ok start fresh saveto: frostbiteRZ_5539449.npz fps:20
 
+RoadRunner
+288 RZ roadrunner data ok start fresh saveto: road_runnerRZ_7174270.npz fps:20
 ===================================================================================
-Ruohan high scores (one episode) (color averaging off)
-Seaquest
-237 RZ seaquest data ok load 235 saveto: seaquestRZ_9656617.npz fps:20
-238 RZ seaquest data ok load 237 saveto: seaquestRZ_9659492.npz fps:20
-239 RZ seaquest data ok load 238 episode end fps:20
-240 RZ seaquest data ok load 238 saveto: seaquestRZ_9931101.npz fps:20
-241 RZ seaquest data ok load 240 saveto: seaquestRZ_19306.npz fps:20
-242 RZ seaquest data ok load 241 saveto: seaquestRZ_515882.npz fps:20 (died several times but not end)
-248 RZ seaquest data ok load 241 saveto: seaquestRZ_802972.npz fps:20
-
-Centipede
-245 RZ centipede data ok load 244 saveto: centipedeRZ_719798.npz fps:20
-247 RZ centipede data ok load 245 episode end fps:20
-254 RZ centipede data ok load 245 saveto: centipedeRZ_1239817.npz fps:20
-259 RZ centipede data ok load 254 saveto: centipedeRZ_1454534.npz fps:20
-
-Asterix
-246 RZ asterix data ok load 243 saveto: asterixRZ_721092.npz fps:20
-260 RZ asterix data ok load 246 saveto: asterixRZ_1456515.npz fps:20
-
-Phoenix 
-252 RZ phoenix data ok load 234 saveto: phoenixRZ_1236831.npz fps:20 (life doesnot regenerate)
-
-Name this game
-267 RZ name_this_game data ok load 230 saveto: name_this_gameRZ_2956617.npz fps:20
 
 ====================================================================================
 Lin games

@@ -11,7 +11,6 @@ import action_enums as aenum
 import vip_constants as V
 from pygame.constants import *
 
-FRAME_RATE = int(sys.argv[3])
 EPISODES = 20 # MAX episodes
 
 class aleForET:
@@ -157,11 +156,12 @@ class aleForET:
 
 if __name__ == '__main__':
     if len(sys.argv) < 3:
-	print 'Usage:', sys.argv[0], 'rom_file', "step_by_step_mode(true|false)"
+	print 'Usage:', sys.argv[0], 'rom_file', "step_by_step_mode(true|false) framerate"
 	sys.exit()
     rom_file = sys.argv[1]
     step_by_step_mode = sys.argv[2].upper() == "TRUE"
 
+    FRAME_RATE = int(sys.argv[3])
     pygame.init()
     pygame.display.init()
     pygame.mixer.init()

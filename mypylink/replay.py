@@ -121,7 +121,7 @@ if __name__ == "__main__":
     clock = pygame.time.Clock()
     while ds.cur_frame_id < ds.total_frame:
         #print(ds.cur_frame_id)
-        #clock.tick(ds.target_fps)  # control FPS 
+        clock.tick(ds.target_fps)  # control FPS 
         # Display FPS
         diff_time = time.time()-last_time
         if diff_time > 1.0:
@@ -149,7 +149,7 @@ if __name__ == "__main__":
         if not ds.pause:
             ds.cur_frame_id += 1
 
-        time.sleep(frameid2duration[UFID] * 0.001) #duration is in msec
+        # time.sleep(frameid2duration[UFID] * 0.001) #duration is in msec
 
     print "Replay ended."
 
