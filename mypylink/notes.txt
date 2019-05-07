@@ -332,6 +332,7 @@ Hero
 216 RZ hero data ok start fresh saveto: heroRZ_7487726.npz fps:20
 269 RZ hero data ok start fresh saveto: heroRZ_3030712.npz fps:20 (episode ends once)
 270 RZ hero data ok start fresh saveto: heroRZ_3098729.npz fps:20
+290 RZ hero data ok start fresh saveto: heroRZ_7259402.npz fps:20
 
 Montezuma's revenge
 231 RZ montezuma's revenge data ok start fresh saveto: montezuma_revengeRZ_9323219.npz fps:20 (practice)
@@ -379,6 +380,7 @@ Frostbite
 
 RoadRunner
 288 RZ roadrunner data ok start fresh saveto: road_runnerRZ_7174270.npz fps:20
+289 RZ roadrunner data ok start fresh saveto: road_runnerRZ_7257751.npz fps:20
 ===================================================================================
 
 ====================================================================================
