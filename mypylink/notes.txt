@@ -333,6 +333,7 @@ Hero
 269 RZ hero data ok start fresh saveto: heroRZ_3030712.npz fps:20 (episode ends once)
 270 RZ hero data ok start fresh saveto: heroRZ_3098729.npz fps:20
 290 RZ hero data ok start fresh saveto: heroRZ_7259402.npz fps:20
+296 RZ hero data ok start fresh saveto: heroRZ_7779361.npz fps:20
 
 Montezuma's revenge
 231 RZ montezuma's revenge data ok start fresh saveto: montezuma_revengeRZ_9323219.npz fps:20 (practice)
@@ -342,6 +343,7 @@ Montezuma's revenge
 284 RZ montezuma's revenge data ok start fresh saveto: montezuma_revengeRZ_5540489.npz fps:20
 285 RZ montezuma's revenge data ok start fresh saveto: montezuma_revengeRZ_5619207.npz fps:20
 287 RZ montezuma's revenge data ok start fresh saveto: montezuma_revengeRZ_7172481.npz fps:20
+291 RZ montezuma's revenge data ok start fresh saveto: montezuma_revengeRZ_7364933.npz fps:20
 
 Mspacman
 199 RZ mspacman data ok start fresh saveto: ms_pacmanRZ_3968652.npz fps:20
@@ -379,8 +381,13 @@ Frostbite
 283 RZ frostbite data ok start fresh saveto: frostbiteRZ_5539449.npz fps:20
 
 RoadRunner
-288 RZ roadrunner data ok start fresh saveto: road_runnerRZ_7174270.npz fps:20
-289 RZ roadrunner data ok start fresh saveto: road_runnerRZ_7257751.npz fps:20
+288 RZ roadrunner data ok start fresh saveto: road_runnerRZ_7174270.npz fps:20 (practice)
+289 RZ roadrunner data ok start fresh saveto: road_runnerRZ_7257751.npz fps:20 (practice)
+292 RZ roadrunner data ok start fresh saveto: road_runnerRZ_7365986.npz fps:20 (practice)
+293 RZ roadrunner data ok start fresh saveto: road_runnerRZ_7432609.npz fps:20
+294 RZ roadrunner data ok start fresh saveto: road_runnerRZ_7433625.npz fps:20
+295 RZ roadrunner data ok start fresh saveto: road_runnerRZ_7778292.npz fps:20
+
 ===================================================================================
 
 ====================================================================================
