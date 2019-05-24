@@ -292,6 +292,7 @@ Space Invaders
 222 RZ space_invaders data ok start fresh saveto: space_invadersRZ_7759093.npz fps:20
 274 RZ space_invaders data ok start fresh saveto: space_invadersRZ_4246647.npz fps:20
 279 RZ space_invaders (1.05 error) start fresh saveto: space_invadersRZ_4836177.npz fps:20
+299 RZ space_invaders (1.03 error) start fresh saveto: space_invadersRZ_8726724.npz fps:20
 
 Phoenix
 180 RZ phoenix data ok start fresh saveto: phoenixRZ_9095735.npz fps:20 (color averaging on!)
@@ -379,6 +380,7 @@ Frostbite
 272 RZ frostbite data ok start fresh saveto: frostbiteRZ_3276369.npz fps:20
 275 RZ frostbite data ok start fresh saveto: frostbiteRZ_4413916.npz fps:20 (died very often)
 283 RZ frostbite data ok start fresh saveto: frostbiteRZ_5539449.npz fps:20
+297 RZ frostbite data ok start fresh saveto: frostbiteRZ_8130770.npz fps:20
 
 RoadRunner
 288 RZ roadrunner data ok start fresh saveto: road_runnerRZ_7174270.npz fps:20 (practice)
@@ -387,6 +389,7 @@ RoadRunner
 293 RZ roadrunner data ok start fresh saveto: road_runnerRZ_7432609.npz fps:20
 294 RZ roadrunner data ok start fresh saveto: road_runnerRZ_7433625.npz fps:20
 295 RZ roadrunner data ok start fresh saveto: road_runnerRZ_7778292.npz fps:20
+298 RZ roadrunner data ok start fresh saveto: road_runnerRZ_8724787.npz fps:20
 
 ===================================================================================
 
