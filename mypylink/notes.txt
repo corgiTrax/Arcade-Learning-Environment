@@ -247,12 +247,14 @@ Asterix
 163 RZ asterix data ok start fresh saveto: asterixRZ_9932825.npz fps: 20 
 213 RZ asterix data ok start fresh saveto: asterixRZ_7141559.npz fps: 20
 243 RZ asterix data ok start fresh saveto: asterixRZ_593078.npz fps:20
+301 RZ asterix data ok start fresh saveto: asterixRZ_9093668.npz fps:20
 ------------------------------------------------------------------------
 246 RZ asterix data ok load 243 saveto: asterixRZ_721092.npz fps:20
 260 RZ asterix data ok load 246 saveto: asterixRZ_1456515.npz fps:20
 
-Amidar
-217 RZ amidar data ok  start fresh saveto: amidarRZ_7489089.npz fps:20
+
+Alien
+314 RZ alien (1.29 error) start fresh saveto: alienRZ_9847886.npz fps:20
 
 Name this game
 161 RZ name_this_game data ok start fresh saveto: name_this_gameRZ_9170137.npz fps:20 
@@ -261,6 +263,7 @@ Name this game
 229 RZ name_this_game data (1.16 error) start fresh saveto: name_this_gameRZ_8273618.npz fps:20 
 230 RZ name_this_game data ok start fresh saveto: name_this_gameRZ_8457879.npz fps:20
 281 RZ name_this_game data ok start fresh saveto: name_this_gameRZ_5014070.npz fps:20
+308 RZ name_this_game data ok start fresh saveto: name_this_gameRZ_9676495.npz fps:20
 ---------------------------------------------------------------------------------
 267 RZ name_this_game data ok load 230 saveto: name_this_gameRZ_2956617.npz fps:20
 
@@ -273,6 +276,7 @@ Berzerk
 266 RZ berzerk data ok start fresh saveto: berzerkRZ_2955300.npz fps: 20
 268 RZ berzerk data ok start fresh saveto: berzerkRZ_3029374.npz fps: 20
 280 RZ berzerk data ok start fresh saveto: berzerkRZ_4950628.npz fps: 20
+309 RZ berzerk data ok start fresh saveto: berzerkRZ_9677516.npz fps: 20
 
 Demon_Attack
 175 RZ demon_attack data ok start fresh saveto: demon_attackRZ_8393573.npz fps:20 
@@ -282,9 +286,6 @@ Demon_Attack
 220 RZ demon_attack data (1.20error) start fresh saveto: demon_attackRZ_7664019.npz fps:20
 221 RZ demon_attack data ok start fresh saveto: demon_attackRZ_7756796.npz fps:20
 
-Bowling
-176 RZ bowling data (no val afterwards) start fresh saveto: bowlingRZ_8400023.npz fps:50 (continuous, do not use)
-178 RZ bowling data (no val afterwards) start fresh saveto: bowlingRZ_9006327.npz fps:50 (step) 
 
 Space Invaders
 177 RZ space_invaders data ok start fresh saveto: space_invadersRZ_9004819.npz fps:20
@@ -293,6 +294,10 @@ Space Invaders
 274 RZ space_invaders data ok start fresh saveto: space_invadersRZ_4246647.npz fps:20
 279 RZ space_invaders (1.05 error) start fresh saveto: space_invadersRZ_4836177.npz fps:20
 299 RZ space_invaders (1.03 error) start fresh saveto: space_invadersRZ_8726724.npz fps:20
+300 RZ space_invaders (1.01 error) start fresh saveto: space_invadersRZ_9092469.npz fps:20
+302 RZ space_invaders data ok start fresh saveto: space_invadersRZ_9240251.npz fps:20
+304 RZ space_invaders data ok start fresh saveto: space_invadersRZ_9314581.npz fps:20
+311 RZ space_invaders data ok start fresh saveto: space_invadersRZ_9776122.npz  fps:20
 
 Phoenix
 180 RZ phoenix data ok start fresh saveto: phoenixRZ_9095735.npz fps:20 (color averaging on!)
@@ -301,6 +306,8 @@ Phoenix
 194 RZ phoenix data ok start fresh saveto: phoenixRZ_204115.npz  fps:20
 214 RZ phoenix data ok start fresh saveto: phoenixRZ_7226016.npz fps:20
 234 RZ phoenix (1.23error) start fresh saveto: phoenixRZ_9500596.npz fps:20
+305 RZ phoenix data ok start fresh saveto: phoenixRZ_9315734.npz fps:20
+306 RZ phoenix data ok start fresh saveto: phoenixRZ_9589522.npz fps:20
 -----------------------------------------------------------------------------
 252 RZ phoenix data ok load 234 saveto: phoenixRZ_1236831.npz fps:20 (life doesnot regenerate)
 
@@ -325,6 +332,7 @@ Breakout
 198 RZ breakout data ok start fresh saveto: breakoutRZ_3877709.npz fps:20
 205 RZ breakout data ok start fresh saveto: breakoutRZ_4137619.npz fps:20
 218 RZ breakout data ok start fresh saveto: breakoutRZ_7584753.npz fps:20
+307 RZ breakout data ok start fresh saveto: breakoutRZ_9590717.npz fps:20
 
 Hero 
 195 RZ hero data ok start fresh saveto: heroRZ_205678.npz fps:20 (practice)
@@ -335,6 +343,8 @@ Hero
 270 RZ hero data ok start fresh saveto: heroRZ_3098729.npz fps:20
 290 RZ hero data ok start fresh saveto: heroRZ_7259402.npz fps:20
 296 RZ hero data ok start fresh saveto: heroRZ_7779361.npz fps:20
+310 RZ hero data ok start fresh saveto: heroRZ_9678533.npz fps:20
+313 RZ hero data ok start fresh saveto: heroRZ_9845973.npz fps:20
 
 Montezuma's revenge
 231 RZ montezuma's revenge data ok start fresh saveto: montezuma_revengeRZ_9323219.npz fps:20 (practice)
@@ -352,11 +362,6 @@ Mspacman
 209 RZ mspacman data ok start fresh saveto: ms_pacmanRZ_6964528.npz fps:20
 271 RZ mspacman data ok start fresh saveto: ms_pacmanRZ_3101375.npz fps:20
 273 RZ mspacman (1.04 error) start fresh saveto: ms_pacmanRZ_3279899.npz fps:20
-
-Gopher
-276 RZ gopher data ok start fresh saveto: gopherRZ_4415229.npz fps:20 (practice)
-278 RZ gopher data ok start fresh saveto: gopherRZ_4772921.npz fps:20
-282 RZ gopher data ok start fresh saveto: gopherRZ_5470475.npz fps:20
 
 Centipede
 204 RZ centipede data ok start fresh saveto: centipedeRZ_4136256.npz fps:20
@@ -390,8 +395,22 @@ RoadRunner
 294 RZ roadrunner data ok start fresh saveto: road_runnerRZ_7433625.npz fps:20
 295 RZ roadrunner data ok start fresh saveto: road_runnerRZ_7778292.npz fps:20
 298 RZ roadrunner data ok start fresh saveto: road_runnerRZ_8724787.npz fps:20
+303 RZ roadrunner data ok start fresh saveto: road_runnerRZ_9241473.npz fps:20
+312 RZ roadrunner data ok start fresh saveto: road_runnerRZ_9777289.npz fps:20
 
 ===================================================================================
+Test runs:
+Gopher
+276 RZ gopher data ok start fresh saveto: gopherRZ_4415229.npz fps:20 (practice)
+278 RZ gopher data ok start fresh saveto: gopherRZ_4772921.npz fps:20
+282 RZ gopher data ok start fresh saveto: gopherRZ_5470475.npz fps:20
+
+Bowling
+176 RZ bowling data (no val afterwards) start fresh saveto: bowlingRZ_8400023.npz fps:50 (continuous, do not use)
+178 RZ bowling data (no val afterwards) start fresh saveto: bowlingRZ_9006327.npz fps:50 (step) 
+
+Amidar
+217 RZ amidar data ok  start fresh saveto: amidarRZ_7489089.npz fps:20
 
 ====================================================================================
 Lin games
