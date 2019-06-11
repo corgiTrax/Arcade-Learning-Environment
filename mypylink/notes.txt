@@ -224,12 +224,12 @@ Centipede
 152 KM centipede data ok start fresh saveto: centipedeKM_3359364.npz fps: 20
 
 Venture
-154 KM venture data ok start fresh saveto: ventureKM_5790027.npz fps: 20
-155 KM venture data ok start fresh saveto: ventureKM_5791179.npz fps: 20
+154 KM venture data ok start fresh saveto: ventureKM_5790027.npz fps:20
+155 KM venture data ok start fresh saveto: ventureKM_5791179.npz fps:20
 
 Freeway
-156 KM freeway data ok start fresh saveto: freewayKM_6306308.npz fps: 20
-157 KM freeway data ok start fresh saveto: freewayKM_6307437.npz fps: 20 
+156 KM freeway data ok start fresh saveto: freewayKM_6306308.npz fps:20
+157 KM freeway data ok start fresh saveto: freewayKM_6307437.npz fps:20 
 
 Enduro
 158 KM enduro data ok start fresh saveto: enduroKM_9158498.npz fps:20
@@ -242,19 +242,20 @@ Ruohan New games
 from trial 158
 
 Asterix
-160 RZ asterix data ok start fresh saveto: asterixRZ_9166697.npz fps: 20
-162 RZ asterix data ok start fresh saveto: asterixRZ_9237724.npz fps: 20
-163 RZ asterix data ok start fresh saveto: asterixRZ_9932825.npz fps: 20 
-213 RZ asterix data ok start fresh saveto: asterixRZ_7141559.npz fps: 20
+160 RZ asterix data ok start fresh saveto: asterixRZ_9166697.npz fps:20
+162 RZ asterix data ok start fresh saveto: asterixRZ_9237724.npz fps:20
+163 RZ asterix data ok start fresh saveto: asterixRZ_9932825.npz fps:20 
+213 RZ asterix data ok start fresh saveto: asterixRZ_7141559.npz fps:20
 243 RZ asterix data ok start fresh saveto: asterixRZ_593078.npz fps:20
 301 RZ asterix data ok start fresh saveto: asterixRZ_9093668.npz fps:20
+315 RZ asterix (1.43 error) start fresh saveto: asterixRZ_216627.npz fps:20
 ------------------------------------------------------------------------
 246 RZ asterix data ok load 243 saveto: asterixRZ_721092.npz fps:20
 260 RZ asterix data ok load 246 saveto: asterixRZ_1456515.npz fps:20
 
-
 Alien
 314 RZ alien (1.29 error) start fresh saveto: alienRZ_9847886.npz fps:20
+316 RZ alien data ok start fresh saveto: alienRZ_217801.npz fps:20
 
 Name this game
 161 RZ name_this_game data ok start fresh saveto: name_this_gameRZ_9170137.npz fps:20 
@@ -264,19 +265,21 @@ Name this game
 230 RZ name_this_game data ok start fresh saveto: name_this_gameRZ_8457879.npz fps:20
 281 RZ name_this_game data ok start fresh saveto: name_this_gameRZ_5014070.npz fps:20
 308 RZ name_this_game data ok start fresh saveto: name_this_gameRZ_9676495.npz fps:20
+317 RZ name_this_game data ok start fresh saveto: name_this_gameRZ_276741.npz fps:20
 ---------------------------------------------------------------------------------
 267 RZ name_this_game data ok load 230 saveto: name_this_gameRZ_2956617.npz fps:20
 
 Berzerk
-164 RZ berzerk data ok start fresh saveto: berzerkRZ_9934643.npz fps: 30
-165 RZ berzerk data ok start fresh saveto: berzerkRZ_9935913.npz fps: 30
-208 RZ berzerk data ok start fresh saveto: berzerkRZ_6886042.npz fps: 20
-211 RZ berzerk data ok start fresh saveto: berzerkRZ_7054196.npz fps: 20
-219 RZ berzerk data ok start fresh saveto: berzerkRZ_7662101.npz fps: 20
-266 RZ berzerk data ok start fresh saveto: berzerkRZ_2955300.npz fps: 20
-268 RZ berzerk data ok start fresh saveto: berzerkRZ_3029374.npz fps: 20
-280 RZ berzerk data ok start fresh saveto: berzerkRZ_4950628.npz fps: 20
-309 RZ berzerk data ok start fresh saveto: berzerkRZ_9677516.npz fps: 20
+164 RZ berzerk data ok start fresh saveto: berzerkRZ_9934643.npz fps:30
+165 RZ berzerk data ok start fresh saveto: berzerkRZ_9935913.npz fps:30
+208 RZ berzerk data ok start fresh saveto: berzerkRZ_6886042.npz fps:20
+211 RZ berzerk data ok start fresh saveto: berzerkRZ_7054196.npz fps:20
+219 RZ berzerk data ok start fresh saveto: berzerkRZ_7662101.npz fps:20
+266 RZ berzerk data ok start fresh saveto: berzerkRZ_2955300.npz fps:20
+268 RZ berzerk data ok start fresh saveto: berzerkRZ_3029374.npz fps:20
+280 RZ berzerk data ok start fresh saveto: berzerkRZ_4950628.npz fps:20
+309 RZ berzerk data ok start fresh saveto: berzerkRZ_9677516.npz fps:20
+318 RZ berzerk data ok start fresh saveto: berzerkRZ_277911.npz fps:20
 
 Demon_Attack
 175 RZ demon_attack data ok start fresh saveto: demon_attackRZ_8393573.npz fps:20 
@@ -345,6 +348,7 @@ Hero
 296 RZ hero data ok start fresh saveto: heroRZ_7779361.npz fps:20
 310 RZ hero data ok start fresh saveto: heroRZ_9678533.npz fps:20
 313 RZ hero data ok start fresh saveto: heroRZ_9845973.npz fps:20
+-------------------------------------------------------------------
 
 Montezuma's revenge
 231 RZ montezuma's revenge data ok start fresh saveto: montezuma_revengeRZ_9323219.npz fps:20 (practice)
@@ -397,6 +401,9 @@ RoadRunner
 298 RZ roadrunner data ok start fresh saveto: road_runnerRZ_8724787.npz fps:20
 303 RZ roadrunner data ok start fresh saveto: road_runnerRZ_9241473.npz fps:20
 312 RZ roadrunner data ok start fresh saveto: road_runnerRZ_9777289.npz fps:20
+
+Riverraid
+319 RZ riverraid data ok start fresh saveto: riverraidRZ_279423.npz fps:20
 
 ===================================================================================
 Test runs:
