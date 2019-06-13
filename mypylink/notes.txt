@@ -256,6 +256,7 @@ Asterix
 Alien
 314 RZ alien (1.29 error) start fresh saveto: alienRZ_9847886.npz fps:20
 316 RZ alien data ok start fresh saveto: alienRZ_217801.npz fps:20
+321 RZ alien data ok start fresh saveto: alienRZ_360935.npz fps:20
 
 Name this game
 161 RZ name_this_game data ok start fresh saveto: name_this_gameRZ_9170137.npz fps:20 
@@ -401,6 +402,7 @@ RoadRunner
 298 RZ roadrunner data ok start fresh saveto: road_runnerRZ_8724787.npz fps:20
 303 RZ roadrunner data ok start fresh saveto: road_runnerRZ_9241473.npz fps:20
 312 RZ roadrunner data ok start fresh saveto: road_runnerRZ_9777289.npz fps:20
+320 RZ roadrunner data ok start fresh saveto: road_runnerRZ_359882.npz fps:20
 
 Riverraid
 319 RZ riverraid data ok start fresh saveto: riverraidRZ_279423.npz fps:20
@@ -475,3 +477,5 @@ Berzerk
 192 JAW berzerk data ok start fresh saveto: berzerkJAW_34452.npz fps: 20
 
 *******************************
+
+
