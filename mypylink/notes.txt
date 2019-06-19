@@ -132,6 +132,7 @@ Alien
 316 RZ alien data ok start fresh saveto: alienRZ_217801.npz fps:20
 321 RZ alien data ok start fresh saveto: alienRZ_360935.npz fps:20
 322 RZ alien data ok start fresh saveto: alienRZ_451429.npz fps:20
+334 RZ alien data ok start fresh saveto: alienRZ_901798.npz fps:20
 
 Asterix
 160 RZ asterix data ok start fresh saveto: asterixRZ_9166697.npz fps:20
@@ -241,6 +242,7 @@ xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 287 RZ montezuma's revenge data ok start fresh saveto: montezuma_revengeRZ_7172481.npz fps:20
 291 RZ montezuma's revenge data ok start fresh saveto: montezuma_revengeRZ_7364933.npz fps:20
 324 RZ montezuma's revenge data ok start fresh saveto: montezuma_revengeRZ_452975.npz fps:20
+333 RZ montezuma's revenge data ok start fresh saveto: montezuma_revengeRZ_900705.npz fps:20
 
 Mspacman
 199 RZ mspacman data ok start fresh saveto: ms_pacmanRZ_3968652.npz fps:20
@@ -320,8 +322,8 @@ Space Invaders
 311 RZ space_invaders data ok start fresh saveto: space_invadersRZ_9776122.npz fps:20
 182 JAW space_invaders data ok start fresh saveto: space_invadersJAW_9348778.npz fps:20 (color averaging on!)
 193 JAW space_invaders data ok start fresh saveto: space_invadersJAW_35607.npz fps: 20
-
-
+330 KM space_invaders data ok start fresh saveto: space_invadersKM_896741.npz fps: 20 (died once)
+332 KM space_invaders data ok start fresh saveto: space_invadersKM_898881.npz fps: 20 
 ======================================== Test runs ===========================================
 Gopher
 276 RZ gopher data ok start fresh saveto: gopherRZ_4415229.npz fps:20 (practice)
