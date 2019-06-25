@@ -151,6 +151,10 @@ Asterix
 246 RZ asterix data ok load 243 saveto: asterixRZ_721092.npz fps:20
 260 RZ asterix data ok load 246 saveto: asterixRZ_1456515.npz fps:20
 
+BankHeist
+342 RZ bankheist data ok start fresh saveto: bank_heistRZ_1413379.npz fps:20
+344 RZ bankheist data ok start fresh saveto: bank_heistRZ_1489894.npz fps:20
+
 Berzerk
 164 RZ berzerk data ok start fresh saveto: berzerkRZ_9934643.npz fps:30
 165 RZ berzerk data ok start fresh saveto: berzerkRZ_9935913.npz fps:30
@@ -165,6 +169,7 @@ Berzerk
 191 JAW berzerk data ok start fresh saveto: berzerkJAW_9955253.npz fps:20
 192 JAW berzerk data ok start fresh saveto: berzerkJAW_34452.npz fps:20
 335 RZ berzerk data ok start fresh saveto: berzerkRZ_961827.npz fps:20
+346 RZ berzerk data ok start fresh saveto: berzerkRZ_1493721.npz fps:20
 
 Breakout
 198 RZ breakout data ok start fresh saveto: breakoutRZ_3877709.npz fps:20
@@ -279,6 +284,7 @@ Phoenix
 234 RZ phoenix (1.23error) start fresh saveto: phoenixRZ_9500596.npz fps:20
 305 RZ phoenix data ok start fresh saveto: phoenixRZ_9315734.npz fps:20
 306 RZ phoenix data ok start fresh saveto: phoenixRZ_9589522.npz fps:20
+343 RZ phoenix data ok start fresh saveto: phoenixRZ_1415157.npz fps:20
 -----------------------------------------------------------------------------
 252 RZ phoenix data ok load 234 saveto: phoenixRZ_1236831.npz fps:20 (life doesnot regenerate)
 
@@ -331,6 +337,7 @@ Space Invaders
 193 JAW space_invaders data ok start fresh saveto: space_invadersJAW_35607.npz fps: 20
 330 KM space_invaders data ok start fresh saveto: space_invadersKM_896741.npz fps: 20 (died once)
 332 KM space_invaders data ok start fresh saveto: space_invadersKM_898881.npz fps: 20 
+345 RZ space_invaders data ok start fresh saveto: space_invadersRZ_1491905.npz fps:20
 
 
 
