@@ -135,6 +135,7 @@ Alien
 334 RZ alien data ok start fresh saveto: alienRZ_901798.npz fps:20
 339 RZ alien data ok start fresh saveto: alienRZ_1061161.npz fps:20
 341 RZ alien (1.18 error) start fresh saveto: alienRZ_1326656.npz fps:20
+348 RZ alien data ok start fresh saveto: alienRZ_1578110.npz fps:20
 
 Asterix
 160 RZ asterix data ok start fresh saveto: asterixRZ_9166697.npz fps:20
@@ -154,6 +155,7 @@ Asterix
 BankHeist
 342 RZ bankheist data ok start fresh saveto: bank_heistRZ_1413379.npz fps:20
 344 RZ bankheist data ok start fresh saveto: bank_heistRZ_1489894.npz fps:20
+347 RZ bankheist data ok start fresh saveto: bank_heistRZ_1568679.npz fps:20
 
 Berzerk
 164 RZ berzerk data ok start fresh saveto: berzerkRZ_9934643.npz fps:30
@@ -239,6 +241,7 @@ xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 313 RZ hero data ok start fresh saveto: heroRZ_9845973.npz fps:20
 325 RZ hero data ok start fresh saveto: heroRZ_454040.npz fps:20
 337 RZ hero data ok start fresh saveto: heroRZ_965560.npz fps:20
+349 RZ hero data ok start fresh saveto: heroRZ_1580216.npz fps:20
 -------------------------------------------------------------------
 
 Montezuma's revenge
