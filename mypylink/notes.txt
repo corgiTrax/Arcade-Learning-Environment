@@ -137,6 +137,7 @@ Alien
 341 RZ alien (1.18 error) start fresh saveto: alienRZ_1326656.npz fps:20
 348 RZ alien data ok start fresh saveto: alienRZ_1578110.npz fps:20
 358 RZ alien data ok start fresh saveto: alienRZ_1928969.npz fps:20
+367 RZ alien data ok start fresh saveto: alienRZ_2082483.npz fps:20
 ----------------------------------------------------------------------------------------------------------
 
 Asterix
@@ -160,6 +161,8 @@ BankHeist
 347 RZ bankheist data ok start fresh saveto: bank_heistRZ_1568679.npz fps:20
 350 RZ bankheist (1.15 error) start fresh saveto: bank_heistRZ_1740637.npz fps:20
 355 RZ bankheist data ok start fresh saveto: bank_heistRZ_1924894.npz fps:20
+362 RZ bankheist data ok strat fresh saveto: bank_heistRZ_1998636.npz fps:20
+368 RZ bankheist data ok start fresh saveto: bank_heistRZ_2084683.npz fps:20
 ----------------------------------------------------------------------------------------------------------
 
 Berzerk
@@ -199,14 +202,15 @@ Centipede
 259 RZ centipede data ok load 254 saveto: centipedeRZ_1454534.npz fps:20
 
 Demon_Attack
+251 LG demon attack (1.22 error) start fresh saveto: demon_attackLG_1235012.npz fps:20 (practice)
+253 LG demon attack data ok start fresh saveto: demon_attackLG_1238143.npz fps:20 (practice)
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 175 RZ demon_attack data ok start fresh saveto: demon_attackRZ_8393573.npz fps:20 
 179 RZ demon_attack data ok (val failed but ok) start fresh saveto: demon_attackRZ_9009155.npz fps:20 (color averaging on!)
 200 RZ demon_attack data (1.17error) start fresh saveto: demon_attackRZ_3969914.npz fps:20
 215 RZ demon_attack data ok start fresh saveto: demon_attackRZ_7227924.npz fps:20
 220 RZ demon_attack data (1.20error) start fresh saveto: demon_attackRZ_7664019.npz fps:20
 221 RZ demon_attack data ok start fresh saveto: demon_attackRZ_7756796.npz fps:20
-251 LG demon attack (1.22 error) start fresh saveto: demon_attackLG_1235012.npz fps:20 (practice)
-253 LG demon attack data ok start fresh saveto: demon_attackLG_1238143.npz fps:20 (practice)
 255 LG demon attack data ok start fresh saveto: demon_attackLG_1306628.npz fps: 20
 256 LG demon attack data ok start fresh saveto: demon_attackLG_1308608.npz fps: 20
 257 LG demon attack data ok start fresh saveto: demon_attackLG_1388148.npz fps: 20
@@ -239,6 +243,8 @@ xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 174 JAW frostbite data ok start fresh saveto: frostbiteJAW_4171531.npz fps: 20
 338 RZ frostbite data ok start fresh saveto: frostbiteRZ_1059520.npz fps:20
 354 RZ frostbite data ok start fresh saveto: frostbiteRZ_1922766.npz fps:20
+360 RZ frostbite data ok start fresh saveto: frostbiteRZ_1995529.npz fps:20
+366 RZ frostbite data ok start fresh saveto: frostbiteRZ_2081375.npz fps:20
 ----------------------------------------------------------------------------------------------------------
 
 Hero 
@@ -256,6 +262,7 @@ xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 325 RZ hero data ok start fresh saveto: heroRZ_454040.npz fps:20
 337 RZ hero data ok start fresh saveto: heroRZ_965560.npz fps:20
 349 RZ hero data ok start fresh saveto: heroRZ_1580216.npz fps:20
+361 RZ hero (1.33 error) start fresh saveto: heroRZ_1997140.npz fps:20
 ----------------------------------------------------------------------------------------------------------
 
 Montezuma's revenge
@@ -271,6 +278,8 @@ xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 324 RZ montezuma's revenge data ok start fresh saveto: montezuma_revengeRZ_452975.npz fps:20
 333 RZ montezuma's revenge data ok start fresh saveto: montezuma_revengeRZ_900705.npz fps:20
 340 RZ montezuma's revenge data ok start fresh saveto: montezuma_revengeRZ_1323550.npz fps:20
+359 RZ montezuma's revenge data ok start fresh saveto: montezuma_revengeRZ_1993616.npz fps:20
+365 RZ montezuma's revenge data ok start fresh saveto: montezuma_revengeRZ_2079996.npz fps:20
 ----------------------------------------------------------------------------------------------------------
 
 Mspacman
@@ -292,6 +301,7 @@ Name this game
 317 RZ name_this_game data ok start fresh saveto: name_this_gameRZ_276741.npz fps:20
 329 RZ name_this_game data ok start fresh saveto: name_this_gameRZ_809735.npz fps:20
 353 RZ name_this_game data ok start fresh saveto: name_this_gameRZ_1744577.npz fps:20
+369 RZ name_this_game data ok start fresh saveto: name_this_gameRZ_2086791.npz fps:20
 ---------------------------------------------------------------------------------
 267 RZ name_this_game data ok load 230 saveto: name_this_gameRZ_2956617.npz fps:20
 
@@ -306,6 +316,7 @@ Phoenix
 306 RZ phoenix data ok start fresh saveto: phoenixRZ_9589522.npz fps:20
 343 RZ phoenix data ok start fresh saveto: phoenixRZ_1415157.npz fps:20
 357 RZ phoenix data ok start fresh saveto: phoenixRZ_1927863.npz fps:20
+370 RZ phoenix (1.01 error) start fresh saveto: phoenixRZ_2089207.npz fps:20
 -----------------------------------------------------------------------------
 252 RZ phoenix data ok load 234 saveto: phoenixRZ_1236831.npz fps:20 (life doesnot regenerate)
 
@@ -328,6 +339,7 @@ xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 312 RZ roadrunner data ok start fresh saveto: road_runnerRZ_9777289.npz fps:20
 320 RZ roadrunner data ok start fresh saveto: road_runnerRZ_359882.npz fps:20
 356 RZ roadrunner (1.22 error) start fresh saveto: road_runnerRZ_1926221.npz fps:20
+363 RZ roadrunner data ok start fresh saveto: road_runnerRZ_2000269.npz fps:20
 ----------------------------------------------------------------------------------------------------------
 
 
@@ -362,6 +374,7 @@ Space Invaders
 330 KM space_invaders data ok start fresh saveto: space_invadersKM_896741.npz fps: 20 (died once)
 332 KM space_invaders data ok start fresh saveto: space_invadersKM_898881.npz fps: 20 
 345 RZ space_invaders data ok start fresh saveto: space_invadersRZ_1491905.npz fps:20
+364 RZ space_invaders data ok start fresh saveto: space_invadersRZ_2001508.npz fps:20
 ----------------------------------------------------------------------------------------------------------
 
 
