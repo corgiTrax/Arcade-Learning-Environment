@@ -163,6 +163,8 @@ BankHeist
 355 RZ bankheist data ok start fresh saveto: bank_heistRZ_1924894.npz fps:20
 362 RZ bankheist data ok strat fresh saveto: bank_heistRZ_1998636.npz fps:20
 368 RZ bankheist data ok start fresh saveto: bank_heistRZ_2084683.npz fps:20
+373 RZ bankheist (1.43 error)start fresh saveto: bank_heistRZ_2176102.npz fps:20
+376 RZ bankheist data ok start fresh saveto: bank_heistRZ_2180835.npz fps:20
 ----------------------------------------------------------------------------------------------------------
 
 Berzerk
@@ -180,6 +182,7 @@ Berzerk
 192 JAW berzerk data ok start fresh saveto: berzerkJAW_34452.npz fps:20
 335 RZ berzerk data ok start fresh saveto: berzerkRZ_961827.npz fps:20
 346 RZ berzerk data ok start fresh saveto: berzerkRZ_1493721.npz fps:20
+377 RZ berzerk data ok start fresh saveto: berzerkRZ_2182316.npz fps:20
 ----------------------------------------------------------------------------------------------------------
 
 Breakout
@@ -225,6 +228,7 @@ xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 
 Enduro
 352 RZ enduro data ok start fresh saveto: enduroRZ_1742994.npz fps:20
+372 RZ enduro (1.14 error) start fresh saveto: enduroRZ_2174919.npz fps:20
 ----------------------------------------------------------------------------------------------------------
 
 Frostbite
@@ -263,6 +267,7 @@ xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 337 RZ hero data ok start fresh saveto: heroRZ_965560.npz fps:20
 349 RZ hero data ok start fresh saveto: heroRZ_1580216.npz fps:20
 361 RZ hero (1.33 error) start fresh saveto: heroRZ_1997140.npz fps:20
+374 RZ hero data ok start fresh saveto: heroRZ_2177309.npz fps:20
 ----------------------------------------------------------------------------------------------------------
 
 Montezuma's revenge
@@ -280,6 +285,7 @@ xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 340 RZ montezuma's revenge data ok start fresh saveto: montezuma_revengeRZ_1323550.npz fps:20
 359 RZ montezuma's revenge data ok start fresh saveto: montezuma_revengeRZ_1993616.npz fps:20
 365 RZ montezuma's revenge data ok start fresh saveto: montezuma_revengeRZ_2079996.npz fps:20
+371 RZ montezuma's revenge data ok start fresh saveto: montezuma_revengeRZ_2173469.npz fps:20
 ----------------------------------------------------------------------------------------------------------
 
 Mspacman
@@ -288,6 +294,7 @@ Mspacman
 209 RZ mspacman data ok start fresh saveto: ms_pacmanRZ_6964528.npz fps:20
 271 RZ mspacman data ok start fresh saveto: ms_pacmanRZ_3101375.npz fps:20
 273 RZ mspacman (1.04 error) start fresh saveto: ms_pacmanRZ_3279899.npz fps:20
+378 RZ mspacman data ok start fresh saveto: ms_pacmanRZ_2184332.npz fps:20
 ----------------------------------------------------------------------------------------------------------
 
 Name this game
@@ -340,6 +347,7 @@ xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 320 RZ roadrunner data ok start fresh saveto: road_runnerRZ_359882.npz fps:20
 356 RZ roadrunner (1.22 error) start fresh saveto: road_runnerRZ_1926221.npz fps:20
 363 RZ roadrunner data ok start fresh saveto: road_runnerRZ_2000269.npz fps:20
+375 RZ roadrunner data ok start fresh saveto: road_runnerRZ_2179243.npz fps:20
 ----------------------------------------------------------------------------------------------------------
 
 
