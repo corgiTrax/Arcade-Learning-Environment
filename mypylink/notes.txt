@@ -138,6 +138,7 @@ Alien
 348 RZ alien data ok start fresh saveto: alienRZ_1578110.npz fps:20
 358 RZ alien data ok start fresh saveto: alienRZ_1928969.npz fps:20
 367 RZ alien data ok start fresh saveto: alienRZ_2082483.npz fps:20
+383 RZ alien data ok start fresh saveto: alienRZ_2265223.npz fps:20
 ----------------------------------------------------------------------------------------------------------
 
 Asterix
@@ -165,6 +166,7 @@ BankHeist
 368 RZ bankheist data ok start fresh saveto: bank_heistRZ_2084683.npz fps:20
 373 RZ bankheist (1.43 error)start fresh saveto: bank_heistRZ_2176102.npz fps:20
 376 RZ bankheist data ok start fresh saveto: bank_heistRZ_2180835.npz fps:20
+380 RZ bankheist data ok start fresh saveto: bank_heistRZ_2261928.npz fps:20
 ----------------------------------------------------------------------------------------------------------
 
 Berzerk
@@ -249,6 +251,7 @@ xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 354 RZ frostbite data ok start fresh saveto: frostbiteRZ_1922766.npz fps:20
 360 RZ frostbite data ok start fresh saveto: frostbiteRZ_1995529.npz fps:20
 366 RZ frostbite data ok start fresh saveto: frostbiteRZ_2081375.npz fps:20
+379 RZ frostbite data ok start fresh saveto: frostbiteRZ_2256806.npz fps:20
 ----------------------------------------------------------------------------------------------------------
 
 Hero 
@@ -268,6 +271,7 @@ xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 349 RZ hero data ok start fresh saveto: heroRZ_1580216.npz fps:20
 361 RZ hero (1.33 error) start fresh saveto: heroRZ_1997140.npz fps:20
 374 RZ hero data ok start fresh saveto: heroRZ_2177309.npz fps:20
+384 RZ hero data ok start fresh saveto: heroRZ_2266503.npz fps:20
 ----------------------------------------------------------------------------------------------------------
 
 Montezuma's revenge
@@ -324,6 +328,7 @@ Phoenix
 343 RZ phoenix data ok start fresh saveto: phoenixRZ_1415157.npz fps:20
 357 RZ phoenix data ok start fresh saveto: phoenixRZ_1927863.npz fps:20
 370 RZ phoenix (1.01 error) start fresh saveto: phoenixRZ_2089207.npz fps:20
+382 RZ phoenix data ok start fresh saveto: phoenixRZ_2264036.npz fps:20
 -----------------------------------------------------------------------------
 252 RZ phoenix data ok load 234 saveto: phoenixRZ_1236831.npz fps:20 (life doesnot regenerate)
 
@@ -348,6 +353,7 @@ xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 356 RZ roadrunner (1.22 error) start fresh saveto: road_runnerRZ_1926221.npz fps:20
 363 RZ roadrunner data ok start fresh saveto: road_runnerRZ_2000269.npz fps:20
 375 RZ roadrunner data ok start fresh saveto: road_runnerRZ_2179243.npz fps:20
+381 RZ roadrunner data ok start fresh saveto: road_runnerRZ_2262970.npz fps:20
 ----------------------------------------------------------------------------------------------------------
 
 
