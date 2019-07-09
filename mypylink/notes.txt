@@ -141,6 +141,7 @@ Alien
 383 RZ alien data ok start fresh saveto: alienRZ_2265223.npz fps:20
 399 RZ alien data ok start fresh saveto: alienRZ_2532784.npz fps:20
 406 RZ alien data ok start fresh saveto: alienRZ_2609928.npz fps:20
+415 RZ alien data ok start fresh saveto: alienRZ_2700361.npz fps:20
 ----------------------------------------------------------------------------------------------------------
 
 Asterix
@@ -173,6 +174,7 @@ BankHeist
 386 RZ bankheist data ok start fresh saveto: bank_heistRZ_2346273.npz fps:20
 397 RZ bankheist data ok start fresh saveto: bank_heistRZ_2529116.npz fps:20
 403 RZ bankheist data ok start fresh saveto: bank_heistRZ_2605063.npz fps:20
+411 RZ bankheist data ok start fresh saveto: bank_heistRZ_2693470.npz fps:20
 ----------------------------------------------------------------------------------------------------------
 
 Berzerk
@@ -191,6 +193,7 @@ Berzerk
 335 RZ berzerk data ok start fresh saveto: berzerkRZ_961827.npz fps:20
 346 RZ berzerk data ok start fresh saveto: berzerkRZ_1493721.npz fps:20
 377 RZ berzerk data ok start fresh saveto: berzerkRZ_2182316.npz fps:20
+413 RZ berzerk data ok start fresh saveto: berzerkRZ_2696601.npz fps:20
 ----------------------------------------------------------------------------------------------------------
 
 Breakout
@@ -260,6 +263,7 @@ xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 366 RZ frostbite data ok start fresh saveto: frostbiteRZ_2081375.npz fps:20
 379 RZ frostbite data ok start fresh saveto: frostbiteRZ_2256806.npz fps:20
 401 RZ frostbite data ok start fresh saveto: frostbiteRZ_2602200.npz fps:20
+409 RZ frostbite data ok start fresh saveto: frostbiteRZ_2690686.npz fps:20
 ----------------------------------------------------------------------------------------------------------
 
 Hero 
@@ -328,6 +332,7 @@ Name this game
 369 RZ name_this_game data ok start fresh saveto: name_this_gameRZ_2086791.npz fps:20
 396 RZ name_this_game data ok start fresh saveto: name_this_gameRZ_2528001.npz fps:20
 404 RZ name_this_game data ok start fresh saveto: name_this_gameRZ_2607581.npz fps:20
+414 RZ name_this_game data ok start fresh saveto: name_this_gameRZ_2698350.npz fps:20
 ---------------------------------------------------------------------------------
 267 RZ name_this_game data ok load 230 saveto: name_this_gameRZ_2956617.npz fps:20
 
@@ -353,6 +358,7 @@ Riverraid
 319 RZ riverraid data ok start fresh saveto: riverraidRZ_279423.npz fps:20
 336 RZ riverraid (1.10 error) start fresh saveto: riverraidRZ_964022.npz fps:20
 389 RZ riverraid data ok start fresh saveto: riverraidRZ_2352191.npz fps:20
+410 RZ riverraid (1.15 error) start fresh saveto: riverraidRZ_2692182.npz fps:20
 
 RoadRunner
 288 RZ roadrunner data ok start fresh saveto: road_runnerRZ_7174270.npz fps:20 (practice)
@@ -373,6 +379,7 @@ xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 375 RZ roadrunner data ok start fresh saveto: road_runnerRZ_2179243.npz fps:20
 381 RZ roadrunner data ok start fresh saveto: road_runnerRZ_2262970.npz fps:20
 388 RZ roadrunner data ok start fresh saveto: road_runnerRZ_2349687.npz fps:20
+412 RZ roadrunner data ok start fresh saveto: road_runnerRZ_2694657.npz fps:20
 ----------------------------------------------------------------------------------------------------------
 
 
