@@ -142,6 +142,7 @@ Alien
 399 RZ alien data ok start fresh saveto: alienRZ_2532784.npz fps:20
 406 RZ alien data ok start fresh saveto: alienRZ_2609928.npz fps:20
 415 RZ alien data ok start fresh saveto: alienRZ_2700361.npz fps:20
+421 RZ alien data ok start fresh saveto: alienRZ_2795983.npz fps:20
 ----------------------------------------------------------------------------------------------------------
 
 Asterix
@@ -175,6 +176,7 @@ BankHeist
 397 RZ bankheist data ok start fresh saveto: bank_heistRZ_2529116.npz fps:20
 403 RZ bankheist data ok start fresh saveto: bank_heistRZ_2605063.npz fps:20
 411 RZ bankheist data ok start fresh saveto: bank_heistRZ_2693470.npz fps:20
+417 RZ bankheist data ok start fresh saveto: bank_heistRZ_2789701.npz fps:20
 ----------------------------------------------------------------------------------------------------------
 
 Berzerk
@@ -223,24 +225,26 @@ xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 179 RZ demon_attack data ok (val failed but ok) start fresh saveto: demon_attackRZ_9009155.npz fps:20 (color averaging on!)
 200 RZ demon_attack data (1.17error) start fresh saveto: demon_attackRZ_3969914.npz fps:20
 215 RZ demon_attack data ok start fresh saveto: demon_attackRZ_7227924.npz fps:20
-220 RZ demon_attack data (1.20error) start fresh saveto: demon_attackRZ_7664019.npz fps:20
+220 RZ demon_attack (1.20error) start fresh saveto: demon_attackRZ_7664019.npz fps:20
 221 RZ demon_attack data ok start fresh saveto: demon_attackRZ_7756796.npz fps:20
 255 LG demon attack data ok start fresh saveto: demon_attackLG_1306628.npz fps: 20
 256 LG demon attack data ok start fresh saveto: demon_attackLG_1308608.npz fps: 20
 257 LG demon attack data ok start fresh saveto: demon_attackLG_1388148.npz fps: 20
 258 LG demon attack (1.15 error) start fresh saveto: demon_attackLG_1389561.npz fps: 20
-261 LG demon attack (1.14 error) start freshsaveto: demon_attackLG_1476698.npz fps: 20
+261 LG demon attack (1.14 error) start fresh saveto: demon_attackLG_1476698.npz fps: 20
 262 LG demon attack data ok start fresh saveto: demon_attackLG_1478757.npz fps: 20
 263 LG demon attack (1.26 error) start fresh saveto: demon_attackLG_1742179.npz fps: 20
 265 LG demon attack (1.05 error) start fresh saveto: demon_attackLG_1743521.npz fps: 20
 189 JAW demon_attack data ok start fresh saveto: demon_attackJAW_9695598.npz fps: 20
 190 JAW demon_attack data ok start fresh saveto: demon_attackJAW_9953661.npz fps: 20
+419 RZ demon_attack (1.27 error) start fresh saveto: demon_attackRZ_2793085.npz fps:20
 ----------------------------------------------------------------------------------------------------------
 
 Enduro
 352 RZ enduro data ok start fresh saveto: enduroRZ_1742994.npz fps:20
 372 RZ enduro (1.14 error) start fresh saveto: enduroRZ_2174919.npz fps:20
 393 RZ enduro data ok start fresh saveto: enduroRZ_2357300.npz fps:20
+423 RZ enduro data ok start fresh saveto: enduroRZ_2798903.npz fps:20
 ----------------------------------------------------------------------------------------------------------
 
 Frostbite
@@ -307,6 +311,7 @@ xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 385 RZ montezuma's revenge data ok start fresh saveto: montezuma_revengeRZ_2344725.npz fps:20
 398 RZ montezuma's revenge data ok start fresh saveto: montezuma_revengeRZ_2530473.npz fps:20
 402 RZ montezuma's revenge data ok start fresh saveto: montezuma_revengeRZ_2603283.npz fps:20
+416 RZ montezuma's revenge data ok start fresh saveto: montezuma_revengeRZ_2788252.npz fps:20
 ----------------------------------------------------------------------------------------------------------
 
 Mspacman
@@ -333,6 +338,7 @@ Name this game
 396 RZ name_this_game data ok start fresh saveto: name_this_gameRZ_2528001.npz fps:20
 404 RZ name_this_game data ok start fresh saveto: name_this_gameRZ_2607581.npz fps:20
 414 RZ name_this_game data ok start fresh saveto: name_this_gameRZ_2698350.npz fps:20
+422 RZ name_this_game data ok start fresh saveto: name_this_gameRZ_2797695.npz fps:20
 ---------------------------------------------------------------------------------
 267 RZ name_this_game data ok load 230 saveto: name_this_gameRZ_2956617.npz fps:20
 
@@ -359,6 +365,7 @@ Riverraid
 336 RZ riverraid (1.10 error) start fresh saveto: riverraidRZ_964022.npz fps:20
 389 RZ riverraid data ok start fresh saveto: riverraidRZ_2352191.npz fps:20
 410 RZ riverraid (1.15 error) start fresh saveto: riverraidRZ_2692182.npz fps:20
+420 RZ riverraid data ok start fresh saveto: riverraidRZ_2794170.npz fps:20
 
 RoadRunner
 288 RZ roadrunner data ok start fresh saveto: road_runnerRZ_7174270.npz fps:20 (practice)
@@ -380,6 +387,7 @@ xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 381 RZ roadrunner data ok start fresh saveto: road_runnerRZ_2262970.npz fps:20
 388 RZ roadrunner data ok start fresh saveto: road_runnerRZ_2349687.npz fps:20
 412 RZ roadrunner data ok start fresh saveto: road_runnerRZ_2694657.npz fps:20
+418 RZ roadrunner data ok start fresh saveto: road_runnerRZ_2790877.npz fps:20
 ----------------------------------------------------------------------------------------------------------
 
 
