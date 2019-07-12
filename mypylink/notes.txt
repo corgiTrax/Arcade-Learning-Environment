@@ -157,6 +157,7 @@ Asterix
 168 JAW asterix data ok start fresh saveto: asterixJAW_2357233.npz fps:20
 171 JAW asterix data ok start fresh saveto: asterixJAW_3395791.npz fps:20
 387 RZ asterix data ok start fresh saveto: asterixRZ_2347924.npz fps:20
+428 RZ asterix data ok start fresh saveto: asterixRZ_2885861.npz fps:20
 ------------------------------------------------------------------------
 246 RZ asterix data ok load 243 saveto: asterixRZ_721092.npz fps:20
 260 RZ asterix data ok load 246 saveto: asterixRZ_1456515.npz fps:20
@@ -177,6 +178,8 @@ BankHeist
 403 RZ bankheist data ok start fresh saveto: bank_heistRZ_2605063.npz fps:20
 411 RZ bankheist data ok start fresh saveto: bank_heistRZ_2693470.npz fps:20
 417 RZ bankheist data ok start fresh saveto: bank_heistRZ_2789701.npz fps:20
+426 RZ bankheist data ok start fresh saveto: bank_heistRZ_2883723.npz fps:20
+430 RZ bankheist data ok start fresh saveto: bank_heistRZ_2946939.npz fps:20
 ----------------------------------------------------------------------------------------------------------
 
 Berzerk
@@ -268,6 +271,7 @@ xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 379 RZ frostbite data ok start fresh saveto: frostbiteRZ_2256806.npz fps:20
 401 RZ frostbite data ok start fresh saveto: frostbiteRZ_2602200.npz fps:20
 409 RZ frostbite data ok start fresh saveto: frostbiteRZ_2690686.npz fps:20
+424 RZ frostbite data ok start fresh saveto: frostbiteRZ_2881662.npz fps:20
 ----------------------------------------------------------------------------------------------------------
 
 Hero 
@@ -290,6 +294,7 @@ xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 384 RZ hero data ok start fresh saveto: heroRZ_2266503.npz fps:20
 390 RZ hero data ok start fresh saveto: heroRZ_2353313.npz fps:20
 405 RZ hero data ok start fresh saveto: heroRZ_2608740.npz fps:20
+431 RZ hero data ok start fresh saveto: heroRZ_2948122.npz fps:20
 ----------------------------------------------------------------------------------------------------------
 
 Montezuma's revenge
@@ -312,6 +317,7 @@ xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 398 RZ montezuma's revenge data ok start fresh saveto: montezuma_revengeRZ_2530473.npz fps:20
 402 RZ montezuma's revenge data ok start fresh saveto: montezuma_revengeRZ_2603283.npz fps:20
 416 RZ montezuma's revenge data ok start fresh saveto: montezuma_revengeRZ_2788252.npz fps:20
+429 RZ montezuma's revenge data ok start fresh saveto: montezuma_revengeRZ_2945490.npz fps:20
 ----------------------------------------------------------------------------------------------------------
 
 Mspacman
@@ -357,6 +363,7 @@ Phoenix
 382 RZ phoenix data ok start fresh saveto: phoenixRZ_2264036.npz fps:20
 392 RZ phoenix data ok start fresh saveto: phoenixRZ_2355652.npz fps:20
 408 RZ phoenix data ok start fresh saveto: phoenixRZ_2612013.npz fps:20
+427 RZ phoenix data ok start fresh saveto: phoenixRZ_2884737.npz fps:20
 -----------------------------------------------------------------------------
 252 RZ phoenix data ok load 234 saveto: phoenixRZ_1236831.npz fps:20 (life doesnot regenerate)
 
@@ -388,8 +395,8 @@ xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 388 RZ roadrunner data ok start fresh saveto: road_runnerRZ_2349687.npz fps:20
 412 RZ roadrunner data ok start fresh saveto: road_runnerRZ_2694657.npz fps:20
 418 RZ roadrunner data ok start fresh saveto: road_runnerRZ_2790877.npz fps:20
+425 RZ roadrunner data ok start fresh saveto: road_runnerRZ_2882662.npz fps:20
 ----------------------------------------------------------------------------------------------------------
-
 
 Seaquest
 185 RZ seaquest data ok start fresh saveto: seaquestRZ_9437843.npz fps:20
