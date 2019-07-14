@@ -181,6 +181,7 @@ BankHeist
 417 RZ bankheist data ok start fresh saveto: bank_heistRZ_2789701.npz fps:20
 426 RZ bankheist data ok start fresh saveto: bank_heistRZ_2883723.npz fps:20
 430 RZ bankheist data ok start fresh saveto: bank_heistRZ_2946939.npz fps:20
+438 RZ bankheist data ok start fresh saveto: bank_heistRZ_3133937.npz fps:20
 ----------------------------------------------------------------------------------------------------------
 
 Berzerk
@@ -200,6 +201,7 @@ Berzerk
 346 RZ berzerk data ok start fresh saveto: berzerkRZ_1493721.npz fps:20
 377 RZ berzerk data ok start fresh saveto: berzerkRZ_2182316.npz fps:20
 413 RZ berzerk data ok start fresh saveto: berzerkRZ_2696601.npz fps:20
+439 RZ berzerk data ok start fresh saveto: berzerkRZ_3135065.npz fps:20
 ----------------------------------------------------------------------------------------------------------
 
 Breakout
@@ -242,6 +244,7 @@ xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 189 JAW demon_attack data ok start fresh saveto: demon_attackJAW_9695598.npz fps: 20
 190 JAW demon_attack data ok start fresh saveto: demon_attackJAW_9953661.npz fps: 20
 419 RZ demon_attack (1.27 error) start fresh saveto: demon_attackRZ_2793085.npz fps:20
+445 RZ demon_attack data ok start fresh saveto: demon_attackRZ_3141952.npz fps:20
 ----------------------------------------------------------------------------------------------------------
 
 Enduro
@@ -249,6 +252,7 @@ Enduro
 372 RZ enduro (1.14 error) start fresh saveto: enduroRZ_2174919.npz fps:20
 393 RZ enduro data ok start fresh saveto: enduroRZ_2357300.npz fps:20
 423 RZ enduro data ok start fresh saveto: enduroRZ_2798903.npz fps:20
+441 RZ enduro data ok start fresh saveto: enduroRZ_3137525.npz fps:20
 ----------------------------------------------------------------------------------------------------------
 
 Frostbite
@@ -296,6 +300,7 @@ xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 390 RZ hero data ok start fresh saveto: heroRZ_2353313.npz fps:20
 405 RZ hero data ok start fresh saveto: heroRZ_2608740.npz fps:20
 431 RZ hero data ok start fresh saveto: heroRZ_2948122.npz fps:20
+443 RZ hero data ok start fresh saveto: heroRZ_3139704.npz fps:20
 ----------------------------------------------------------------------------------------------------------
 
 Montezuma's revenge
@@ -319,6 +324,7 @@ xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 402 RZ montezuma's revenge data ok start fresh saveto: montezuma_revengeRZ_2603283.npz fps:20
 416 RZ montezuma's revenge data ok start fresh saveto: montezuma_revengeRZ_2788252.npz fps:20
 429 RZ montezuma's revenge data ok start fresh saveto: montezuma_revengeRZ_2945490.npz fps:20
+436 RZ montezuma's revenge data ok start fresh saveto: montezuma_revengeRZ_3131841.npz fps:20
 ----------------------------------------------------------------------------------------------------------
 
 Mspacman
@@ -367,6 +373,7 @@ Phoenix
 408 RZ phoenix data ok start fresh saveto: phoenixRZ_2612013.npz fps:20
 427 RZ phoenix data ok start fresh saveto: phoenixRZ_2884737.npz fps:20
 435 RZ phoenix data ok start fresh saveto: phoenixRZ_3050833.npz fps:20
+440 RZ phoenix data ok start fresh saveto: phoenixRZ_3136193.npz fps:20
 -----------------------------------------------------------------------------
 252 RZ phoenix data ok load 234 saveto: phoenixRZ_1236831.npz fps:20 (life doesnot regenerate)
 
@@ -376,6 +383,7 @@ Riverraid
 389 RZ riverraid data ok start fresh saveto: riverraidRZ_2352191.npz fps:20
 410 RZ riverraid (1.15 error) start fresh saveto: riverraidRZ_2692182.npz fps:20
 420 RZ riverraid data ok start fresh saveto: riverraidRZ_2794170.npz fps:20
+444 RZ riverraid data ok start fresh saveto: riverraidRZ_3140887.npz fps:20
 
 RoadRunner
 288 RZ roadrunner data ok start fresh saveto: road_runnerRZ_7174270.npz fps:20 (practice)
@@ -409,6 +417,7 @@ Seaquest
 235 RZ seaquest data ok start fresh saveto: seaquestRZ_9578441.npz fps:20
 351 RZ seaquest data ok start fresh saveto: seaquestRZ_1741925.npz fps:20
 407 RZ seaquest data ok start fresh saveto: seaquestRZ_2610962.npz fps:20
+442 RZ seaquest data ok start fresh saveto: seaquestRZ_3138584.npz fps:20
 --------------------------------------------------------------------------
 237 RZ seaquest data ok load 235 saveto: seaquestRZ_9656617.npz fps:20
 238 RZ seaquest data ok load 237 saveto: seaquestRZ_9659492.npz fps:20
@@ -440,8 +449,9 @@ Space Invaders
 ----------------------------------------------------------------------------------------------------------
 
 Venture
-391 RZ venture data ok start fresh saveto: ventureRZ_2354543.npz fps:20
+391 RZ venture data ok start fresh saveto: ventureRZ_2354543.npz fps:20 (practice?)
 400 RZ venture data ok start fresh saveto: ventureRZ_2533918.npz fps:20
+437 RZ venture data ok start fresh saveto: ventureRZ_3132888.npz fps:20
 
 ======================================== Test runs ===========================================
 Gopher
