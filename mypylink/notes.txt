@@ -145,6 +145,7 @@ Alien
 421 RZ alien data ok start fresh saveto: alienRZ_2795983.npz fps:20
 434 RZ alien data ok start fresh saveto: alienRZ_3049757.npz fps:20
 449 RZ alien data ok start fresh saveto: alienRZ_3219709.npz fps:20
+464 RZ alien data ok start fresh saveto: alienRZ_3302134.npz fps:20
 ----------------------------------------------------------------------------------------------------------
 
 Asterix
@@ -160,6 +161,7 @@ Asterix
 171 JAW asterix data ok start fresh saveto: asterixJAW_3395791.npz fps:20
 387 RZ asterix data ok start fresh saveto: asterixRZ_2347924.npz fps:20
 428 RZ asterix data ok start fresh saveto: asterixRZ_2885861.npz fps:20
+461 RZ asterix data ok start fresh saveto: asterixRZ_3297787.npz fps:20
 ------------------------------------------------------------------------
 246 RZ asterix data ok load 243 saveto: asterixRZ_721092.npz fps:20
 260 RZ asterix data ok load 246 saveto: asterixRZ_1456515.npz fps:20
@@ -205,6 +207,7 @@ Berzerk
 413 RZ berzerk data ok start fresh saveto: berzerkRZ_2696601.npz fps:20
 439 RZ berzerk data ok start fresh saveto: berzerkRZ_3135065.npz fps:20
 454 RZ berzerk data ok start fresh saveto: berzerkRZ_3227196.npz fps:20
+468 RZ berzerk data ok start fresh saveto: berzerkRZ_3315708.npz fps:20
 ----------------------------------------------------------------------------------------------------------
 
 Breakout
@@ -283,6 +286,7 @@ xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 409 RZ frostbite data ok start fresh saveto: frostbiteRZ_2690686.npz fps:20
 424 RZ frostbite data ok start fresh saveto: frostbiteRZ_2881662.npz fps:20
 446 RZ frostbite data ok start fresh saveto: frostbiteRZ_3215484.npz fps:20
+466 RZ frostbite data ok start fresh saveto: frostbiteRZ_3312550.npz fps:20
 ----------------------------------------------------------------------------------------------------------
 
 Hero 
@@ -331,6 +335,7 @@ xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 416 RZ montezuma's revenge data ok start fresh saveto: montezuma_revengeRZ_2788252.npz fps:20
 429 RZ montezuma's revenge data ok start fresh saveto: montezuma_revengeRZ_2945490.npz fps:20
 436 RZ montezuma's revenge data ok start fresh saveto: montezuma_revengeRZ_3131841.npz fps:20
+459 RZ montezuma's revenge data ok start fresh saveto: montezuma_revengeRZ_3291266.npz fps:20
 ----------------------------------------------------------------------------------------------------------
 
 Mspacman
@@ -340,6 +345,7 @@ Mspacman
 271 RZ mspacman data ok start fresh saveto: ms_pacmanRZ_3101375.npz fps:20
 273 RZ mspacman (1.04 error) start fresh saveto: ms_pacmanRZ_3279899.npz fps:20
 378 RZ mspacman data ok start fresh saveto: ms_pacmanRZ_2184332.npz fps:20
+467 RZ mspacman data ok start fresh saveto: ms_pacmanRZ_3314679.npz fps:20
 ----------------------------------------------------------------------------------------------------------
 
 Name this game
@@ -360,6 +366,7 @@ Name this game
 422 RZ name_this_game data ok start fresh saveto: name_this_gameRZ_2797695.npz fps:20
 433 RZ name_this_game data ok start fresh saveto: name_this_gameRZ_3048504.npz fps:20
 448 RZ name_this_game data ok start fresh saveto: name_this_gameRZ_3218022.npz fps:20
+458 RZ name_this_game data ok start fresh saveto: name_this_gameRZ_3289968.npz fps:20
 ---------------------------------------------------------------------------------
 267 RZ name_this_game data ok load 230 saveto: name_this_gameRZ_2956617.npz fps:20
 
@@ -382,6 +389,7 @@ Phoenix
 435 RZ phoenix data ok start fresh saveto: phoenixRZ_3050833.npz fps:20
 440 RZ phoenix data ok start fresh saveto: phoenixRZ_3136193.npz fps:20
 451 RZ phoenix data ok start fresh saveto: phoenixRZ_3223057.npz fps:20
+465 RZ phoenix data ok start fresh saveot: phoenixRZ_3303208.npz fps:20
 -----------------------------------------------------------------------------
 252 RZ phoenix data ok load 234 saveto: phoenixRZ_1236831.npz fps:20 (life doesnot regenerate)
 
@@ -392,6 +400,7 @@ Riverraid
 410 RZ riverraid (1.15 error) start fresh saveto: riverraidRZ_2692182.npz fps:20
 420 RZ riverraid data ok start fresh saveto: riverraidRZ_2794170.npz fps:20
 444 RZ riverraid data ok start fresh saveto: riverraidRZ_3140887.npz fps:20
+463 RZ riverraid (1.04 error) start fresh saveto: riverraidRZ_3300841.npz fps:20
 
 RoadRunner
 288 RZ roadrunner data ok start fresh saveto: road_runnerRZ_7174270.npz fps:20 (practice)
@@ -417,6 +426,7 @@ xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 425 RZ roadrunner data ok start fresh saveto: road_runnerRZ_2882662.npz fps:20
 432 RZ roadrunner data ok start fresh saveto: road_runnerRZ_3047347.npz fps:20
 447 RZ roadrunner data ok start fresh saveto: road_runnerRZ_3216773.npz fps:20
+460 RZ roadrunner data ok start fresh saveto: road_runnerRZ_3293824.npz fps:20
 ----------------------------------------------------------------------------------------------------------
 
 Seaquest
@@ -427,6 +437,7 @@ Seaquest
 351 RZ seaquest data ok start fresh saveto: seaquestRZ_1741925.npz fps:20
 407 RZ seaquest data ok start fresh saveto: seaquestRZ_2610962.npz fps:20
 442 RZ seaquest data ok start fresh saveto: seaquestRZ_3138584.npz fps:20
+457 RZ seaquest data ok start fresh saveto: seaquestRZ_3231577.npz fps:20
 --------------------------------------------------------------------------
 237 RZ seaquest data ok load 235 saveto: seaquestRZ_9656617.npz fps:20
 238 RZ seaquest data ok load 237 saveto: seaquestRZ_9659492.npz fps:20
@@ -463,6 +474,7 @@ Venture
 400 RZ venture data ok start fresh saveto: ventureRZ_2533918.npz fps:20
 437 RZ venture data ok start fresh saveto: ventureRZ_3132888.npz fps:20
 452 RZ venture data ok start fresh saveto: ventureRZ_3224763.npz fps:20
+462 RZ venture data ok start fresh saveto: ventureRZ_3298909.npz fps:20
 
 ======================================== Test runs ===========================================
 Gopher
