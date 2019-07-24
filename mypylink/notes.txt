@@ -48,8 +48,9 @@ Enduro
 158 KM enduro data ok start fresh saveto: enduroKM_9158498.npz fps:20
 159 KM enduro data ok start fresh saveto: enduroKM_9159582.npz fps:20
 -----------------------------------------------------------------------------
-123 enduro data ok load: enduroRZ_3688272.npz saveto: enduroRZ_4885375.npz fps: 20 
-124 enduro data ok load: enduroRZ_4885375.npz saveto: enduroRZ_4886576.npz fps: 20
+123 enduro data ok load 113 saveto: enduroRZ_4885375.npz fps:20 
+124 enduro data ok load 123 saveto: enduroRZ_4886576.npz fps:20
+510 enduro data ok load 124 saveto: enduroRZ_3926226.npz fps:20
 
 Freeway
 55 RZ freeway data ok start fresh saveto: freewayRZ_2464601.npz fps: 20 
@@ -192,6 +193,10 @@ BankHeist
 456 RZ bankheist data ok start fresh saveto: bank_heistRZ_3229544.npz fps:20
 470 RZ bankheist data ok start fresh saveto: bank_heistRZ_3392231.npz fps:20
 ----------------------------------------------------------------------------------------------------------
+505 RZ bankheist data ok load 417 saveto: bank_heistRZ_3917332.npz fps:20
+506 RZ bankheist data ok load 505 saveto: bank_heistRZ_3918510.npz fps:20
+508 RZ bankheist data ok load 506 saveto: bank_heistRZ_3923284.npz fps:20 (dangerous situation)
+509 RZ bankheist data ok load 506 saveto: bank_heistRZ_3924539.npz fps:20
 
 Berzerk
 164 RZ berzerk data ok start fresh saveto: berzerkRZ_9934643.npz fps:30
@@ -329,6 +334,8 @@ xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 443 RZ hero data ok start fresh saveto: heroRZ_3139704.npz fps:20
 482 RZ hero data ok start fresh saveto: heroRZ_3472304.npz fps:20
 ----------------------------------------------------------------------------------------------------------
+507 RZ hero data ok load 482 saveto: heroRZ_3920097.npz fps:20
+
 
 Montezuma's revenge
 231 RZ montezuma's revenge data ok start fresh saveto: montezuma_revengeRZ_9323219.npz fps:20 (practice)
