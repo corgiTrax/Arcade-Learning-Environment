@@ -76,8 +76,8 @@ MsPacman
 131 KM mspacman data ok start fresh saveto: ms_pacmanKM_3030302.npz fps: 20
 137 KM mspacman data ok start fresh saveto: ms_pacmanKM_3115947.npz fps: 20
 ----------------------------------------------------------------------------
-118 mspacman data ok load ms_pacmanRZ_3438636 saveto: ms_pacmanRZ_4303947.npz fps: 20
-119 mspacman data ok load ms_pacmanRZ_4303947 saveto: none fps: 20 (died)
+118 mspacman data ok load 89 saveto: ms_pacmanRZ_4303947.npz fps: 20
+119 mspacman data ok load 118 saveto: none fps: 20 (died)
 
 Riverraid
 77 RZ riverraid data ok start fresh saveto: riverraidRZ_3012316.npz fps: 20
@@ -197,6 +197,7 @@ BankHeist
 506 RZ bankheist data ok load 505 saveto: bank_heistRZ_3918510.npz fps:20
 508 RZ bankheist data ok load 506 saveto: bank_heistRZ_3923284.npz fps:20 (dangerous situation)
 509 RZ bankheist data ok load 506 saveto: bank_heistRZ_3924539.npz fps:20
+513 RZ bankheist data ok load 509 episode end fps:20
 
 Berzerk
 164 RZ berzerk data ok start fresh saveto: berzerkRZ_9934643.npz fps:30
@@ -220,6 +221,7 @@ Berzerk
 468 RZ berzerk data ok start fresh saveto: berzerkRZ_3315708.npz fps:20
 476 RZ berzerk data ok start fresh saveto: berzerkRZ_3400020.npz fps:20
 ----------------------------------------------------------------------------------------------------------
+515 RZ berzerk data ok load 377 saveto: berzerkRZ_3995152.npz fps:20
 
 Breakout
 198 RZ breakout data ok start fresh saveto: breakoutRZ_3877709.npz fps:20
@@ -503,6 +505,9 @@ Space Invaders
 455 RZ space_invaders data ok start fresh saveto: space_invadersRZ_3228302.npz fps:20
 497 RZ space_invaders data ok start fresh saveto: space_invadersRZ_3561920.npz fps:20
 ----------------------------------------------------------------------------------------------------------
+511 RZ space_invaders data ok load 497 saveto: space_invadersRZ_3988011.npz fps:20
+512 RZ space_invaders data ok load 511 saveto: space_invadersRZ_3991738.npz fps:20
+514 RZ space_invaders data ok load 512 saveto: space_invadersRZ_3993948.npz fps:20
 
 Venture
 391 RZ venture data ok start fresh saveto: ventureRZ_2354543.npz fps:20 (practice?)
