@@ -29,6 +29,7 @@ Alien
 491 RZ alien data ok start fresh saveto: alienRZ_3489522.npz fps:20
 ----------------------------------------------------------------------------------------------------------
 533 RZ alien data ok load 399 saveto: alienRZ_4165119.npz fps:20
+551 RZ alien data ok load 533 episode end fps:20
 
 Asterix
 160 RZ asterix data ok start fresh saveto: asterixRZ_9166697.npz fps:20
@@ -51,6 +52,7 @@ Asterix
 260 RZ asterix data ok load 246 saveto: asterixRZ_1456515.npz fps:20
 534 RZ asterix data ok load 260 saveto: asterixRZ_4166872.npz fps:20
 543 RZ asterix data ok load 534 saveto: asterixRZ_4430054.npz fps:20
+553 RZ asterix data ok load 543 max reached fps:20
 
 BankHeist
 342 RZ bankheist data ok start fresh saveto: bank_heistRZ_1413379.npz fps:20
@@ -216,6 +218,9 @@ Enduro
 124 RZ enduro data ok load 123 saveto: enduroRZ_4886576.npz fps:20
 510 RZ enduro data ok load 124 saveto: enduroRZ_3926226.npz fps:20
 542 RZ enduro data ok load 510 saveto: enduroRZ_4428500.npz fps:20
+552 RZ enduro data ok load 542 saveto: enduroRZ_4516802.npz fps:20
+*******************************************************************************
+546 KD enduro data ok start fresh saveto: enduroKD_4506300.npz fps:20
 
 Freeway
 55 RZ freeway data ok start fresh saveto: freewayRZ_2464601.npz fps: 20 
@@ -255,6 +260,7 @@ xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 492 RZ frostbite data ok start fresh saveto: frostbiteRZ_3556049.npz fps:20
 ----------------------------------------------------------------------------------------------------------
 525 RZ frostbite data ok load 479 saveto: frostbiteRZ_4096215.npz fps:20
+549 RZ frostbite data ok load 525 saveto: frostbiteRZ_4511922.npz fps:20
 
 Hero 
 195 RZ hero data ok start fresh saveto: heroRZ_205678.npz fps:20 (practice)
@@ -281,10 +287,13 @@ xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 482 RZ hero data ok start fresh saveto: heroRZ_3472304.npz fps:20
 ----------------------------------------------------------------------------------------------------------
 507 RZ hero data ok load 482 saveto: heroRZ_3920097.npz fps:20
+
 **********************************************************************************************************
 517 KD hero (large validation error) start fresh saveto: heroKD_4079831.npz fps:20
 518 KD hero (large validation error) start fresh saveto: heroKD_4081171.npz fps:20
-
+544 KD hero data ok start fresh esc pressed fps:20 (subject ID marked wrong)
+545 KD hero data ok start fresh saveto: heroKD_4504850.npz fps:20
+547 KD hero data ok start fresh saveto: heroKD_4508017.npz fps:20
 
 Montezuma's revenge
 231 RZ montezuma's revenge data ok start fresh saveto: montezuma_revengeRZ_9323219.npz fps:20 (practice)
@@ -315,6 +324,7 @@ xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 ----------------------------------------------------------------------------------------------------------
 523 RZ montezuma's revenge data ok load 480 saveto: montezuma_revengeRZ_4091327.npz fps:20
 536 RZ montezuma's revenge data ok load 523 saveto: montezuma_revengeRZ_4420664.npz fps:20
+548 RZ montezuma's revenge data ok load 536 saveto: montezuma_revengeRZ_4509746.npz fps:20
 
 MsPacman
 52 RZ mspacman data ok start fresh saveto: 2394668 fps: 20
@@ -388,8 +398,9 @@ Phoenix
 465 RZ phoenix data ok start fresh saveto: phoenixRZ_3303208.npz fps:20
 477 RZ phoenix data ok start fresh saveto: phoenixRZ_3401134.npz fps:20
 -----------------------------------------------------------------------------
-252 RZ phoenix data ok load 234 saveto: phoenixRZ_1236831.npz fps:20 (life doesnot regenerate)
+252 RZ phoenix data ok load 234 saveto: phoenixRZ_1236831.npz fps:20 
 540 RZ phoenix (1.23 error) load 440 saveto: phoenixRZ_4425986.npz fps:20	
+550 RZ phoenix data ok load 540 saveto: phoenixRZ_4513408.npz fps:20
 
 Pong
 520 AS pong data ok start fresh saveto: pongAS_4085032.npz fps:20
@@ -507,7 +518,8 @@ Space Invaders
 512 RZ space_invaders data ok load 511 saveto: space_invadersRZ_3991738.npz fps:20
 514 RZ space_invaders data ok load 512 saveto: space_invadersRZ_3993948.npz fps:20
 541 RZ space_invaders (1.01 error) load 514 saveto: space_invadersRZ_4427259.npz fps:20
-
+554 RZ space_invaders (1.59 error) load 541 saveto: space_invadersRZ_4520643.npz fps:20
+ 
 Venture
 63 RZ venture data ok start fresh saveto: ventureRZ_2749316.npz fps: 30
 65 RZ venture data ok start fresh saveto: none fps: 30 
