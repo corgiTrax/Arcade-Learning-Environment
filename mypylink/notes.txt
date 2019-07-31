@@ -29,7 +29,8 @@ Alien
 491 RZ alien data ok start fresh saveto: alienRZ_3489522.npz fps:20
 ----------------------------------------------------------------------------------------------------------
 533 RZ alien data ok load 399 saveto: alienRZ_4165119.npz fps:20
-551 RZ alien data ok load 533 episode end fps:20
+551 RZ alien data ok load 533 episode end fps:20 (best score)
+562 RZ alien data ok load 533 episode end fps:20
 
 Asterix
 160 RZ asterix data ok start fresh saveto: asterixRZ_9166697.npz fps:20
@@ -131,6 +132,7 @@ Breakout
 490 KM breakout data ok start fresh saveto: breakoutKM_3486399.npz fps:20 
 ----------------------------------------------------------------------------------------------------------
 527 RZ breakout data ok load 472 saveto: breakoutRZ_4153166.npz fps:20
+564 RZ breakout data ok load 527 episode end fps:20 (end of game reached)
 ********************************************************************************************************
 519 AS breakout data ok start fresh saveto: breakoutAS_4083721.npz fps:20
 528 AS breakout data ok start fresh saveto: breakoutAS_4154228.npz fps:20
@@ -191,6 +193,7 @@ xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 475 RZ demon_attack data ok start fresh saveto: demon_attackRZ_3398140.npz fps:20 (died once)
 495 RZ demon_attack data ok start fresh saveto: demon_attackRZ_3559787.npz fps:20
 ----------------------------------------------------------------------------------------------------------
+566 RZ demon_attack data ok load 445 saveto: demon_attackRZ_4605844.npz fps:20
 
 Enduro
 82 RZ enduro data ok start fresh saveto: enduroRZ_3087678.npz fps: 20
@@ -261,6 +264,7 @@ xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 ----------------------------------------------------------------------------------------------------------
 525 RZ frostbite data ok load 479 saveto: frostbiteRZ_4096215.npz fps:20
 549 RZ frostbite data ok load 525 saveto: frostbiteRZ_4511922.npz fps:20
+560 RZ frostbite data ok load 549 saveto: frostbiteRZ_4596723.npz fps:20
 
 Hero 
 195 RZ hero data ok start fresh saveto: heroRZ_205678.npz fps:20 (practice)
@@ -287,6 +291,7 @@ xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 482 RZ hero data ok start fresh saveto: heroRZ_3472304.npz fps:20
 ----------------------------------------------------------------------------------------------------------
 507 RZ hero data ok load 482 saveto: heroRZ_3920097.npz fps:20
+563 RZ hero data ok load 507 saveto: heroRZ_4601024.npz fps:20 (dangerous situation)
 
 **********************************************************************************************************
 517 KD hero (large validation error) start fresh saveto: heroKD_4079831.npz fps:20
@@ -325,6 +330,7 @@ xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 523 RZ montezuma's revenge data ok load 480 saveto: montezuma_revengeRZ_4091327.npz fps:20
 536 RZ montezuma's revenge data ok load 523 saveto: montezuma_revengeRZ_4420664.npz fps:20
 548 RZ montezuma's revenge data ok load 536 saveto: montezuma_revengeRZ_4509746.npz fps:20
+561 RZ montezuma's revenge data ok load 548 saveto: montezuma_revengeRZ_4598680.npz fps:20
 
 MsPacman
 52 RZ mspacman data ok start fresh saveto: 2394668 fps: 20
@@ -398,14 +404,19 @@ Phoenix
 465 RZ phoenix data ok start fresh saveto: phoenixRZ_3303208.npz fps:20
 477 RZ phoenix data ok start fresh saveto: phoenixRZ_3401134.npz fps:20
 -----------------------------------------------------------------------------
-252 RZ phoenix data ok load 234 saveto: phoenixRZ_1236831.npz fps:20 
+252 RZ phoenix data ok load 234 saveto: phoenixRZ_1236831.npz fps:20 (not in use)
 540 RZ phoenix (1.23 error) load 440 saveto: phoenixRZ_4425986.npz fps:20	
 550 RZ phoenix data ok load 540 saveto: phoenixRZ_4513408.npz fps:20
+565 RZ phoenix data ok load 550 saveto: phoenixRZ_4604537.npz fps:20
 
 Pong
 520 AS pong data ok start fresh saveto: pongAS_4085032.npz fps:20
 529 AS pong data ok start fresh saveto: pongAS_4156261.npz fps:20
 531 AS pong data ok start fresh saveto: pongAS_4159635.npz fps:20
+
+Qbert
+556 KD qbert data ok start fresh saveto: qbertKD_4590768.npz fps:20
+558 KD qbert (1.69 error) start fresh saveto: qbertKD_4593647.npz fps:20
 
 Riverraid
 77 RZ riverraid data ok start fresh saveto: riverraidRZ_3012316.npz fps: 20
@@ -491,6 +502,10 @@ Seaquest
 248 RZ seaquest data ok load 241 saveto: seaquestRZ_802972.npz fps:20
 538 RZ seaquest data ok load 248 saveto: seaquestRZ_4423044.npz fps:20
 539 RZ seaquest (1.07 error) load 538 saveto: seaquestRZ_4424827.npz fps:20
+***********************************************************************************
+555 KD seaquest (1.73 error) start fresh saveto: seaquestKD_4589264.npz fps:20
+557 KD seaquest data ok start fresh saveto: seaquestKD_4592060.npz fps:20
+559 KD seaquest (1.02 error) start fresh saveto: seaquestKD_4595259.npz fps:20
 
 Space Invaders
 177 RZ space_invaders data ok start fresh saveto: space_invadersRZ_9004819.npz fps:20
