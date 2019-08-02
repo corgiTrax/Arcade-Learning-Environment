@@ -139,6 +139,8 @@ Breakout
 530 AS breakout data ok start fresh saveto: breakoutAS_4157852.npz fps:20
 567 AS breakout data ok start fresh saveto: breakoutAS_4670551.npz fps:20
 569 AS breakout data ok start fresh saveto: breakoutAS_4673908.npz fps:20
+579 AS breakout data ok start fresh saveto: breakoutAS_4763410.npz fps:20
+581 AS breakout data ok load 579 save to: breakoutAS_4767279.npz fps:20
 
 Centipede
 53 RZ centipede data ok start fresh saveto: centipedeRZ_2398139.npz fps: 20 
@@ -270,6 +272,8 @@ xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 560 RZ frostbite data ok load 549 saveto: frostbiteRZ_4596723.npz fps:20
 570 RZ frostbite data ok load 560 saveto: frostbiteRZ_4676443.npz fps:20
 571 RZ frostbite data ok load 570 saveto: frostbiteRZ_4677453.npz fps:20
+582 RZ frostbite data ok load 571 saveto: frostbiteRZ_4769831.npz fps:20
+583 RZ frostbite data ok load 582 saveto: frostbiteRZ_4770928.npz fps:20
 
 Hero 
 195 RZ hero data ok start fresh saveto: heroRZ_205678.npz fps:20 (practice)
@@ -298,6 +302,9 @@ xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 507 RZ hero data ok load 482 saveto: heroRZ_3920097.npz fps:20
 563 RZ hero data ok load 507 saveto: heroRZ_4601024.npz fps:20 (1 live left)
 572 RZ hero data ok load 507 saveto: heroRZ_4679292.npz fps:20 (1 live left)
+585 RZ hero data ok load 507 episode ends fps:20
+586 RZ hero data ok load 507 saveto: heroRZ_4774309.npz fps:20
+load 586
 
 **********************************************************************************************************
 517 KD hero (large validation error) start fresh saveto: heroKD_4079831.npz fps:20
@@ -338,6 +345,7 @@ xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 548 RZ montezuma's revenge data ok load 536 saveto: montezuma_revengeRZ_4509746.npz fps:20
 561 RZ montezuma's revenge data ok load 548 saveto: montezuma_revengeRZ_4598680.npz fps:20
 573 RZ montezuma's revenge data ok load 561 saveto: montezuma_revengeRZ_4680777.npz fps:20
+584 RZ montezuma's revenge data ok load 573 saveto: montezuma_revengeRZ_4772014.npz fps:20
 
 MsPacman
 52 RZ mspacman data ok start fresh saveto: 2394668 fps: 20
@@ -423,6 +431,8 @@ Pong
 529 AS pong data ok start fresh saveto: pongAS_4156261.npz fps:20
 531 AS pong data ok start fresh saveto: pongAS_4159635.npz fps:20
 568 AS pong (1.37 error) start fresh saveto: pongAS_4672128.npz fps:20
+578 AS pong data ok start fresh saveto: pongAS_4762015.npz fps:20
+580 AS pong data ok start fresh saveto: pongAS_4765925.npz fps:20
 
 Qbert
 556 KD qbert data ok start fresh saveto: qbertKD_4590768.npz fps:20
@@ -545,6 +555,7 @@ Space Invaders
 514 RZ space_invaders data ok load 512 saveto: space_invadersRZ_3993948.npz fps:20
 541 RZ space_invaders (1.01 error) load 514 saveto: space_invadersRZ_4427259.npz fps:20
 554 RZ space_invaders (1.59 error) load 541 saveto: space_invadersRZ_4520643.npz fps:20
+587 RZ space_invaders data ok load 554 saveto: space_invadersRZ_4775423.npz fps:20
  
 Venture
 63 RZ venture data ok start fresh saveto: ventureRZ_2749316.npz fps: 30
