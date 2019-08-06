@@ -198,6 +198,8 @@ xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 495 RZ demon_attack data ok start fresh saveto: demon_attackRZ_3559787.npz fps:20
 ----------------------------------------------------------------------------------------------------------
 566 RZ demon_attack data ok load 445 saveto: demon_attackRZ_4605844.npz fps:20
+592 RZ demon_attack data ok load 566 saveto: demon_attackRZ_5036180.npz fps:20
+
 
 Enduro
 82 RZ enduro data ok start fresh saveto: enduroRZ_3087678.npz fps: 20
@@ -227,6 +229,8 @@ Enduro
 542 RZ enduro data ok load 510 saveto: enduroRZ_4428500.npz fps:20
 552 RZ enduro data ok load 542 saveto: enduroRZ_4516802.npz fps:20
 575 RZ enduro data ok load 552 episode end fps:20
+591 RZ enduro data ok load 552 saveto: enduroRZ_5035044.npz fps:20
+597 RZ enduro data ok load 591 saveto: enduroRZ_5119670.npz fps:20
 *******************************************************************************
 546 KD enduro data ok start fresh saveto: enduroKD_4506300.npz fps:20
 
@@ -346,6 +350,7 @@ xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 561 RZ montezuma's revenge data ok load 548 saveto: montezuma_revengeRZ_4598680.npz fps:20
 573 RZ montezuma's revenge data ok load 561 saveto: montezuma_revengeRZ_4680777.npz fps:20
 584 RZ montezuma's revenge data ok load 573 saveto: montezuma_revengeRZ_4772014.npz fps:20
+588 RZ montezuma's revenge data ok load 584 saveto: montezuma_revengeRZ_5032278.npz fps:20
 
 MsPacman
 52 RZ mspacman data ok start fresh saveto: 2394668 fps: 20
@@ -369,8 +374,9 @@ MsPacman
 467 RZ mspacman data ok start fresh saveto: ms_pacmanRZ_3314679.npz fps:20
 496 RZ mspacman data ok start fresh saveto: ms_pacmanRZ_3560871.npz fps:20
 ----------------------------------------------------------------------------------------------------------
-118 mspacman data ok load 89 saveto: ms_pacmanRZ_4303947.npz fps: 20
-119 mspacman data ok load 118 episode end fps: 20 
+118 mspacman data ok load 89 saveto: ms_pacmanRZ_4303947.npz fps:20
+119 mspacman data ok load 118 episode ends fps:20 
+593 mspacman data ok load 119 episode ends fps:20
 
 
 Name this game
@@ -425,6 +431,9 @@ Phoenix
 550 RZ phoenix data ok load 540 saveto: phoenixRZ_4513408.npz fps:20
 565 RZ phoenix data ok load 550 saveto: phoenixRZ_4604537.npz fps:20
 574 RZ phoenix data ok load 565 saveto: phoenixRZ_4682055.npz fps:20
+594 RZ phoenix data ok load 574 episode ends fps:20 (could do better)
+595 RZ phoenix data ok load 574 episode ends fps:20 (could do better)
+598 RZ phoenix data ok load 574 saveto: phoenixRZ_5120717.npz fps:20
 
 Pong
 520 AS pong data ok start fresh saveto: pongAS_4085032.npz fps:20
@@ -462,6 +471,8 @@ Riverraid
 -----------------------------------------------------------------------------
 121 RZ riverraid data ok load 102 saveto:riverraidRZ_4560739.npz fps: 20
 577 RZ riverraid data ok load 121 episode ends fps:20 (could do better)
+589 RZ riverraid data ok load 121 episode ends fps:20 (better than 577)
+590 RZ riverraid data ok load 121 episode ends fps:20 (better than 589)
 
 RoadRunner
 288 RZ roadrunner data ok start fresh saveto: road_runnerRZ_7174270.npz fps:20 (practice)
@@ -556,6 +567,7 @@ Space Invaders
 541 RZ space_invaders (1.01 error) load 514 saveto: space_invadersRZ_4427259.npz fps:20
 554 RZ space_invaders (1.59 error) load 541 saveto: space_invadersRZ_4520643.npz fps:20
 587 RZ space_invaders data ok load 554 saveto: space_invadersRZ_4775423.npz fps:20
+596 RZ space_invaders data ok load 587 saveto: space_invadersRZ_5117737.npz fps:20
  
 Venture
 63 RZ venture data ok start fresh saveto: ventureRZ_2749316.npz fps: 30
@@ -580,7 +592,7 @@ Venture
 486 RZ venture data ok start fresh saveto: ventureRZ_3478885.npz fps:20
 499 RZ venture data ok start fresh saveto: ventureRZ_3564033.npz fps:20
 -----------------------------------------------------------------------------
-load 462
+599 RZ venture data ok load 462 saveto: ventureRZ_5122227.npz fps:20
 
 ======================================== Test runs ===========================================
 Gopher
