@@ -199,6 +199,8 @@ xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 ----------------------------------------------------------------------------------------------------------
 566 RZ demon_attack data ok load 445 saveto: demon_attackRZ_4605844.npz fps:20
 592 RZ demon_attack data ok load 566 saveto: demon_attackRZ_5036180.npz fps:20
+602 RZ demon_attack data ok load 592 saveto: demon_attackRZ_5207936.npz fps:20
+605 RZ demon_attack (1.23 error) load 602 saveto: demon_attackRZ_5214038.npz fps:20
 
 
 Enduro
@@ -308,8 +310,9 @@ xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 572 RZ hero data ok load 507 saveto: heroRZ_4679292.npz fps:20 (1 live left)
 585 RZ hero data ok load 507 episode ends fps:20
 586 RZ hero data ok load 507 saveto: heroRZ_4774309.npz fps:20
-load 586
-
+601 RZ hero data ok load 586 episode ends fps:20
+603 RZ hero data ok load 586 saveto: heroRZ_5209286.npz fps:20
+607 RZ hero data ok load 603 saveto: heroRZ_5216502.npz fps:20
 **********************************************************************************************************
 517 KD hero (large validation error) start fresh saveto: heroKD_4079831.npz fps:20
 518 KD hero (large validation error) start fresh saveto: heroKD_4081171.npz fps:20
@@ -434,6 +437,8 @@ Phoenix
 594 RZ phoenix data ok load 574 episode ends fps:20 (could do better)
 595 RZ phoenix data ok load 574 episode ends fps:20 (could do better)
 598 RZ phoenix data ok load 574 saveto: phoenixRZ_5120717.npz fps:20
+600 RZ phoenix data ok load 598 saveto: phoenixRZ_5203429.npz fps:20
+606 RZ phoenix data ok load 600 saveto: phoenixRZ_5215078.npz fps:20
 
 Pong
 520 AS pong data ok start fresh saveto: pongAS_4085032.npz fps:20
@@ -593,6 +598,7 @@ Venture
 499 RZ venture data ok start fresh saveto: ventureRZ_3564033.npz fps:20
 -----------------------------------------------------------------------------
 599 RZ venture data ok load 462 saveto: ventureRZ_5122227.npz fps:20
+604 RZ venture data ok load 599 episode ends fps:20
 
 ======================================== Test runs ===========================================
 Gopher
