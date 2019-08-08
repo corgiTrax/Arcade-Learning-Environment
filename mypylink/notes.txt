@@ -171,6 +171,9 @@ Centipede
 247 RZ centipede data ok load 245 episode end fps:20
 254 RZ centipede data ok load 245 saveto: centipedeRZ_1239817.npz fps:20
 259 RZ centipede data ok load 254 saveto: centipedeRZ_1454534.npz fps:20
+610 RZ centipede data ok load 259 saveto: centipedeRZ_5290268.npz fps:20
+612 RZ centipede (1.07 error) load 610 saveto: centipedeRZ_5293382.npz fps:20
+615 RZ centipede data ok load 612 saveto: centipedeRZ_5298584.npz fps:20
 
 Demon_Attack
 251 LG demon attack (1.22 error) start fresh saveto: demon_attackLG_1235012.npz fps:20 (practice)
@@ -201,7 +204,8 @@ xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 592 RZ demon_attack data ok load 566 saveto: demon_attackRZ_5036180.npz fps:20
 602 RZ demon_attack data ok load 592 saveto: demon_attackRZ_5207936.npz fps:20
 605 RZ demon_attack (1.23 error) load 602 saveto: demon_attackRZ_5214038.npz fps:20
-
+609 RZ demon_attack data ok load 605 saveto: demon_attackRZ_5288966.npz fps:20
+614 RZ demon_attack data ok load 609 saveto: demon_attackRZ_5296679.npz fps:20
 
 Enduro
 82 RZ enduro data ok start fresh saveto: enduroRZ_3087678.npz fps: 20
@@ -313,6 +317,8 @@ xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 601 RZ hero data ok load 586 episode ends fps:20
 603 RZ hero data ok load 586 saveto: heroRZ_5209286.npz fps:20
 607 RZ hero data ok load 603 saveto: heroRZ_5216502.npz fps:20
+608 RZ hero data ok load 607 saveto: heroRZ_5287908.npz fps:20
+613 RZ hero data ok load 608 saveto: heroRZ_5294814.npz fps:20
 **********************************************************************************************************
 517 KD hero (large validation error) start fresh saveto: heroKD_4079831.npz fps:20
 518 KD hero (large validation error) start fresh saveto: heroKD_4081171.npz fps:20
@@ -478,6 +484,7 @@ Riverraid
 577 RZ riverraid data ok load 121 episode ends fps:20 (could do better)
 589 RZ riverraid data ok load 121 episode ends fps:20 (better than 577)
 590 RZ riverraid data ok load 121 episode ends fps:20 (better than 589)
+611 RZ riverraid (1.73 error) load 121 episode ends fps:20 (better than 590)
 
 RoadRunner
 288 RZ roadrunner data ok start fresh saveto: road_runnerRZ_7174270.npz fps:20 (practice)
