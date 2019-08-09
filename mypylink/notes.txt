@@ -206,6 +206,7 @@ xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 605 RZ demon_attack (1.23 error) load 602 saveto: demon_attackRZ_5214038.npz fps:20
 609 RZ demon_attack data ok load 605 saveto: demon_attackRZ_5288966.npz fps:20
 614 RZ demon_attack data ok load 609 saveto: demon_attackRZ_5296679.npz fps:20
+618 RZ demon_attack data ok load 614 saveto: demon_attackRZ_5375788.npz fps:20
 
 Enduro
 82 RZ enduro data ok start fresh saveto: enduroRZ_3087678.npz fps: 20
@@ -241,14 +242,16 @@ Enduro
 546 KD enduro data ok start fresh saveto: enduroKD_4506300.npz fps:20
 
 Freeway
-55 RZ freeway data ok start fresh saveto: freewayRZ_2464601.npz fps: 20 
-59 RZ freeway data ok start fresh saveto: freewayRZ_2494228.npz fps: 20
-72 RZ freeway data ok start fresh saveto: freewayRZ_2903977.npz fps: 20 
-79 RZ freeway data ok start fresh saveto: freewayRZ_3074177.npz fps: 20
-149 JAW freeway data ok start fresh saveto: freewayJAW_3355334.npz fps: 20
-151 JAW freeway data ok start fresh saveto: freewayJAW_3358283.npz fps: 20
+55 RZ freeway data ok start fresh saveto: freewayRZ_2464601.npz fps:20 
+59 RZ freeway data ok start fresh saveto: freewayRZ_2494228.npz fps:20
+72 RZ freeway data ok start fresh saveto: freewayRZ_2903977.npz fps:20 
+79 RZ freeway data ok start fresh saveto: freewayRZ_3074177.npz fps:20
+149 JAW freeway data ok start fresh saveto: freewayJAW_3355334.npz fps:20
+151 JAW freeway data ok start fresh saveto: freewayJAW_3358283.npz fps:20
 156 KM freeway data ok start fresh saveto: freewayKM_6306308.npz fps:20
-157 KM freeway data ok start fresh saveto: freewayKM_6307437.npz fps:20  
+157 KM freeway data ok start fresh saveto: freewayKM_6307437.npz fps:20
+616 RZ freeway data ok start fresh saveto: freewayRZ_5373632.npz fps:20
+617 RZ freeway data ok start fresh saveto: freewayRZ_5373632.npz fps:20  
 
 Frostbite
 223 RZ frostbite data ok start fresh saveto: frostbiteRZ_7843228.npz fps:20 (did not know fish was reward)
@@ -319,6 +322,7 @@ xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 607 RZ hero data ok load 603 saveto: heroRZ_5216502.npz fps:20
 608 RZ hero data ok load 607 saveto: heroRZ_5287908.npz fps:20
 613 RZ hero data ok load 608 saveto: heroRZ_5294814.npz fps:20
+619 RZ hero data ok load 613 saveto: heroRZ_5376862.npz fps:20
 **********************************************************************************************************
 517 KD hero (large validation error) start fresh saveto: heroKD_4079831.npz fps:20
 518 KD hero (large validation error) start fresh saveto: heroKD_4081171.npz fps:20
