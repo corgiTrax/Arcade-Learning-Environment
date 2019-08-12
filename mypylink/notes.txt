@@ -174,6 +174,7 @@ Centipede
 610 RZ centipede data ok load 259 saveto: centipedeRZ_5290268.npz fps:20
 612 RZ centipede (1.07 error) load 610 saveto: centipedeRZ_5293382.npz fps:20
 615 RZ centipede data ok load 612 saveto: centipedeRZ_5298584.npz fps:20
+620 RZ centipede data ok load 615 saveto: centipedeRZ_5632787.npz fps:20
 
 Demon_Attack
 251 LG demon attack (1.22 error) start fresh saveto: demon_attackLG_1235012.npz fps:20 (practice)
@@ -387,9 +388,9 @@ MsPacman
 467 RZ mspacman data ok start fresh saveto: ms_pacmanRZ_3314679.npz fps:20
 496 RZ mspacman data ok start fresh saveto: ms_pacmanRZ_3560871.npz fps:20
 ----------------------------------------------------------------------------------------------------------
-118 mspacman data ok load 89 saveto: ms_pacmanRZ_4303947.npz fps:20
-119 mspacman data ok load 118 episode ends fps:20 
-593 mspacman data ok load 119 episode ends fps:20
+118 RZ mspacman data ok load 89 saveto: ms_pacmanRZ_4303947.npz fps:20
+119 RZ mspacman data ok load 118 episode ends fps:20 
+593 RZ mspacman data ok load 119 episode ends fps:20
 
 
 Name this game
@@ -489,6 +490,7 @@ Riverraid
 589 RZ riverraid data ok load 121 episode ends fps:20 (better than 577)
 590 RZ riverraid data ok load 121 episode ends fps:20 (better than 589)
 611 RZ riverraid (1.73 error) load 121 episode ends fps:20 (better than 590)
+621 RZ riverraid data ok load 121 episode ends fps:20
 
 RoadRunner
 288 RZ roadrunner data ok start fresh saveto: road_runnerRZ_7174270.npz fps:20 (practice)
