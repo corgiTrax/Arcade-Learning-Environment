@@ -1,6 +1,13 @@
 #!/usr/bin/env python
 import sys, re, os, subprocess, numpy as np, string
 
+if len(sys.argv) < 4:
+  print "Usage: %s <GAME_NAME|all> <MODEL_NAME> <EXP_TYPE>" % __file__ 
+  print "'all' means run all games."
+  print "Supported MODEL_NAME are: " , model_to_func.keys() 
+  print "Experiment type are sub-directories in model folders"
+  sys.exit(1)
+
 Exp_type = sys.argv[3] # hacky, TODO
 
 def create_bgrun_sh_content_imgOf_model(GAME_NAME):
@@ -120,12 +127,6 @@ model_to_func = {
         "baseline": create_bgrun_sh_content_baseline_model,
         }
 
-if len(sys.argv) < 4:
-  print "Usage: %s <GAME_NAME|all> <MODEL_NAME> <EXP_TYPE>" % __file__ 
-  print "'all' means run all games."
-  print "Supported MODEL_NAME are: " , model_to_func.keys() 
-  print "Experiment type are sub-directories in model folders"
-  sys.exit(1)
 
 if sys.argv[2] in model_to_func:
     print "Job output will be directed to folder ./CondorOutput"

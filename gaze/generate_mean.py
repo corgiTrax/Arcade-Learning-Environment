@@ -16,8 +16,8 @@ print("Usage Training Mode: ipython main.py 0 parameters")
 GAME_NAME = sys.argv[1]
 if GAME_NAME == 'seaquest':
     VAL_DATASET = ['75_RZ_3006069_Aug-17-16-46-05']
-    BASE_FILE_NAME = "/scratch/cluster/zharucs/dataset_gaze/seaquest_mixall"  
-    MODEL_DIR = "Mixall"
+    BASE_FILE_NAME = "/scratch/cluster/zharucs/dataset_gaze/seaquest_mixNoHighSc"  
+    MODEL_DIR = "MixNoHighSc"
 
 LABELS_FILE_TRAIN = BASE_FILE_NAME + '-train.txt' 
 LABELS_FILE_VAL =  BASE_FILE_NAME + '-val.txt' 

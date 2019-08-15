@@ -6,6 +6,10 @@ import ipdb
 import json
 import sys
 import time
+import os
+
+os.environ["CUDA_DEVICE_ORDER"]="PCI_BUS_ID"
+os.environ["CUDA_VISIBLE_DEVICES"]="0"
 
 print("Tensorflow version: %s" % tf.__version__)
 print("Keras version: %s" % K.__version__)
@@ -18,7 +22,7 @@ GAME_NAME = sys.argv[1]
 if GAME_NAME == 'seaquest':
     VAL_DATASET = ['235_RZ_9578441_Feb-07-16-28-09']
     BASE_FILE_NAME = "/scratch/cluster/zharucs/dataset_gaze/seaquest_{185_197_212}train_{235}val"  
-    MODEL_DIR = "Test/seaquest"
+    MODEL_DIR = "Test/seaquest4frame"
 
 LABELS_FILE_TRAIN = BASE_FILE_NAME + '-train.txt' 
 LABELS_FILE_VAL =  BASE_FILE_NAME + '-val.txt' 
@@ -33,8 +37,8 @@ dropout = float(sys.argv[3])
 #lr = float(sys.argv[3])
 #factor = float(sys.argv[4])
 heatmap_shape = 84
-#k = 4
-#stride = 1
+k = 4
+stride = 1
 SHAPE = (84,84,k) # height * width * channel This cannot read from file and needs to be provided here
 
 import input_utils as IU, misc_utils as MU

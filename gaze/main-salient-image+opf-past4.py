@@ -6,6 +6,10 @@ import ipdb
 import json
 import sys
 import time
+import os
+
+os.environ["CUDA_DEVICE_ORDER"]="PCI_BUS_ID"
+os.environ["CUDA_VISIBLE_DEVICES"]="0"
 
 print("Usage: ipython main.py gamename [PredictMode?]")
 print("Usage Predict Mode: ipython main.py gamename 1 parameters Model.hdf5")

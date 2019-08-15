@@ -6,6 +6,10 @@ import ipdb
 import json
 import sys
 import time
+import os
+
+os.environ["CUDA_DEVICE_ORDER"]="PCI_BUS_ID"
+os.environ["CUDA_VISIBLE_DEVICES"]="0"
 
 print("Tensorflow version: %s" % tf.__version__)
 print("Keras version: %s" % K.__version__)
@@ -38,8 +42,8 @@ if not predict_mode: # if train
     expr = MU.BMU.ExprCreaterAndResumer(MODEL_DIR, postfix='current_dp%.2f' % (dropout))
     expr.redirect_output_to_logfile_if_not_on("eldar-11")
 
-MU.BMU.save_GPU_mem_keras()
-MU.keras_model_serialization_bug_fix()
+#MU.BMU.save_GPU_mem_keras()
+#MU.keras_model_serialization_bug_fix()
 
 if resume_model:
     model = expr.load_weight_and_training_config_and_state()

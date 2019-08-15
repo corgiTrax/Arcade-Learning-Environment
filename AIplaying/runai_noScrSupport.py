@@ -25,7 +25,6 @@ if __name__ == "__main__":
         sys.exit()
 
     # parse the command line args in a simple way (and prone to bugs too!)
-    # TODO: use import argparse
 
     rom_file, model_name, model_file, mean_file  = sys.argv[1], sys.argv[2], sys.argv[3], sys.argv[4]
 
@@ -35,7 +34,7 @@ if __name__ == "__main__":
     _d = sys.argv.index('==') if '==' in sys.argv else -1
     args_passed_to_model_initializer = sys.argv[(_d+1):] if _d != -1 else []
 
-    MODEL_DIR = 'Mixall/'+os.path.splitext(os.path.basename(rom_file))[0] #TODO
+    MODEL_DIR = 'MixNoHighSc/'+os.path.splitext(os.path.basename(rom_file))[0] #TODO
     expr = MU.BMU.ExprCreaterAndResumer(MODEL_DIR, 
         postfix="%s" % (model_name))
     expr.dump_src_code_and_model_def(sys.argv[0], kerasmodel=None)

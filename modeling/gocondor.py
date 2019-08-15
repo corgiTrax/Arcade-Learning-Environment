@@ -8,11 +8,11 @@ for more detailed behaviors, please take a look at the code.
 def multi_experiment():
   l = [] # compose a list of arguments needed to be passed to the python script
   EXPRIMENTS=[
-      ("seaquest_mixall", "Mixall")
+      ("seaquest_mixNoHighSc", "MixNoHighSc")
   ]
 
   for (BASE_FILE_NAME, MODEL_DIR) in EXPRIMENTS:
-      for dropout in ['0.2','0.3','0.4','0.5']:
+      for dropout in ['0.1']:
           l.append(' '.join([BASE_FILE_NAME, MODEL_DIR, dropout]))
 
   return l
