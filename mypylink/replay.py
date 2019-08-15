@@ -89,13 +89,15 @@ def event_handler_func():
     ds.target_fps = max(1, ds.target_fps)
 
 if __name__ == "__main__":
-    if len(sys.argv) < 3:
-        print "Usage: %s saved_frames_png_tar asc_file" % (sys.argv[0])
+    if len(sys.argv) < 2:
+        print "Usage: %s saved_frames_png_tar asc_file(optional)" % (sys.argv[0])
         sys.exit(0)
 
     tar = tarfile.open(sys.argv[1], 'r')
-    #asc_path = sys.argv[1].split(".")[0] + ".asc"
-    asc_path = sys.argv[2]
+    if len(sys.argv) == 2:
+        asc_path = sys.argv[1].split(".")[0] + ".asc"
+    elif len(sys.argv) == 3:
+        asc_path = sys.argv[2]
 
     png_files = tar.getnames()
     png_files = preprocess_and_sanity_check(png_files)
@@ -121,7 +123,7 @@ if __name__ == "__main__":
     clock = pygame.time.Clock()
     while ds.cur_frame_id < ds.total_frame:
         #print(ds.cur_frame_id)
-        #clock.tick(ds.target_fps)  # control FPS 
+        clock.tick(ds.target_fps)  # control FPS 
         # Display FPS
         diff_time = time.time()-last_time
         if diff_time > 1.0:
@@ -149,7 +151,7 @@ if __name__ == "__main__":
         if not ds.pause:
             ds.cur_frame_id += 1
 
-        time.sleep(frameid2duration[UFID] * 0.001) #duration is in msec
+        # time.sleep(frameid2duration[UFID] * 0.001) #duration is in msec
 
     print "Replay ended."
 
