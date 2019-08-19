@@ -103,8 +103,8 @@ class DatasetWithGaze(BIU.Dataset):
     super(DatasetWithGaze, self).__init__(LABELS_FILE_TRAIN, LABELS_FILE_VAL, RESIZE_SHAPE)
     print "Reading gaze data ASC file, and converting per-frame gaze positions to heat map..."
     self.frameid2pos, self.frameid2action_notused, _,_,_ = BIU.read_gaze_data_asc_file(GAZE_POS_ASC_FILE)
-    self.train_GHmap = np.zeros([self.train_size, RESIZE_SHAPE[0], RESIZE_SHAPE[1], 1], dtype=np.float32)
-    self.val_GHmap = np.zeros([self.val_size, RESIZE_SHAPE[0], RESIZE_SHAPE[1], 1], dtype=np.float32)
+    self.train_GHmap = np.zeros([self.train_size, RESIZE_SHAPE[0], RESIZE_SHAPE[1], 1], dtype=np.float16)
+    self.val_GHmap = np.zeros([self.val_size, RESIZE_SHAPE[0], RESIZE_SHAPE[1], 1], dtype=np.float16)
 
     # Prepare train val gaze data
     print "Running BIU.convert_gaze_pos_to_heap_map() and convolution..."
@@ -203,8 +203,8 @@ class DatasetWithGazeWindow(BIU.Dataset):
       print "Reading gaze data ASC file, and converting per-frame gaze positions to heat map..."
       all_gaze, all_frame, _ = read_gaze_data_asc_file_2(GAZE_POS_ASC_FILE)
       self.rescale_and_clip_gaze_pos_on_all_gaze(all_gaze)
-      self.train_GHmap = np.empty([self.train_size, RESIZE_SHAPE[0], RESIZE_SHAPE[1], 1], dtype=np.float32)
-      self.val_GHmap = np.empty([self.val_size, RESIZE_SHAPE[0], RESIZE_SHAPE[1], 1], dtype=np.float32)
+      self.train_GHmap = np.empty([self.train_size, RESIZE_SHAPE[0], RESIZE_SHAPE[1], 1], dtype=np.float16)
+      self.val_GHmap = np.empty([self.val_size, RESIZE_SHAPE[0], RESIZE_SHAPE[1], 1], dtype=np.float16)
       print "Running convert_gaze_data_to_map()..."
       t1=time.time()
       self.frameid2GH, self.frameid2gazetuple = self.convert_gaze_data_to_heat_map_proprietary(all_gaze, all_frame)
@@ -234,7 +234,7 @@ class DatasetWithGazeWindow(BIU.Dataset):
         print "'Bad' means the gaze position is outside the 160*210 screen"
 
     def convert_gaze_data_to_heat_map_proprietary(self, all_gaze, all_frame):
-        GH = np.zeros([self.RESIZE_SHAPE[0], self.RESIZE_SHAPE[1], 1], dtype=np.float32)
+        GH = np.zeros([self.RESIZE_SHAPE[0], self.RESIZE_SHAPE[1], 1], dtype=np.float16)
         left, right = 0,0
         frameid2GH = {}
         frameid2gazetuple={}

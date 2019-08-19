@@ -6,16 +6,33 @@ the primary place you might want to change is multi_experiment().
 for more detailed behaviors, please take a look at the code.
 """
 def multi_experiment():
-  l = [] # compose a list of arguments needed to be passed to the python script
-  EXPRIMENTS=[
-      ("seaquest_mixNoHighSc", "MixNoHighSc")
-  ]
+    l = [] # compose a list of arguments needed to be passed to the python script
+    for game in [
+                 "alien",
+                 "asterix",
+                 "bank_heist",
+                 "berzerk",
+                 "breakout",
+                 "centipede",
+                 "demon_attack",
+                 "enduro",
+                 "freeway",
+                 "frostbite",
+                 "hero",
+                 "montezuma_revenge",
+                 "ms_pacman",
+                 "name_this_game",
+                 "phoenix",
+                 "riverraid",
+                 "road_runner",
+                 "seaquest",
+                 "space_invaders",
+                 "venture"
+                ]:
+        for dropout in ['0.0','0.1','0.2']:
+            l.append(' '.join([game, dropout]))
 
-  for (BASE_FILE_NAME, MODEL_DIR) in EXPRIMENTS:
-      for dropout in ['0.1']:
-          l.append(' '.join([BASE_FILE_NAME, MODEL_DIR, dropout]))
-
-  return l
+    return l
 
 import sys, re, os, subprocess
 

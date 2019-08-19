@@ -21,7 +21,7 @@ def acc_(y_true, y_pred): # don't rename it to acc or accuracy (otherwise stupid
   return tf.reduce_mean(
     tf.cast(tf.nn.in_top_k(
       targets=tf.squeeze(tf.cast(y_true,tf.int32)), 
-      predictions=y_pred,k=1),tf.float32))
+      predictions=y_pred,k=1),tf.float16))
 
 def my_softmax(x):
     """Softmax activation function. Normalize the whole metrics.

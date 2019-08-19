@@ -24,7 +24,7 @@ if len(sys.argv) < 2:
 RESIZE_SHAPE = (84, 84)
 dataset = sys.argv[1]
 dataset_name = dataset.split('.')[-3].split('/')[-1] # eg: 42_RZ_4988291_May-16-21-33-46
-save_path = '/scratch/cluster/zharucs/dataset_gaze/bottom_up/'
+save_path = '/scratch/cluster/zharucs/data/bottom_up/'
 if not os.path.exists(save_path + dataset_name):
     os.mkdir(save_path + dataset_name)
 
@@ -38,7 +38,7 @@ l = len(png_files)
 def read_thread(PID):
     for i in range(PID, l, num_thread):
         # read
-	img = cv2.imread('/scratch/cluster/zharucs/dataset_gaze/' + png_files[i])
+	img = cv2.imread('/scratch/cluster/zharucs/data/' + png_files[i])
 	# initialize
 	imgsize = img.shape
 	img_width  = imgsize[1]

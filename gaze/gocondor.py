@@ -8,17 +8,38 @@ for more detailed behaviors, please take a look at the code.
 def multi_experiment():
     l = [] # compose a list of arguments needed to be passed to the python script
 
-#    for game in ["asterix","berzerk","hero","montezuma_revenge"]:
-#        for dropout in ['0.0','0.1','0.2','0.3','0.4','0.5']:
-#            l.append(' '.join([game, '0', dropout]))
-    for param in ["asterix 0 0.1",
-                  "asterix 0 0.2",
-                  "asterix 0 0.3",
-                  "asterix 0 0.5",
-                  "berzerk",
-                  "hero",
-                  "montezuma_revenge"]:
-        l.append(' '.join([param]))
+    for game in [
+#                  "alien",
+#                 "asterix",
+#                 "bank_heist",
+#                 "berzerk",
+#                 "breakout",
+#                 "centipede",
+#                 "demon_attack",
+#                 "enduro",
+#                 "freeway",
+#                 "frostbite",
+#                 "hero",
+#                 "montezuma_revenge",
+#                 "ms_pacman",
+#                 "name_this_game",
+#                 "phoenix",
+#                 "riverraid",
+#                 "road_runner",
+#                 "seaquest",
+#                 "space_invaders",
+                 "venture"
+                ]:
+#
+#        for dropout in ['0.1','0.2','0.3','0.4','0.5']:
+        for dropout in ['0.2']:
+            l.append(' '.join([game, '0', dropout]))
+#    for param in [
+#                   "ms_pacman 0 0.4",
+#                   "breakout 0 0.1",
+#                   "bank_hesit 0 0.2",
+#                  ]:
+#        l.append(' '.join([param]))
 
 
     return l
