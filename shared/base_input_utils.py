@@ -38,7 +38,7 @@ class Dataset(object):
     self.train_lbl = self._convert_one_hot_label_to_prob_dist(self.train_lbl, moving_avarage_window_radius, NUM_CLASSES)
     self.val_lbl = self._convert_one_hot_label_to_prob_dist(self.val_lbl, moving_avarage_window_radius, NUM_CLASSES)
   def _convert_one_hot_label_to_prob_dist(self, lbl, r, NUM_CLASSES):
-    result = np.zeros((len(lbl), NUM_CLASSES), dtype=np.float16)
+    result = np.zeros((len(lbl), NUM_CLASSES), dtype=np.float32)
     for i in range(len(lbl)):
         result[i][lbl[i]] = 1.0
     for i in range(len(lbl)):
@@ -196,8 +196,8 @@ def read_np_parallel(label_file, RESIZE_SHAPE, num_thread=6, preprocess_deprecat
     N = len(labels)
     imgs = [None] * N
     labels = np.asarray(labels, dtype=np.int32)
-    gaze = np.asarray(gaze, dtype=np.float16)
-    weight = np.asarray(weight, dtype=np.float16)
+    gaze = np.asarray(gaze, dtype=np.float32)
+    weight = np.asarray(weight, dtype=np.float32)
 
     def read_thread(PID):
         d = os.path.dirname(label_file)
@@ -206,7 +206,7 @@ def read_np_parallel(label_file, RESIZE_SHAPE, num_thread=6, preprocess_deprecat
                 img = misc.imread(os.path.join(d, png_files[i]), 'Y') # 'Y': grayscale  
                 img = misc.imresize(img, [RESIZE_SHAPE[0],RESIZE_SHAPE[1]], interp='bilinear')
                 img = np.expand_dims(img, axis=2)
-                img = img.astype(np.float16) / 255.0 # normalize image to [0,1]
+                img = img.astype(np.float32) / 255.0 # normalize image to [0,1]
             else:
                 img = misc.imread(os.path.join(d, png_files[i])) # uint8 RGB (210,160,3)
             imgs[i] = img
@@ -257,7 +257,7 @@ def preprocess_gaze_heatmap(GHmap, sigmaH, sigmaW, bg_prob_density, debug_plot_r
 
     model.add(K.layers.Lambda(lambda x: x+bg_prob_density, input_shape=(GHmap.shape[1],GHmap.shape[2],1)))
 
-    if sigmaH > 0.0 and sigmaW > 0.0:
+    if sigmaH > 1 and sigmaW > 1: # was 0,0; if too small don't blur #TODO
         lh, lw = int(4*sigmaH), int(4*sigmaW)
         x, y = np.mgrid[-lh:lh+1:1, -lw:lw+1:1] # so the kernel size is [lh*2+1,lw*2+1]
         pos = np.dstack((x, y))
