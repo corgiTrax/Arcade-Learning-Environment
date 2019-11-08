@@ -3,6 +3,8 @@ import shutil, os, time, re, sys
 from IPython import embed
 sys.path.insert(0, '../shared') # After research, this is the best way to import a file in another dir
 import base_misc_utils as BMU
+from scipy import misc
+import copy
 
 def keras_model_serialization_bug_fix(): # stupid keras
     from keras.utils.generic_utils import get_custom_objects
@@ -13,6 +15,9 @@ def keras_model_serialization_bug_fix(): # stupid keras
     f(my_softmax)
     f(my_kld)
     f(NSS)
+    f(my_gcl_modifiedKL)
+    f(my_gcl_abs)
+    f(my_gcl_squared)
 
 def loss_func(target, pred): 
     return K.backend.sparse_categorical_crossentropy(output=pred, target=target, from_logits=True)
@@ -44,6 +49,24 @@ def my_kld(y_true, y_pred):
     y_pred = K.backend.clip(y_pred, epsilon, 1)
     return K.backend.sum(y_true * K.backend.log(y_true / y_pred), axis = [1,2,3])
         
+def my_gcl_modifiedKL(y_true, y_pred):
+    """
+    Gaze converage loss; conv layer 3 feature maps size: 7x7; layer 2: 9x9; layer 1: 20x20
+    """
+    epsilon = 1e-10 # introduce epsilon to avoid log and division by zero error
+    y_true2 = K.backend.clip(y_true, epsilon, 1)
+    y_pred = K.backend.clip(y_pred, epsilon, 1)
+    return K.backend.sum(y_true * y_true2 * K.backend.log(y_true2 / y_pred), axis = [1,2,3])
+
+def my_gcl_abs(y_true, y_pred):
+    return K.backend.sum(y_true * K.backend.abs(y_true - y_pred), axis = [1,2,3])
+
+def my_gcl_squared(y_true, y_pred):
+    epsilon = 1e-10 # introduce epsilon to avoid log and division by zero error
+    y_pred = K.backend.clip(y_pred, epsilon, 1)
+    return K.backend.sum(y_true * (y_true / y_pred - 1) * (y_true / y_pred - 1), axis = [1,2,3])
+
+
 
 def NSS(y_true, y_pred):
     """
