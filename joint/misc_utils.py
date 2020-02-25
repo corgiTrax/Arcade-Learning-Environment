@@ -18,6 +18,7 @@ def keras_model_serialization_bug_fix(): # stupid keras
     f(my_gcl_modifiedKL)
     f(my_gcl_abs)
     f(my_gcl_squared)
+    f(my_gcl_simplifiedKL)
 
 def loss_func(target, pred): 
     return K.backend.sparse_categorical_crossentropy(output=pred, target=target, from_logits=True)
@@ -57,6 +58,15 @@ def my_gcl_modifiedKL(y_true, y_pred):
     y_true2 = K.backend.clip(y_true, epsilon, 1)
     y_pred = K.backend.clip(y_pred, epsilon, 1)
     return K.backend.sum(y_true * y_true2 * K.backend.log(y_true2 / y_pred), axis = [1,2,3])
+
+def my_gcl_simplifiedKL(y_true, y_pred):
+    """
+    Gaze converage loss; conv layer 3 feature maps size: 7x7; layer 2: 9x9; layer 1: 20x20
+    """
+    epsilon = 1e-10 # introduce epsilon to avoid log and division by zero error
+    y_true2 = K.backend.clip(y_true, epsilon, 1)
+    y_pred = K.backend.clip(y_pred, epsilon, 1)
+    return K.backend.sum(y_true * K.backend.log(y_true2 / y_pred), axis = [1,2,3])
 
 def my_gcl_abs(y_true, y_pred):
     return K.backend.sum(y_true * K.backend.abs(y_true - y_pred), axis = [1,2,3])
