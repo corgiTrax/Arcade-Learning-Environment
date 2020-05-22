@@ -11,7 +11,7 @@ class Human_Gaze_Predictor:
     def __init__(self, gaze_model_file, mean_file, data_file):
         self.gaze_model_file = gaze_model_file
         self.mean_file = mean_file
-        self.game_name = gaze_model_file.split(".")[0]
+        self.game_name = gaze_model_file.split(".")[0].split("/")[-1]
         # data_file is a npz file
         self.data_file = data_file
         # img_name_file is a list of images, which is not in used now
@@ -114,19 +114,21 @@ class Human_Gaze_Predictor:
         print "Predicted."
     
         # Uncomment this block to save predicted gaze heatmap for visualization
-        print "Converting predicted results into png files and save..."
-        m = cm.ScalarMappable(cmap='jet')
-        for i,pred in enumerate(self.preds):
-            temp = pred[:,:,0]
-            # pic = convolve(temp, Gaussian2DKernel(stddev=1))
-            pic = m.to_rgba(temp)[:,:,:3]
-            plt.imsave(self.game_name + "/" + str(i) + '.png', pic)
-        print "Done."
+        SAVE_IMG = False
+        if SAVE_IMG:
+            print "Converting predicted results into png files and save..."
+            m = cm.ScalarMappable(cmap='jet')
+            for i,pred in enumerate(self.preds):
+                temp = pred[:,:,0]
+                # pic = convolve(temp, Gaussian2DKernel(stddev=1))
+                pic = m.to_rgba(temp)[:,:,:3]
+                plt.imsave(self.game_name + "/" + str(i) + '.png', pic)
+            print "Done."
     
-    #    print "Writing predicted gaze heatmap (train) into the npz file..."
-    #    np.savez_compressed(self.game_name, heatmap=train_pred)
-    #    print "Done. Output is:"
-    #    print " %s" % BASE_FILE_NAME.split('/')[-1] + '-train' + AFFIX + '.npz'
+        print "Writing predicted gaze heatmap (train) into the npz file..."
+        np.savez_compressed("human_gaze_" + self.game_name, heatmap=self.preds[:,:,:,0])
+        print "Done. Output is:"
+        print " %s" % "human_gaze_" + self.game_name + '.npz'
     
 if __name__ == "__main__":
     pass
