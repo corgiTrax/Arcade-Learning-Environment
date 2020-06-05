@@ -7,8 +7,6 @@ import time
 import copy as cp
 import os
 
-
-
 class Human_Gaze_Predictor:
     def __init__(self, gaze_model_file, mean_file, data_file):
         self.gaze_model_file = gaze_model_file
@@ -85,7 +83,8 @@ class Human_Gaze_Predictor:
         data = np.load(self.data_file, allow_pickle=True)
         print(data.keys())
         raw_imgs = data["raw"] # 100 x 16 x 210 x 160 x 3
-        
+        print(raw_imgs.shape)
+
         PAST = 4
         self.imgs = []
         for i,raw_img_stack16 in enumerate(raw_imgs):
@@ -105,7 +104,39 @@ class Human_Gaze_Predictor:
         mean = np.load(self.mean_file)
         self.imgs -= mean
 
-    def predict_and_save(self):
+    def init_data_exp5(self, before_idx):
+        from scipy import misc
+        data = np.load(self.data_file, allow_pickle=True)
+        print(data.keys())
+        fail_key = data.keys()[0]
+        raw_imgs = data[fail_key] 
+        print(raw_imgs.shape)
+
+        self.index = before_idx
+        BEFORE_DEAD_IDX = before_idx
+        FAIL_IDX = 0
+        PAST = 4
+        self.imgs = []
+        for i,raw_img_stack in enumerate(raw_imgs): # iterate over 100 images
+            raw_img_stack16 = raw_img_stack[BEFORE_DEAD_IDX][FAIL_IDX]
+            stack = [] # 4 x 84 x 84
+            for j,raw_img in enumerate(raw_img_stack16): # over 16 images
+                if j < PAST: # only take the past 4 frames
+                    # raw_img.shape is 210 x 160 x 3
+                    img = np.dot(raw_img[...,:3], [0.2989, 0.5870, 0.1140])
+                    img = misc.imresize(img, [self.img_shape,self.img_shape], interp='bilinear')
+                    img = img.astype(np.float16) / 255.0 # normalize image to [0,1]
+                    stack.append(cp.deepcopy(img))
+                    stack.reverse() # Note: LB stored imgs in npz in backward order
+            self.imgs.append(cp.deepcopy(stack))
+        self.imgs = np.asarray(self.imgs)
+        self.imgs = self.imgs.transpose([0,2,3,1]) # 100 x 84 x 84 x 4
+        # standardize
+        print(self.imgs.shape)
+        mean = np.load(self.mean_file)
+        self.imgs -= mean
+
+    def predict_and_save(self, exp):
         import matplotlib.cm as cm
         import matplotlib.pyplot as plt
         # These may be needed for better visualization later
@@ -127,24 +158,34 @@ class Human_Gaze_Predictor:
                 pic = m.to_rgba(temp)[:,:,:3]
                 plt.imsave(self.game_name + "/" + str(i) + '.png', pic)
             print "Done."
-    
-        print "Writing predicted gaze heatmap (train) into the npz file..."
-        np.savez_compressed("human_gaze_" + self.game_name, heatmap=self.preds[:,:,:,0])
-        print "Done. Output is:"
-        print " %s" % "human_gaze_" + self.game_name + '.npz'
-    
+        
+        if exp == 5:
+            print "Writing predicted gaze heatmap (train) into the npz file..."
+            np.savez_compressed("human_gaze_" + self.game_name + "_" + str(self.index), heatmap=self.preds[:,:,:,0])
+            print "Done. Output is:"
+            print " %s" % "human_gaze_" + self.game_name + "_" + str(self.index) + '.npz'
+        else:
+            print "Writing predicted gaze heatmap (train) into the npz file..."
+            np.savez_compressed("human_gaze_" + self.game_name, heatmap=self.preds[:,:,:,0])
+            print "Done. Output is:"
+            print " %s" % "human_gaze_" + self.game_name + '.npz'
+
 if __name__ == "__main__":
     os.environ["CUDA_DEVICE_ORDER"]="PCI_BUS_ID"
     os.environ["CUDA_VISIBLE_DEVICES"]="0"
 
-    if len(sys.argv) < 4:
-        print("Usage: %s gaze_model.hdf5 meanfile datafile" % sys.argv[0])
+    if len(sys.argv) < 5:
+        print("Usage: %s gaze_model.hdf5 meanfile datafile expNumber" % sys.argv[0])
         sys.exit(1)
     
     predictor = Human_Gaze_Predictor(sys.argv[1], sys.argv[2], sys.argv[3])
     predictor.init_model()
-    predictor.init_data()
-    predictor.predict_and_save()
+    EXP = int(sys.argv[4])
+    if EXP == 5: # failure data
+        predictor.init_data_exp5(int(sys.argv[5])) #before_dead_indx of the failure data
+    else:
+        predictor.init_data()
+    predictor.predict_and_save(EXP)
 
 
 # Not in use; TODO for future: this seems to be past4 not including the current one, may be problematic
