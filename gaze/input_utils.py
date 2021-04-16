@@ -19,7 +19,7 @@ class DatasetWithHeatmap(BIU.Dataset):
   frameid2pos, frameid2action_notused = None, None
   train_GHmap, val_GHmap = None, None # GHmap means gaze heap map
   
-  def __init__(self, LABELS_FILE_TRAIN, LABELS_FILE_VAL, RESIZE_SHAPE, HEATMAP_SHAPE, GAZE_POS_ASC_FILE):
+  def __init__(self, LABELS_FILE_TRAIN, LABELS_FILE_VAL, RESIZE_SHAPE, HEATMAP_SHAPE, GAZE_POS_ASC_FILE, SIGMA_MULTIPLIER=1):
     super(DatasetWithHeatmap, self).__init__(LABELS_FILE_TRAIN, LABELS_FILE_VAL, RESIZE_SHAPE)
     print "Reading gaze data ASC file, and converting per-frame gaze positions to heat map..."
     self.frameid2pos, self.frameid2action_notused, _, _, _ = BIU.read_gaze_data_asc_file(GAZE_POS_ASC_FILE)
@@ -41,8 +41,12 @@ class DatasetWithHeatmap(BIU.Dataset):
     print "Bad gaze (x,y) sample: %d (%.2f%%, total gaze sample: %d)" % (bad_count, 100*float(bad_count)/tot_count, tot_count)    
     print "'Bad' means the gaze position is outside the 160*210 screen"
 
-    sigmaH = 28.50 * HEATMAP_SHAPE / V.SCR_H
-    sigmaW = 44.58 * HEATMAP_SHAPE / V.SCR_W
+    print("Sigma multiplier for generating the groudtruth gaze heatmap is: %s" % SIGMA_MULTIPLIER)
+    #sigmaH = SIGMA_MULTIPLIER * 28.50 * HEATMAP_SHAPE / V.SCR_H # this is 210 * 4
+    #sigmaW = SIGMA_MULTIPLIER * 44.58 * HEATMAP_SHAPE / V.SCR_W # this is 160 * 8
+    sigmaH = SIGMA_MULTIPLIER * (HEATMAP_SHAPE / 28.50) #TODO: our previous calculations was wrong
+    sigmaW = SIGMA_MULTIPLIER * (HEATMAP_SHAPE / 44.58)
+
     self.train_GHmap = BIU.preprocess_gaze_heatmap(self.train_GHmap, sigmaH, sigmaW, 0).astype(np.float16)
     self.val_GHmap = BIU.preprocess_gaze_heatmap(self.val_GHmap, sigmaH, sigmaW, 0).astype(np.float16)
 
@@ -59,8 +63,8 @@ class DatasetWithHeatmap(BIU.Dataset):
     print "Done. BIU.convert_gaze_pos_to_heap_map() and convolution used: %.1fs" % (time.time()-t1)
 
 class DatasetWithHeatmap_PastKFrames(DatasetWithHeatmap):
-  def __init__(self, LABELS_FILE_TRAIN, LABELS_FILE_VAL, RESIZE_SHAPE, HEATMAP_SHAPE, GAZE_POS_ASC_FILE, K, stride=1, before=0):
-    super(DatasetWithHeatmap_PastKFrames, self).__init__(LABELS_FILE_TRAIN, LABELS_FILE_VAL, RESIZE_SHAPE, HEATMAP_SHAPE, GAZE_POS_ASC_FILE)
+  def __init__(self, LABELS_FILE_TRAIN, LABELS_FILE_VAL, RESIZE_SHAPE, HEATMAP_SHAPE, GAZE_POS_ASC_FILE, SIGMA_MULTIPLIER=1, K=4, stride=1, before=0):
+    super(DatasetWithHeatmap_PastKFrames, self).__init__(LABELS_FILE_TRAIN, LABELS_FILE_VAL, RESIZE_SHAPE, HEATMAP_SHAPE, GAZE_POS_ASC_FILE, SIGMA_MULTIPLIER=1)
     # delete the following line when merge with lzd's input_util.py in the future, to save memory
     # self.train_imgs_bak, self.val_imgs_bak = self.train_imgs, self.val_imgs
 
